@@ -1,5 +1,7 @@
 from flask import Flask, render_template, jsonify, request
 from pymongo import MongoClient #패키지 임포트
+client = MongoClient("mongodb+srv://test:sparta@cluster0.jmcjmfs.mongodb.net/?retryWrites=true&w=majority")
+db = client.dbsparta.study
 
 app = Flask(__name__)
 
@@ -26,7 +28,16 @@ def signup():
 @app.route('/signup', methods=['POST'])
 def signup_post():
     name_receive = request.form['name_give']
-    return jsonify({'msg':'post연결완료'})
+    id_receive = request.form['name_give']
+    pw_receive = request.form['name_give']
+    doc = {
+            "name":name_receive,
+            "id":id_receive,
+            "pw":pw_receive
+    }
+    db.insert_one(doc)
+
+    return jsonify({'msg':'회원가입완료'})
 @app.route('/signup', methods=['GET'])
 def signup_get():
     return jsonify({'msg':'get연결완료'})
