@@ -28,8 +28,8 @@ def signup():
 @app.route('/signup', methods=['POST'])
 def signup_post():
     name_receive = request.form['name_give']
-    id_receive = request.form['name_give']
-    pw_receive = request.form['name_give']
+    id_receive = request.form['id_give']
+    pw_receive = request.form['pw_give']
     doc = {
             "name":name_receive,
             "id":id_receive,
