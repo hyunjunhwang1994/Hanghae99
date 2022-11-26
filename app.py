@@ -40,6 +40,10 @@ def signup_post():
 @app.route('/signup', methods=['GET'])
 def signup_get():
     return jsonify({'msg':'get연결완료'})
+@app.route('/idcheck', methods=['POST'])
+def id_check_post():
+    id_list = list(db.users.find({},{'_id':False,'pw':False,'name':False}))
+    return jsonify({'id_list':id_list})
 
 # 포켓몬 전체조회 (이혜민)
 @app.route("/poketmon", methods=["GET"])
@@ -71,10 +75,6 @@ def movie_post():
         'date': date_receive,
     }
     db.poketmons.insert_one(doc)
-@app.route('/idcheck', methods=['POST'])
-def id_check_post():
-    id_list = list(db.users.find({},{'_id':False,'pw':False,'name':False}))
-    return jsonify({'id_list':id_list})
 
 
 
