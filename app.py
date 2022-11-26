@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('main.html')
 
 #로그인
 @app.route('/login')
@@ -35,8 +35,7 @@ def signup_post():
             "id":id_receive,
             "pw":pw_receive
     }
-    db.insert_one(doc)
-
+    db.users.insert_one(doc)
     return jsonify({'msg':'회원가입완료'})
 @app.route('/signup', methods=['GET'])
 def signup_get():
@@ -72,6 +71,10 @@ def movie_post():
         'date': date_receive,
     }
     db.poketmons.insert_one(doc)
+@app.route('/idcheck', methods=['POST'])
+def id_check_post():
+    id_list = list(db.users.find({},{'_id':False,'pw':False,'name':False}))
+    return jsonify({'id_list':id_list})
 
     return jsonify({'msg':'저장완료'})
 
