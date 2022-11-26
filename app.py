@@ -76,7 +76,6 @@ def id_check_post():
     id_list = list(db.users.find({},{'_id':False,'pw':False,'name':False}))
     return jsonify({'id_list':id_list})
 
-    return jsonify({'msg':'저장완료'})
 
 
 if __name__ == '__main__':
