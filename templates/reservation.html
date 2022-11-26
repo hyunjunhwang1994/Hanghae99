@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>포켓몬빵 예약화면</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <style>
+        .mypost {
+            width: 400px;
+            max-width: 500px;
+            margin: 20px auto 0px 10px;
+            padding: 20px;
+            box-shadow: 0px 0px 3px 0px gray;
+
+        }
+
+        .mybtns {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+
+            margin-top: 20px;
+        }
+
+        .mybtns > button {
+            margin-right: 10px;
+        }
+
+        .content {
+            margin-top: 15px;
+        }
+
+        .con {
+            margin-top: 0px;
+        }
+    </style>
+    <script>
+        function posting() {
+            let name = $('#name').val()
+            let store = $('#store').val()
+            let count = $('#count').val()
+            if(count == '-- 선택하기 --'){
+                alert('수량을 선택하세요')
+            }else{
+                alert(name + ' 빵을 ' + count + '개 예약합니다')
+                $.ajax({
+                type: 'POST',
+                url: '/reservation',
+                data: {name_give:name, store_give:store, count_give:count},
+                    // + 데이터에 로그인 사용자 정보 + 예약일(현재날짜) 추가
+
+                success: function (response) {
+                    alert(response['msg'])
+
+                }
+            });
+            }
+        }
+
+    </script>
+</head>
+<body>
+
+<a class="" href="index.html">포켓몬빵찾기(사이트명)</a>
+<a class="" href="login.html">로그인</a>
+<a class="" href="signup.html">회원가입</a>
+<a class="" href="reservation-list.html">예약조회</a>
+<h1 class="title">포켓몬빵 예약화면</h1>
+
+<div class="mypost" id="post-box">
+    <div class="row g-3 align-items-center">
+        <div class="mb-3">
+            <label class="form-label">포켓몬빵이름</label>
+            <input type="text" id="name" class="form-control" value="피카츄" readonly>
+        </div>
+
+        <div class="mb-3 con">
+            <label class="form-label">편의점</label>
+            <input type="text" id="store" class="form-control" value="CU반석점" readonly>
+        </div>
+    </div>
+    <div class="input-group mb-3 content">
+        <label class="input-group-text">수량</label>
+        <select class="form-select" id="count">
+            <option  selected>-- 선택하기 --</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select>
+    </div>
+    <div class="form-floating content">
+        <textarea id="comment" class="form-control" placeholder="Leave a comment here"></textarea>
+        <label>요청사항</label>
+    </div>
+    <div class="mybtns">
+        <button onclick="posting()" type="button" class="btn btn-dark">예약하기</button>
+        <button onclick="close_box()" type="button" class="btn btn-outline-dark">취소</button>
+    </div>
+</div>
+
+</body>
+</html>

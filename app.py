@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template('main.html')
+    return render_template('index.html')
 
 #로그인
 @app.route('/login')
@@ -42,6 +42,38 @@ def signup_post():
 def signup_get():
     return jsonify({'msg':'get연결완료'})
 
+# 포켓몬 전체조회 (이혜민)
+@app.route("/poketmon", methods=["GET"])
+def poketmonlist():
+    poketmon_list = list(db.poketmons.find({}, {'_id': False}))
+    return jsonify({'poketmons': poketmon_list})
+
+# 검색 (이혜민)
+@app.route("/search", methods=["GET"])
+def poketmon_search():
+    poketmon_list = list(db.poketmons.find({}, {'_id': False}))
+    return jsonify({'poketmons': poketmon_list})
+
+#예약확정,DB저장 (이혜민)
+@app.route("/reservation", methods=["POST"])
+def movie_post():
+    name_receive = request.form['name_give']
+    store_receive = request.form['store_give']
+    count_receive = request.form['count_give']
+    # username, date 가져올것
+    username_receive = request.form['username_give']
+    date_receive = request.form['date_give']
+
+    doc = {
+        'name': name_receive,
+        'store': store_receive,
+        'count': count_receive,
+        'username': username_receive,
+        'date': date_receive,
+    }
+    db.poketmons.insert_one(doc)
+
+    return jsonify({'msg':'저장완료'})
 
 
 if __name__ == '__main__':
