@@ -14,23 +14,19 @@
 
     <title>로그인화면</title>
     <script>
-        function login(){
+        function login() {
             let id = $('#id').val()
             let pw = $('#pw').val()
             $.ajax({
-                type: "GET",
+                type: "POST",
                 url: "/login",
-                data: {},
+                data: {"id_give": id, "pw_give": pw},
                 success: function (response) {
                     alert(response['msg'])
-                    console.log(response['users_list'])
-                    // let users_rows = response['users_list']
-                    // for(let i = 0; i < users_rows.length;i++){
-                    //     if(id == users_rows[i]['id'] && pw == users_rows[i]['pw']){
-                    //         alert("로그인성공")
-                    //         location.href='/'
-                    //     }
-                    // }
+                    if(response['msg']=="로그인성공"){
+                        location.href='/'
+                    }
+
 
                 }
             })

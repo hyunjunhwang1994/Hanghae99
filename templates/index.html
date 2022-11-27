@@ -113,6 +113,19 @@
                 }
             });
         }
+        //로그아웃
+        function logout(){
+            //console.log("작동함")
+            $.ajax({
+                type: "GET",
+                url: "/delcookie",
+                data: {},
+                success: function (response) {
+                    alert(response['msg'])
+                }
+            })
+        }
+
 
 
 
@@ -127,6 +140,7 @@
     <a class="btn btn-primary" href="reservation">예약하기</a>
     <a class="btn btn-primary" href="reservation-list">예약조회</a>
     <a class="btn btn-primary" href="ask">문의하기</a>
+    <button onclick="logout()">로그아웃</button>
 
 
     <h1 class="title">내 주변 포켓몬빵을 찾고 예약해보세요</h1>
