@@ -78,8 +78,12 @@ def movie_post():
 
 
 #예약내역 보기. (황현준)
+@app.route("/show_reservation", methods=['POST'])
+def show_reservation():
 
 #문의하기 (황현준)
+@app.route("/do_ask", methods=['POST'])
+def do_ask():
 
 
 if __name__ == '__main__':
