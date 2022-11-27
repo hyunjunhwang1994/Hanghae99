@@ -14,10 +14,11 @@
 
     <script>
         function show_reservation() {
+
             $.ajax({
                 type: "POST",
                 url: "/show_reservation",
-                data: { "name_give": $("#name") },
+                data: { "name_give": $('#name').val() },
                 success: function (response) {
 
                     let rows = response['reservation_list']

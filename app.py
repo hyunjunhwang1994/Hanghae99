@@ -2,6 +2,7 @@ from flask import Flask, render_template, jsonify, request
 from pymongo import MongoClient  # 패키지 임포트
 
 client = MongoClient("mongodb+srv://test:sparta@cluster0.jmcjmfs.mongodb.net/?retryWrites=true&w=majority")
+
 db = client.dbsparta.study
 
 app = Flask(__name__)
