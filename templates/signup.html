@@ -12,17 +12,70 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 
-  <title>회원가입화면</title>
+    <title>회원가입화면</title>
+    <script>
+        function signup(){
+            let name = $('#name').val()
+            let id = $('#id').val()
+            let pw = $('#pw').val()
+            let pw_re = $('#pw_re').val()
+            if(pw==pw_re && $('#idcheck').val() == "check"){
+                $.ajax({
+                    type:"POST",
+                    url:"/signup",
+                    data:{"name_give":name,"id_give":id,"pw_give":pw,"pw_re_give":pw_re,},
+                    success:function(response){
+                        alert(response['msg'])
+                        location.reload()
+                    }
+                })
+            }else{
+                alert("비밀번호가 다르거나 아이디중복확인이필요")
+            }
+        }
 
+        function check_id(){
+            let id = $('#id').val()
+            $.ajax({
+                type:"GET",
+                url:"/idcheck",
+                data:{},
+                success:function(response){
+                    let id_rows = response['id_list']
+                    if(id_rows.length==0){
+                        $('#idcheck').val("check")
+                    }
+                    for (let i = 0; i < id_rows.length; i++) {
+                        if (id != id_rows[i]['id']) {
+                            console.log(id)
+                            console.log(id_rows[i])
+                            $('#idcheck').val("check")
+                            console.log($('#idcheck').val())
+                        } else {
+                            $('#idcheck').val("uncheck")
+                            alert("동일한 아이디가 있습니다")
+                            break;
+                        }
+                    }
+                    if($('#idcheck').val() == "check"){
+                        alert("사용가능합니다")
+                    }
+
+
+                }
+            })
+        }
+    </script>
 </head>
 <body>
     <h1>회원가입화면입니다</h1>
 
-    <p>이름:<input type="text"></p>
-    <p>아이디:<input type="text"><button>아이디중복확인</button></p>
-    <p>비밀번호   :<input type="password"></p>
-    <p>비밀번호확인:<input type="password"></p>
-    <button>회원가입</button>
+    <p>이름:<input id="name" type="text"></p>
+    <p>아이디:<input id="id" type="text"><button onclick="check_id()">아이디중복확인</button>
+    <input type="hidden" id="idcheck" value="uncheck"</p>
+    <p>비밀번호   :<input id="pw" type="password"></p>
+    <p>비밀번호확인:<input id="pw_re" type="password"></p>
+    <button onclick="signup()">가입하기</button>
 
 
 </body>
