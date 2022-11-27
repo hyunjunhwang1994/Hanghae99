@@ -79,11 +79,7 @@ def reservation_get():
 
 # 예약확정,DB저장 (이혜민)
 @app.route("/reservation", methods=["POST"])
-<<<<<<< Updated upstream
 def reservation_post():
-=======
-def reservation():
->>>>>>> Stashed changes
     name_receive = request.form['name_give']
     store_receive = request.form['store_give']
     count_receive = request.form['count_give']
@@ -100,7 +96,6 @@ def reservation():
     db.reservation.insert_one(doc)
 
     return jsonify({'msg':'저장완료'})
-
 
 # 예약내역보기 (황현준)
 @app.route('/reservation-list')
