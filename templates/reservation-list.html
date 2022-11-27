@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- HJ -->
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+        function show_reservation() {
+            $.ajax({
+                type: "POST",
+                url: "/homework",
+                data: {},
+                success: function (response) {
+                    let rows = response['users']
+
+
+                    for (let i = 0; i < rows.length; i++){
+                        let name = rows[i]['name']
+                        let comment = rows[i]['comment']
+
+                        let temp_html = `
+                             <div class="card">
+                                <div class="card-body">
+                                    <blockquote class="blockquote mb-0">
+                                        <p>${name}</p>
+                                        <footer class="blockquote-footer">${comment}</footer>
+                                    </blockquote>
+                                </div>
+                            </div>
+                        `
+                        $('#comment-list').append(temp_html)
+                    }
+                }
+            });
+        }
+</head>
+<body>
+
+<button type="button" onclick="show_reservation()">예약 조회</button>
+<p>예약 내역 입니다.</p>
+
+
+</body>
+</html>
