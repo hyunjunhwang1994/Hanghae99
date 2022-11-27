@@ -94,18 +94,19 @@ def movie_post():
     db.poketmons.insert_one(doc)
 
 # 예약내역보기 (황현준)
+@app.route('/reservation-list')
+def reservation_list():
+    return render_template('reservation-list.html')
+
 @app.route("/show_reservation", methods=["POST"])
 def show_reservation():
 
+    name_receive = request.form['name_give']
 
-    # 해당 사용자의 예약내역을 확인하고 있다면 보여주기.
-    reservation_list = list(db.poketmons.find({}, {'_id': False}))
+    reservation_list = list(db.poketmons.find({"name": name_receive}, {'_id': False}))
+
     return jsonify({'reservation_list': reservation_list})
 
-
-
-
-    return 0;
 # 문의하기 (황현준)
 @app.route("/do_ask", methods=["POST"])
 def do_ask():
