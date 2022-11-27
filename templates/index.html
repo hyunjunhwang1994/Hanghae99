@@ -26,21 +26,17 @@
                 url: "/poketmon",
                 data: {},
                 success: function (response) {
-
                     let rows = response['poketmons']
                     for (let i=0; i < rows.length; i++){
                         let img = rows[i]['image']
                         let name = rows[i]['name']
                         let store = rows[i]['store']
                         let stock = rows[i]['stock']
-                        let num = i;
-                        console.log(img, name, store)
                         let temp_html = `<div class="card" style="width: 270px;">
-                                              <img src="${img}" class="card-img-top" alt="빵이미지${num}번째">
+                                              <img src="${img}" class="card-img-top" alt="빵이미지${i}번째">
                                               <div class="card-body">
                                                 <h5 class="card-title">${name}</h5>
                                                 <p class="card-text">${store} 재고 : ${stock} 개 </p>
-                                                <a href="#" class="btn btn-primary" onclick="reservation()">예약하기</a>
                                               </div>
                                         </div>`
                         $('#cards-box').append(temp_html)
@@ -56,7 +52,6 @@
             if(keyword==''){
                 alert('검색어를 입력하세요')
             }else{
-                alert('검색키워드: ' + keyword)
                 $('#cards-box').empty()
             }
 
@@ -65,31 +60,26 @@
                 url: "/search",
                 data: {},
                 success: function (response) {
-                    let rows = response['poketmons']
+                    let rows = response['poketmon_list']
                     let count = 0;
                     for (let i=0; i < rows.length; i++){
                         let img = rows[i]['image']
                         let name = rows[i]['name']
                         let store = rows[i]['store']
                         let stock = rows[i]['stock']
-                        let num = i;
-
                         if(name==keyword){
-                            count += 1
-                            console.log(count)
-                            let temp_html = `<div class="card" style="width: 270px;">
-                                              <img src="${img}" class="card-img-top" alt="빵이미지${num}번째">
-                                              <div class="card-body">
-                                                <h5 class="card-title">${name}</h5
+                            let temp_html = `<div class="card" id="${i}" style="width: 270px;">
+                                              <img src="${img}" class="card-img-top" alt="빵이미지${i}번째">
+                                              <div class="card-body reservation">
+                                              <h5 class="card-title" id="bread-name">${name}</h5>
                                                 <p class="card-text">${store} 재고 : ${stock} 개 </p>
-                                                <a href="#" class="btn btn-primary" onclick="reservation()">예약하기</a>
                                               </div>
                                         </div>`
                         $('#cards-box').append(temp_html)
+                        count += 1
                         }
                     }
 
-                    //왜 안되지???
                     if(count ==0){
                         alert('조회결과없음')
                         listing();
@@ -101,8 +91,19 @@
         }
 
         //예약하기버튼
+
+        $('.reservation > button').click(function(e) {
+            // var btnName =  $(this).getElementsByClassName('bread-name').val()
+            let keyword = $('#keyword').val()
+
+            alert(keyword)
+        });
+
         function reservation(){
-            alert('예약할까요?')
+            alert(num)
+
+                location.href='reservation'
+
               $.ajax({
                 type: "POST",
                 url: "/reservation",
@@ -124,17 +125,17 @@
 
 </head>
 <body>
-    <a class="" href="index.html">포켓몬빵찾기(사이트명)</a>
-    <a class="" href="login.html">로그인</a>
-    <a class="" href="signup.html">회원가입</a>
-
-    <!-- 현준 -->
+    <a class="" href="index">포켓몬빵찾기</a>
+    <a class="" href="login">로그인</a>
+    <a class="" href="signup">회원가입</a>
+    <a class="btn btn-primary" href="reservation">예약하기</a>
     <a class="" href="reservation-list">예약조회</a>
 
 
     <h1 class="title">내 주변 포켓몬빵을 찾고 예약해보세요</h1>
     <input type="text" id="keyword">
-    <button type="button" class="btn btn-dark download-btn" onclick="search()">포켓몬빵 검색</button>
+    <button type="button" class="btn btn-dark" onclick="search()">포켓몬빵 검색</button>
+    <button type="button" class="btn btn-outline-dark">포켓몬빵 등록?</button>
 
     <div id="cards-box" class="row row-cols-1 row-cols-md-4 g-4">
         <div class="card " style="width: 18rem;">
@@ -142,7 +143,6 @@
           <div class="card-body">
             <h5 class="card-title">포켓몬빵이름</h5>
             <p class="card-text">편의점정보</p>
-              <button class="btn btn-primary" onclick="reservation()">예약하기</button>
               <button class="btn btn-primary" onclick="ask()">문의하기</button> <!--문의하기 버튼 만듬.-->
           </div>
         </div>
