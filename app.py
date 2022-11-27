@@ -89,7 +89,11 @@ def show_reservation():
     return jsonify({'reservation_list': reservation_list})
 
 # 문의하기 (황현준)
-@app.route("/do_ask", methods=["POST"])
+
+@app.route('/ask')
+def show_ask():
+    return render_template('ask.html')
+@app.route("/ask", methods=["POST"])
 def do_ask():
     return 0;
 
