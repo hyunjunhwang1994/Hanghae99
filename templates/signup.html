@@ -17,13 +17,13 @@
         function signup(){
             let name = $('#name').val()
             let id = $('#id').val()
-            let pw = $('#pw').val()
-            let pw_re = $('#pw_re').val()
-            if(pw==pw_re && $('#idcheck').val() == "check"){
+            let pwd = $('#pwd').val()
+            let pwd_re = $('#pwd_re').val()
+            if(pwd==pwd_re && $('#idcheck').val() == "check"){
                 $.ajax({
                     type:"POST",
                     url:"/signup",
-                    data:{"name_give":name,"id_give":id,"pw_give":pw,"pw_re_give":pw_re,},
+                    data:{"name_give":name,"id_give":id,"pwd_give":pwd},
                     success:function(response){
                         alert(response['msg'])
                         location.reload()
@@ -73,8 +73,8 @@
     <p>이름:<input id="name" type="text"></p>
     <p>아이디:<input id="id" type="text"><button onclick="check_id()">아이디중복확인</button>
     <input type="hidden" id="idcheck" value="uncheck"</p>
-    <p>비밀번호   :<input id="pw" type="password"></p>
-    <p>비밀번호확인:<input id="pw_re" type="password"></p>
+    <p>비밀번호   :<input id="pwd" type="password"></p>
+    <p>비밀번호확인:<input id="pwd_re" type="password"></p>
     <button onclick="signup()">가입하기</button>
 
 
