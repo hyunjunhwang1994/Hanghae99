@@ -77,6 +77,10 @@ def movie_post():
     db.poketmons.insert_one(doc)
 
 
+#예약내역 보기. (황현준)
+
+#문의하기 (황현준)
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0',port=5000,debug=True)
