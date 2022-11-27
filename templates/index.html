@@ -13,12 +13,62 @@
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
 
+
+    <style>
+        .login-and-out{
+            margin: 0px 30px 70px 0px;
+            text-align: right;
+            align-items: revert;
+        }
+
+        .title{
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .mybtn{
+            width: 550px;
+            margin:50px auto 50px auto;
+        }
+    </style>
+
     <script>
-        $(document).ready(function () {
+       $(document).ready(function () {
+            let userid = getCookie('user_id')
+            if(userid != ""){
+                loginSuccess();
+            }
             listing();
         });
 
-        //전체조회
+       //로그인 후 쿠키 가져오기
+        function getCookie(name) {
+            let nameOfCookie = name
+            let x = 0;
+            while (x <= document.cookie.length) {
+                let y = (x + nameOfCookie.length);
+
+                if (document.cookie.substring(x, y) == nameOfCookie) {
+                    if ((endOfCookie = document.cookie.indexOf(";", y)) == -1)
+                    endOfCookie = document.cookie.length;
+                    return unescape(document.cookie.substring(y, endOfCookie));
+                                    }
+
+                x = document.cookie.indexOf(" ", x) + 1;
+                if (x == 0)
+                break;
+            }
+            return "";
+          }
+           //로그인-로그아웃 버튼 전환
+        function loginSuccess() {
+            $('#login-and-out').empty()
+            let temp_html = `<a class="" href="login" id="logout" onclick="logout()">로그아웃</a>`
+            $('#login-and-out').append(temp_html)
+        }
+
+       //전체조회
         function listing(){
             $('#cards-box').empty()
             $.ajax({
@@ -90,7 +140,7 @@
             });
         }
 
-        //예약하기버튼
+         //예약하기버튼
 
         $('.reservation > button').click(function(e) {
             // var btnName =  $(this).getElementsByClassName('bread-name').val()
@@ -125,29 +175,35 @@
                 }
             })
         }
-
-
-
-
     </script>
 
 
 </head>
 <body>
-    <a class="" href="index">포켓몬빵찾기</a>
-    <a class="" href="login">로그인</a>
-    <a class="" href="signup">회원가입</a>
-    <a class="btn btn-primary" href="reservation">예약하기</a>
-    <a class="btn btn-primary" href="reservation-list">예약조회</a>
-    <a class="btn btn-primary" href="ask">문의하기</a>
+
+
+    <nav class="nav nav-pills nav-fill">
+        <a class="nav-link active" aria-current="page" href="index">포켓몬빵찾기</a>
+        <a class="nav-link" href="reservation">예약하기</a>
+        <a class="nav-link" href="reservation-list">예약조회</a>
+        <a class="nav-link" href="ask" >문의하기</a>
+    </nav>
+    <div class="col">
+        <div id="login-and-out col" class="login-and-out">
+            <a class="" href="login" id="login">로그인</a>
+            <a class="" href="signup">회원가입</a>
+        </div>
+    </div>
+
     <button onclick="logout()">로그아웃</button>
 
 
-    <h1 class="title">내 주변 포켓몬빵을 찾고 예약해보세요</h1>
-    <input type="text" id="keyword">
-    <button type="button" class="btn btn-dark" onclick="search()">포켓몬빵 검색</button>
-    <button type="button" class="btn btn-outline-dark">등록(임시)</button>
-
+   <h1 class="title">내 주변 포켓몬빵을 찾고 예약해보세요</h1>
+    <div class="mybtn">
+        <input type="text" id="keyword">
+        <button type="button" class="btn btn-dark" onclick="search()">포켓몬빵 검색</button>
+        <button type="button" class="btn btn-outline-dark">등록(임시)</button>
+    </div>
     <div id="cards-box" class="row row-cols-1 row-cols-md-4 g-4">
         <div class="card " style="width: 18rem;">
           <img src="..." class="card-img-top cards-box" alt="포켓몬빵이미지">
