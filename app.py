@@ -139,11 +139,25 @@ def show_reservation():
 
 # 문의하기 (황현준)
 @app.route('/ask')
-def show_ask():
+def enter_ask():
     return render_template('ask.html')
 @app.route("/ask", methods=["POST"])
-def do_ask():
-    return 0;
+def input_ask():
+
+    # 문의내용 넣기
+    # 어떤 ID, 어떤 편의점, 문의내용을 넣는다.
+    # - ID 정보를 가저와 ID 추출
+    # - 편의점 정보를 가져오기
+    # - 문의내용 넣기.
+
+    poketmon_list = list(db.poketmons.find({"store"}, {'_id': False}))
+    return jsonify({'poketmons': poketmon_list})
+@app.route("/show_ask", methods=["POST"])
+def show_ask():
+    id_receive = request.form['login.id']
+
+    ask_list = list(db.ask.find({"id": id_receive}, {'_id': False}))
+    return jsonify({'ask_list': ask_list})
 
 
 if __name__ == '__main__':
