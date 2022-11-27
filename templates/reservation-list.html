@@ -77,8 +77,11 @@
 <body>
 
 
-<input type="text" class="form-control w-25" id="name" placeholder="조회할 ID 입력..." aria-label="조회할 ID 입력..." aria-describedby="basic-addon1">
-<button type="button" class="btn btn-primary" onclick="show_reservation()">예약 조회</button>
+
+<div class="input-group mb-3 w-25">
+  <input type="text" class="form-control" id="name" placeholder="조회할 ID 입력..." aria-label="R조회할 ID 입력..." aria-describedby="button-addon2">
+  <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="show_reservation()">예약 조회</button>
+</div>
 <div id="reservation-list">
 </div>
 
