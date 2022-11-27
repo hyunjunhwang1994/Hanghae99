@@ -89,7 +89,6 @@ def show_reservation():
     return jsonify({'reservation_list': reservation_list})
 
 # 문의하기 (황현준)
-
 @app.route('/ask')
 def show_ask():
     return render_template('ask.html')
