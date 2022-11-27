@@ -30,6 +30,9 @@
                     }else{
 
 
+                        let username = rows[0]['username']
+                    let temp_html =  `${username}님의 예약 내역 입니다.`
+                    $('#reservation-list').append(temp_html)
 
                     console.log(response)
                     for (let i = 0; i < rows.length; i++){
@@ -39,7 +42,7 @@
                         let username = rows[i]['username']
                         let date = rows[i]['date']
 
-                        let temp_html = `${username}님의 예약 내역 입니다.
+                        let temp_html = `
 <table class="table table-striped table-hover">
   <thead>
     <tr>
