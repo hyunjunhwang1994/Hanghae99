@@ -88,7 +88,7 @@ def reservation():
 
 @app.route("/reservation", methods=["GET"])
 def reservation_get():
-    print('확인해봐')
+    print('확인해봐') #안되는부분*******************************************************
     poketmons_list = list(db.poketmons.find({}, {'_id': False}))
     print(poketmon_list)
     return jsonify({'poketmons_list': poketmons_list})
@@ -120,7 +120,6 @@ def reservation_post():
         db.reservation.insert_one(doc)
         db.poketmons.update_one({'name': name_receive, 'store':store_receive}, {'$set': {'stock': stock-count_receive}})
         return jsonify({'msg': '예약완료'})
-
 
 
 # 예약내역보기 (황현준)
