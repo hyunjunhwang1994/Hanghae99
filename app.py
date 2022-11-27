@@ -98,7 +98,7 @@ def reservation_get():
 def reservation_post():
     name_receive = request.form['name_give']
     store_receive = request.form['store_give']
-    count_receive = request.form['count_give']
+    count_receive = int(request.form['count_give'])
     username_receive = request.form['username_give']
     date_receive = request.form['date_give']
 
@@ -109,9 +109,18 @@ def reservation_post():
         'date': date_receive,
         'count': count_receive
     }
-    db.reservation.insert_one(doc)
 
-    return jsonify({'msg':'저장완료'})
+    poketmon = db.poketmons.find({'name': name_receive, 'store': store_receive}, {'stock': True})
+    poketmon = list(poketmon)
+    stock = int(poketmon[0]['stock'])
+
+    if count_receive > stock:
+        return jsonify({'msg': '예약 가능 수량을 초과하였습니다'})
+    else:
+        db.reservation.insert_one(doc)
+        db.poketmons.update_one({'name': name_receive, 'store':store_receive}, {'$set': {'stock': stock-count_receive}})
+        return jsonify({'msg': '예약완료'})
+
 
 # 예약내역보기 (황현준)
 @app.route('/reservation-list')
