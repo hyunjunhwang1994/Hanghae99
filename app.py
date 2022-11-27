@@ -141,23 +141,41 @@ def show_reservation():
 @app.route('/ask')
 def enter_ask():
     return render_template('ask.html')
-@app.route("/ask", methods=["POST"])
+@app.route("/input_ask", methods=["POST"])
 def input_ask():
+    name_receive = request.form['name_give']
+    store_receive = request.form['store_give']
+    count_receive = int(request.form['count_give'])
+    username_receive = request.form['username_give']
+    date_receive = request.form['date_give']
 
-    # 문의내용 넣기
-    # 어떤 ID, 어떤 편의점, 문의내용을 넣는다.
-    # - ID 정보를 가저와 ID 추출
-    # - 편의점 정보를 가져오기
-    # - 문의내용 넣기.
+    doc = {
+        'name': name_receive,
+        'store': store_receive,
+        'username': username_receive,
+        'date': date_receive,
+        'count': count_receive
+    }
+
+
+
+
 
     poketmon_list = list(db.poketmons.find({"store"}, {'_id': False}))
     return jsonify({'poketmons': poketmon_list})
 @app.route("/show_ask", methods=["POST"])
 def show_ask():
-    id_receive = request.form['login.id']
+    id_receive = request.form['login_id']
 
     ask_list = list(db.ask.find({"id": id_receive}, {'_id': False}))
     return jsonify({'ask_list': ask_list})
+
+@app.route("/show_option", methods=["GET"])
+def show_option():
+
+    option_list = list(db.poketmons.find({}, {'_id': False}))
+    return jsonify({'option_list': option_list})
+
 
 
 if __name__ == '__main__':
