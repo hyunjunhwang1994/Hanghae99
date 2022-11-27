@@ -1,9 +1,13 @@
 from flask import Flask, render_template, jsonify, request
 from pymongo import MongoClient  # 패키지 임포트
 
-client = MongoClient("mongodb+srv://test:sparta@cluster0.jmcjmfs.mongodb.net/?retryWrites=true&w=majority")
+# client = MongoClient("mongodb+srv://test:sparta@cluster0.jmcjmfs.mongodb.net/?retryWrites=true&w=majority")
+# db = client.dbsparta.study
 
-db = client.dbsparta.study
+client = MongoClient('mongodb+srv://test:sparta@cluster0.jftxkcu.mongodb.net/?retryWrites=true&w=majority')
+db = client.dbsparta
+
+
 
 app = Flask(__name__)
 
@@ -107,7 +111,7 @@ def show_reservation():
 
     name_receive = request.form['name_give']
 
-    reservation_list = list(db.poketmons.find({"name": name_receive}, {'_id': False}))
+    reservation_list = list(db.reservation.find({"username": name_receive}, {'_id': False}))
 
     return jsonify({'reservation_list': reservation_list})
 

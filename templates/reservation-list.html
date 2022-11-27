@@ -14,6 +14,7 @@
 
     <script>
         function show_reservation() {
+             $('#reservation-list').empty()
 
             $.ajax({
                 type: "POST",
@@ -23,6 +24,13 @@
 
                     let rows = response['reservation_list']
 
+                    if (rows.length == 0){
+                        let temp_html = `예약 내역이 없잖아..`
+                        $('#reservation-list').append(temp_html)
+                    }else{
+
+
+
                     console.log(response)
                     for (let i = 0; i < rows.length; i++){
                         let name = rows[i]['name']
@@ -31,14 +39,32 @@
                         let username = rows[i]['username']
                         let date = rows[i]['date']
 
-                        let temp_html = `
-                                    <p>${name}</p>
-                                    <p>${comment}</p>
-                                    <p>${count}</p>
-                                    <p>${username}</p>
-                                    <p>${date}</p>
-                        `
+                        let temp_html = `${username}님의 예약 내역 입니다.
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th scope="col">이름:</th>
+      <th scope="col">${name}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">코멘트:</th>
+      <td>${comment}</td>
+    </tr>
+    <tr>
+      <th scope="row">카운트:</th>
+      <td>${count}</td>
+    </tr>
+    <tr>
+      <th scope="row">날짜:</th>
+      <td colspan="1">${date}</td>
+    </tr>
+  </tbody>
+</table>
+`
                         $('#reservation-list').append(temp_html)
+                        }
                     }
                 }
             });
@@ -51,6 +77,17 @@
 <button type="button" onclick="show_reservation()">예약 조회</button>
 <p>예약 내역 입니다.</p>
 <div id="reservation-list">
+
+
+
+
+
+
+
+
+
+
+
 
 
 </div>
