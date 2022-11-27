@@ -32,8 +32,14 @@
                         let name = rows[i]['name']
                         let store = rows[i]['store']
                         let stock = rows[i]['stock']
+<<<<<<< Updated upstream
                         let temp_html = `<div class="card" style="width: 270px;">
                                               <img src="${img}" class="card-img-top" alt="빵이미지${i}번째">
+=======
+                        let num = i;
+                        let temp_html = `<div class="card" id="${num}" style="width: 270px;">
+                                              <img src="${img}" class="card-img-top" alt="빵이미지${num}번째">
+>>>>>>> Stashed changes
                                               <div class="card-body">
                                                 <h5 class="card-title">${name}</h5>
                                                 <p class="card-text">${store} 재고 : ${stock} 개 </p>
@@ -49,7 +55,7 @@
         function search(){
 
             let keyword = $('#keyword').val()
-            if(keyword==''){
+            if(keyword==null){
                 alert('검색어를 입력하세요')
             }else{
                 $('#cards-box').empty()
@@ -68,11 +74,22 @@
                         let store = rows[i]['store']
                         let stock = rows[i]['stock']
                         if(name==keyword){
+<<<<<<< Updated upstream
                             let temp_html = `<div class="card" id="${i}" style="width: 270px;">
                                               <img src="${img}" class="card-img-top" alt="빵이미지${i}번째">
                                               <div class="card-body reservation">
                                               <h5 class="card-title" id="bread-name">${name}</h5>
                                                 <p class="card-text">${store} 재고 : ${stock} 개 </p>
+=======
+                            count += 1
+                            console.log(count)
+                            let temp_html = `<div class="card" id={num} style="width: 270px;" >
+                                              <img src="${img}" class="card-img-top" alt="빵이미지${num}번째">
+                                              <div class="card-body">
+                                                <h5 class="card-title">${name}</h5>
+                                                <p class="card-text">${store} 재고 : ${stock} 개 </p>
+                                                <a href="#" class="btn btn-primary reservation ${num}" onclick="reservation()">예약하기</a>
+>>>>>>> Stashed changes
                                               </div>
                                         </div>`
                         $('#cards-box').append(temp_html)
@@ -83,7 +100,6 @@
                     if(count ==0){
                         alert('조회결과없음')
                         listing();
-
                     }
 
                 }
@@ -100,9 +116,13 @@
         });
 
         function reservation(){
+<<<<<<< Updated upstream
             alert(num)
 
                 location.href='reservation'
+=======
+            alert('예약할까요?')
+>>>>>>> Stashed changes
 
               $.ajax({
                 type: "POST",
@@ -136,6 +156,7 @@
 
     <h1 class="title">내 주변 포켓몬빵을 찾고 예약해보세요</h1>
     <input type="text" id="keyword">
+<<<<<<< Updated upstream
     <button type="button" class="btn btn-dark" onclick="search()">포켓몬빵 검색</button>
     <button type="button" class="btn btn-outline-dark">등록(임시)</button>
 
@@ -149,5 +170,10 @@
           </div>
         </div>
     </div>
+=======
+    <button type="button" class="btn btn-dark download-btn" onclick="search()">포켓몬빵 검색</button>
+    <button type="button" class="btn download-btn" onclick="search()">포켓몬빵 등록</button>
+
+>>>>>>> Stashed changes
 </body>
 </html>
