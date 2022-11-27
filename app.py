@@ -16,10 +16,13 @@ def home():
 @app.route('/login')
 def login():
     return render_template('login.html')
+@app.route('/login', methods=['POST'])
+def login_post():
+    name_receive = request.form['name_give']
+    return jsonify({'msg':'post연결완료'})
 @app.route('/login', methods=['GET'])
 def login_get():
-    #users_list = list(db.users.find({},{'_id':False,'name':False}))
-    return jsonify({'msg':'get연결완료','users_list':users_list})
+    return jsonify({'msg':'get연결완료'})
 
 #회원가입
 @app.route('/signup')
@@ -37,8 +40,11 @@ def signup_post():
     }
     db.users.insert_one(doc)
     return jsonify({'msg':'회원가입완료'})
-@app.route('/idcheck', methods=['GET'])
-def id_check_get():
+@app.route('/signup', methods=['GET'])
+def signup_get():
+    return jsonify({'msg':'get연결완료'})
+@app.route('/idcheck', methods=['POST'])
+def id_check_post():
     id_list = list(db.users.find({},{'_id':False,'pw':False,'name':False}))
     return jsonify({'id_list':id_list})
 
@@ -87,6 +93,10 @@ def reservation_post():
         'date': date_receive,
         'count': count_receive
     }
+    db.reservation.insert_one(doc)
+
+    return jsonify({'msg':'저장완료'})
+
 
 # 예약내역보기 (황현준)
 @app.route('/reservation-list')
@@ -103,16 +113,13 @@ def show_reservation():
     return jsonify({'reservation_list': reservation_list})
 
 # 문의하기 (황현준)
-
 @app.route('/ask')
 def show_ask():
     return render_template('ask.html')
 @app.route("/ask", methods=["POST"])
 def do_ask():
     return 0;
-    db.reservation.insert_one(doc)
 
-    return jsonify({'msg':'저장완료'})
 
 if __name__ == '__main__':
     app.run('0.0.0.0',port=5000,debug=True)
