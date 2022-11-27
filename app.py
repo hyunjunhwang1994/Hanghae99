@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template('main.html')
+    return render_template('index.html')
 
 
 # 로그인
@@ -96,6 +96,15 @@ def movie_post():
 # 예약내역보기 (황현준)
 @app.route("/show_reservation", methods=["POST"])
 def show_reservation():
+
+
+    # 해당 사용자의 예약내역을 확인하고 있다면 보여주기.
+    reservation_list = list(db.poketmons.find({}, {'_id': False}))
+    return jsonify({'reservation_list': reservation_list})
+
+
+
+
     return 0;
 # 문의하기 (황현준)
 @app.route("/do_ask", methods=["POST"])
