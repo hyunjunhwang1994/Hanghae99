@@ -20,7 +20,7 @@
             $.ajax({
                 type: "POST",
                 url: "/login",
-                data: {"id_give": id, "pw_give": pw},
+                data: {"id_give": id, "pwd_give": pw},
                 success: function (response) {
                     alert(response['msg'])
                     if(response['msg']=="로그인성공"){

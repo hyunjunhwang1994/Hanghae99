@@ -22,10 +22,10 @@ def login():
 @app.route('/login', methods=['POST'])
 def login_post():
     id_receive = request.form['id_give']
-    pw_receive = request.form['pw_give']
+    pwd_receive = request.form['pwd_give']
     users_list = list(db.users.find({},{'_id':False,'name':False}))
-    for id_pw in users_list:
-        if id_receive == id_pw['id'] and pw_receive == id_pw['pw']:
+    for id_pwd in users_list:
+        if id_receive == id_pwd['id'] and pwd_receive == id_pwd['pwd']:
             user_id = request.form["id_give"]
             res = make_response(jsonify({'msg':"로그인성공"}))
             res.set_cookie("user_id", user_id)
@@ -51,17 +51,17 @@ def signup():
 def signup_post():
     name_receive = request.form['name_give']
     id_receive = request.form['id_give']
-    pw_receive = request.form['pw_give']
+    pwd_receive = request.form['pwd_give']
     doc = {
             "name":name_receive,
             "id":id_receive,
-            "pw":pw_receive
+            "pwd":pwd_receive
     }
     db.users.insert_one(doc)
     return jsonify({'msg':'회원가입완료'})
 @app.route('/idcheck', methods=['GET'])
 def id_check_get():
-    id_list = list(db.users.find({},{'_id':False,'pw':False,'name':False}))
+    id_list = list(db.users.find({},{'_id':False,'pwd':False,'name':False}))
     return jsonify({'id_list':id_list})
 
 
