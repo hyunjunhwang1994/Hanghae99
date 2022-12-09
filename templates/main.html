@@ -22,7 +22,7 @@
         * {
             font-family: 'Jua', sans-serif;
         }
-        .simple {
+        .title {
             text-align: center;
 
             /*background-color: red;*/
@@ -31,15 +31,70 @@
 
             padding-top: 40px;
         }
+        .myLogin {
+            display: flex; /*내용물 쉽게 정렬하기 4줄 세트*/
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            max-width: 500px;
+          width: 95%;
+          margin: 20px auto 0px auto;
+
+          box-shadow: 0px 0px 3px 0px gray;
+          padding: 20px;
+            display: none;
+        }
     </style>
+    <script>
+        function open_box(){
+            $('#idBox').show()
+        }
+
+        function close_box(){
+            $('#idBox').hide()
+        }
+
+        function login() {
+            let id = document.getElementById('ID').value
+            let pw = document.getElementById('PW').value
+            $.ajax({
+                type: "POST",
+                url: "/member/login",
+                data: {
+                    id_give: id,
+                    pw_give: pw,
+                },
+                success: function (response) {
+                    alert(response)
+                    window.location.href='/'
+                }
+            });
+            alert('login!');
+        }
+    </script>
 
 </head>
 <body>
-    <div class="simple">
-        <h1>대충 타이틀</h1>
-        <p> <button onclick="location.href = '/login'" type="button" class="btn btn-outline-primary">대충 로그인</button>
-            <button onclick="location.href = '/register'" type="button" class="btn btn-outline-success">대충 회원가입</button> </p>
-<!--        <p> <button type="button" class="btn btn-outline-danger">대충 회원수정</button> </p>-->
+    <div class="title">
+        <p> <button onclick="open_box()" type="button" class="btn btn-outline-success">로그인</button>
+            <button onclick="location.href = '/register'" type="button" class="btn btn-outline-success">회원가입</button>
+        </p>
+    </div>
+    <div class="login-box">
+        <div class="myLogin" id="idBox">
+            <div class="form-floating mb-3">
+                <input type="email" class="form-control" id="ID" placeholder="name@example.com">
+                <label for="floatingInput">ID</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="email" class="form-control" id="PW" placeholder="name@example.com">
+                <label for="floatingInput">PW</label>
+            </div>
+            <p> <button onclick="login()" type="button" class="btn btn-outline-primary">로그인</button>
+                <button onclick="close_box()" type="button" class="btn btn-outline-danger">취소</button>
+            </p>
+        </div>
     </div>
 
 

@@ -12,6 +12,7 @@
         margin: 20px auto 0 auto;
         padding: 20px;
         box-shadow: 0 0 3px 0 gray;
+
     }
 
 
@@ -19,6 +20,27 @@
 
 <script>
 
+    function signUp() {
+        let id = document.getElementById('inputID').value
+        let pw = document.getElementById('inputPW1').value
+        let nick = document.getElementById('inputNick').value
+        let email = document.getElementById('inputEmail').value
+        $.ajax({
+                type: "POST",
+                url: "/member/join",
+                data: {
+                    id_give: id,
+                    pw_give: pw,
+                    nick_give: nick,
+                    email_give: email,
+                },
+                success: function (response) {
+                    alert(response)
+                    window.location.href='/'
+                }
+            });
+
+    }
 
 
 </script>
@@ -27,16 +49,22 @@
 <div class="signUpBox">
     <h1>회원등록</h1>
 
-    <p> ID: <input type="text" id="inputid"/> </p>
+    <p> ID: <input type="text" id="inputID" placeholder="ID"/>
+    </p>
 <!--    <button onclick="dupCheck()">중복확인</button> -->
-    <p> PW: <input type="password" id="inputpw1" placeholder="비밀번호"/> </p>
-    <p> PW확인: <input type="password" id="inputPw2" placeholder="비밀번호 확인."/> </p>
-    <p> 닉네임: <input type="text" id="inputNick"/> </p>
-    <p> 이메일: <input type="text" id="inputEmail"/> </p>
+    <p> PW: <input type="password" id="inputPW1" placeholder="비밀번호"/>
+    </p>
+    <p> PW확인: <input type="password" id="inputPW2" placeholder="비밀번호 확인"/>
+    </p>
+    <p> 닉네임: <input type="text" id="inputNick" placeholder="닉네임"/>
+    </p>
+    <p> 이메일: <input type="email" id="inputEmail" placeholder="example@email.com"/>
+    </p>
 
 <!--        <button onclick="doubleCheck()">중복확인</button> -->
-    <p> <button onclick="signUp()">등록하기</button>
-        <button onclick="">취소</button> </p>
+    <p> <button  onclick="signUp()">등록하기</button>
+        <button onclick="location.href = '/'">취소</button>
+    </p>
 </div>
 </body>
 </html>
