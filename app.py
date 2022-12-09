@@ -11,16 +11,17 @@ db = client.dbsparta
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('main.html')
 
 @app.route('/register')
 def regiser():
     return render_template('register.html')
 
 
+@app.route('/test')
+def test():
 
-
-
+    return render_template('test.html')
 
 
 if __name__ == '__main__':
