@@ -17,10 +17,13 @@ def home():
     doc = {'name': 'bobby', 'age': 21}
     db.test.insert_one(doc)
 
-    return 'index.html'
+    return render_template('index.html')
 
 
+@app.route('/test')
+def test():
 
+    return render_template('test.html')
 
 
 if __name__ == '__main__':
