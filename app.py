@@ -9,15 +9,15 @@ db = client.dbsparta
 
 
 
-
-
 @app.route('/')
 def home():
+    return render_template('index.html')
 
-    doc = {'name': 'bobby', 'age': 21}
-    db.test.insert_one(doc)
+@app.route('/register')
+def regiser():
+    return render_template('register.html')
 
-    return 'index.html'
+
 
 
 
