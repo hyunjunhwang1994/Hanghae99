@@ -85,10 +85,11 @@
     }
 
     function checkInput() {
-        let blnkAll = /^\s+|\s$/g;
-        let blnkInit = /[\s]/g;
-        let blnkSpec = /\W|\s/g
-        let idRule =  /^[a-zA-Z0-9]/g;
+        let regBlnk = /^\s+|\s$/g;
+        // let regSpace = /[\s]/g;
+        // let regSpec = /\W|\s/g
+        let regID =  /^[a-zA-Z0-9]/g;
+        let regEmail = /^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/g;
 
         let id = document.getElementById('inputID').value
         let pw = document.getElementById('inputPW1').value
@@ -96,8 +97,8 @@
         let email = document.getElementById('inputEmail').value
 
         // 공백 란인지 확인 공백 란이면 True
-        if (id.replace(blnkAll, "") == "" || pw.replace(blnkAll, "") == ""
-            || nick.replace(blnkAll, "") == ""|| email.replace(blnkAll, "")== ""){
+        if (id.replace(regBlnk, "") == "" || pw.replace(regBlnk, "") == ""
+            || nick.replace(regBlnk, "") == ""|| email.replace(regBlnk, "")== ""){
             return alert('공백 란을 확인 해 주세요')
         }
 
@@ -108,9 +109,16 @@
         }
 
         // 아이디는 영어와 숫자만! 형식이 맞으면 True
-        if (idRule.test(id) != true) {
+        if (regID.test(id) != true) {
             return alert('아이디 형식을 확인 해 주세요')
         }
+
+        // 이메일 형식이 맞으면 True
+        if (regEmail.test(email) != true) {
+            return alert('이메일 형식을 확인 해 주세요')
+        }
+
+
     }
 
     $(function () {
@@ -157,6 +165,26 @@
     </p>
     <p> 이메일 <input type="email" class="form-control" id="inputEmail" placeholder="example@email.com"/>
     </p>
+<!--    <div class="row g-2">-->
+<!--        <div class="col-md">-->
+<!--            <div class="form-floating">-->
+<!--                <input type="email" class="form-control" id="floatingInputGrid" placeholder="name@example.com"-->
+<!--                       value="example">-->
+<!--                <label for="floatingInputGrid">Email Id</label>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="col-md">-->
+<!--            <div class="form-floating">-->
+<!--                <select class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">-->
+<!--                    <option selected>Open this select menu</option>-->
+<!--                    <option value="@naver.com">naver.com</option>-->
+<!--                    <option value="@gmail.com">gmail.com</option>-->
+<!--                    <option value="@kakao.com">kakao.com</option>-->
+<!--                </select>-->
+<!--                <label for="floatingSelectGrid">email.com</label>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
 
 <!--        <button onclick="doubleCheck()">중복확인</button> -->
     <p> <button  onclick="join()">등록하기</button>
