@@ -26,13 +26,13 @@
 
             $.ajax({
                 type: "GET",
-                url: "/written/content",
+                url: "/written/content/<int:post_num>",
                 data: {},
                 success: function (response) {
                     let rows = response['written']
                      for (let i = 0; i < rows.length; i++) {
                         let crudtitle = rows[i]['crudtitle']
-                        let num = rows[i]['num']
+                        let post_num = rows[i]['post_num']
                         let written = rows[i]['write']
                          let editable = rows[i]['editable']
                      }

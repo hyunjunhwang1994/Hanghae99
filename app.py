@@ -32,12 +32,26 @@ def register():
     return render_template('register.html')
 
 
-@app.route('/member/join', methods=["POST"])
+@app.route('/members/checkid', methods=["POST"])
+def checkid():
+    id_receive = request.form['id_give']
+    chkID = db.users.find_one({'id':id_receive})
+    if chkID == None:
+        return '1'
+    if chkID != None:
+        return '0'
+
+
+@app.route('/members/join', methods=["POST"])
 def join():
     id_receive = request.form['id_give']
     pw_receive = request.form['pw_give']
     nick_receive = request.form['nick_give']
     email_receive = request.form['email_give']
+
+    user_list = list(db.users.find({}, {'_id': False}))
+
+    uid = len(user_list) + 1
 
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
@@ -46,23 +60,35 @@ def join():
         'id': id_receive,
         'pw': pw_hash,
         'nick': nick_receive,
-        'email': email_receive
+        'email': email_receive,
+        'uid' : uid
     }
 
     db.users.insert_one(doc)
 
-    return '0'
+    return '등록 완료'
 
 
-@app.route('/member/login', methods=["POST"])
+@app.route('/members/login', methods=["POST"])
 def login():
-    # id_receive=
-    return None
 
+    id_receive=request.form['id_give']
+    pw_receive = request.form['pw_give']
 
-    return render_template('index.html')
+    pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
+    val = db.users.find_one({'id': id_receive,'pw':pw_hash})
 
+    if val != None:
+        payload = {
+            'id': id_receive,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=5)
+        }
+        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+        return jsonify({'result': 'success', 'token': token})
+
+    if val == None:
+        return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
 
 
@@ -270,12 +296,12 @@ def write_content():
     write_receive = request.form['write_give']
     print(write_receive)
     write_list = list(db.crud.find({}, {'_id': False}))
-    count = len(write_list) + 1  # len() = ~의 리스트 수
+    post_num = len(write_list) + 1  # len() = ~의 리스트 수
 
     doc = {
         # ID 추가해야함
         'crudtitle': crud_title_receive,
-        'num': count,
+        'post_num': post_num,
         'write': write_receive,
         'editable': 1  #수정가능하면 editable 1
     }
@@ -287,8 +313,8 @@ def write_content():
 def written():
     return render_template('written.html')
 
-@app.route("/written/content/", methods=["GET"])
-def written_get():
+@app.route("/written/content/<int:post_num>", methods=["GET"])
+def written_get(post_num):
     write_list = list(db.crud.find({}, {'_id': False}))
     return jsonify({'written': write_list})
 # edit 쪽에 보내야 할 듯.

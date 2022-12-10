@@ -4,7 +4,24 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    </script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="<%=ctxPath %>/script/RSA/rsa.js">
+    </script>
+    <script type="text/javascript" src="<%=ctxPath %>/script/RSA/jsbn.js">
+    </script>
+    <script type="text/javascript" src="<%=ctxPath %>/script/RSA/prng4.js">
+    </script>
+    <script type="text/javascript" src="<%=ctxPath %>/script/RSA/rng.js">
+    </script>
+
 <style>
     .signUpBox {
         width: 95%;
@@ -20,14 +37,16 @@
 
 <script>
 
-    function signUp() {
+    function join() {
+        checkInput();
+
         let id = document.getElementById('inputID').value
         let pw = document.getElementById('inputPW1').value
         let nick = document.getElementById('inputNick').value
         let email = document.getElementById('inputEmail').value
         $.ajax({
                 type: "POST",
-                url: "/member/join",
+                url: "/members/join",
                 data: {
                     id_give: id,
                     pw_give: pw,
@@ -39,8 +58,83 @@
                     window.location.href='/'
                 }
             });
-
     }
+    function checkDup() {
+        let id = document.getElementById('inputID').value
+
+        $.ajax({
+            type: "POST",
+            url: "/members/checkid",
+            data: {id_give: id},
+            success: function (response) {
+
+                //    response의 값이 '1' 일시 중복 없음 '0'일시 중복.  0과 1은 문자열. app.py에서 숫자값 반환 불가.
+                if (response === '1') {
+                    bool_ID = true
+
+                    document.getElementById('chkID_text').innerText = '사용 가능한 아이디 입니다.'
+                    document.getElementById('chkID_text').style.color = 'blue'
+                } else {
+                    bool_ID = false
+
+                    document.getElementById('chkID_text').innerText = '이미 사용중인 아이디 입니다.'
+                    document.getElementById('chkID_text').style.color = 'red'
+                }
+            }
+        })
+    }
+
+    function checkInput() {
+        let blnkAll = /^\s+|\s$/g;
+        let blnkInit = /[\s]/g;
+        let blnkSpec = /\W|\s/g
+        let idRule =  /^[a-zA-Z0-9]/g;
+
+        let id = document.getElementById('inputID').value
+        let pw = document.getElementById('inputPW1').value
+        let nick = document.getElementById('inputNick').value
+        let email = document.getElementById('inputEmail').value
+
+        // 공백 란인지 확인 공백 란이면 True
+        if (id.replace(blnkAll, "") == "" || pw.replace(blnkAll, "") == ""
+            || nick.replace(blnkAll, "") == ""|| email.replace(blnkAll, "")== ""){
+            return alert('공백 란을 확인 해 주세요')
+        }
+
+        // 스페이스바 체크 있으면 True
+        if (id.search(/\s/) != -1 || pw.search(/\s/) != -1
+            || nick.search(/\s/) != -1|| email.search(/\s/) != -1){
+            return alert('공백이 있는지 확인 해 주세요')
+        }
+
+        // 아이디는 영어와 숫자만! 형식이 맞으면 True
+        if (idRule.test(id) != true) {
+            return alert('아이디 형식을 확인 해 주세요')
+        }
+    }
+
+    $(function () {
+        $('#inputPW1').keyup(function () {
+            if ($('#inputPW1').val() == $('#inputPW2').val()) {
+                document.getElementById('chkPW_text').innerText = '비밀번호 일치함'
+                document.getElementById('chkPW_text').style.color = 'blue'
+            } else {
+                document.getElementById('chkPW_text').innerText = '비밀번호 일치하지 않음'
+                document.getElementById('chkPW_text').style.color = 'red'
+            }
+        });
+
+        $('#inputPW2').keyup(function () {
+            if ($('#inputPW1').val() == $('#inputPW2').val()) {
+                document.getElementById('chkPW_text').innerText = '비밀번호 일치함'
+                document.getElementById('chkPW_text').style.color = 'blue'
+            } else {
+                document.getElementById('chkPW_text').innerText = '비밀번호 일치하지 않음'
+                document.getElementById('chkPW_text').style.color = 'red'
+            }
+        });
+    });
+
 
 
 </script>
@@ -49,20 +143,23 @@
 <div class="signUpBox">
     <h1>회원등록</h1>
 
-    <p> ID: <input type="text" id="inputID" placeholder="ID"/>
+    <p> ID <input type="text" class="form-control" id="inputID" placeholder="ID"/>
+    <button onclick="checkDup()" type="button" class="btn btn-outline-primary">중복 확인</button>
+    <b id="chkID_text"></b>
     </p>
 <!--    <button onclick="dupCheck()">중복확인</button> -->
-    <p> PW: <input type="password" id="inputPW1" placeholder="비밀번호"/>
+    <p> PW <input type="password" class="form-control" id="inputPW1" placeholder="비밀번호"/>
     </p>
-    <p> PW확인: <input type="password" id="inputPW2" placeholder="비밀번호 확인"/>
+    <p> PW확인 <input type="password" class="form-control" id="inputPW2" placeholder="비밀번호 확인"/>
+    <h6 id="chkPW_text"></h6>
     </p>
-    <p> 닉네임: <input type="text" id="inputNick" placeholder="닉네임"/>
+    <p> 닉네임 <input type="text" class="form-control" id="inputNick" placeholder="닉네임"/>
     </p>
-    <p> 이메일: <input type="email" id="inputEmail" placeholder="example@email.com"/>
+    <p> 이메일 <input type="email" class="form-control" id="inputEmail" placeholder="example@email.com"/>
     </p>
 
 <!--        <button onclick="doubleCheck()">중복확인</button> -->
-    <p> <button  onclick="signUp()">등록하기</button>
+    <p> <button  onclick="join()">등록하기</button>
         <button onclick="location.href = '/'">취소</button>
     </p>
 </div>
