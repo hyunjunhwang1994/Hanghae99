@@ -160,6 +160,49 @@ def pagination():
 
 
 
+@app.route('/addfriend')
+def goFriend():
+    return render_template("friendtest.html")
+
+@app.route('/api/addfriend', methods=["POST"])
+def addFriend():
+    # userA_receive = request.form['userA'] # 유저 세션이나 JWT 확인 (현재 유저)
+    # userB_receive = request.form['userB'] # 추가할 유저 -> html에서 클릭시 해당유저 id 가지고옴
+    # test
+    userA_receive = "userA"
+    userB_receive = "superpower"
+
+
+    doc = {
+        'friends_a': userA_receive,
+        'friends_b': userB_receive,
+        'friends_isFriend': 0}
+
+    db.friends.insert_one(doc)
+
+    return render_template('index.html')
+
+@app.route('/api/showfriend', methods=['POST'])
+def showFriend():
+    # userA_receive = request.form['userA'] # 유저 세션이나 JWT 확인 (현재 유저)
+
+    #test
+    userA_receive = "userA"
+
+    # 접속한 userA의 경우 표현할 것
+    # friend_a가 userA / isFriend: 0   친구 신청 중
+    # friend_a가 userA / isFriend: 1   내 친구
+
+    # friend_b가 userA / isFriend: 0   친구 수락하기 전
+    # friend_b가 userA / isFriend: 1   내 친구
+    all_friends = list(db.friends.find({"$or": [{'friends_a': userA_receive}, {"friends_b": userA_receive}]},{'_id':False}))
+
+    print("서버 단 친구 목록보기 " + str(all_friends))
+
+    return jsonify(all_friends)
+
+    # return render_template('friendtest.html',
+    #                        all_friends="3")
 @app.route('/test')
 def test():
 

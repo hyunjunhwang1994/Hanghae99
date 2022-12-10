@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <script>
+
+   function addFriend() {
+
+        $.ajax({
+                type: "POST",
+                url: "/api/addfriend",
+                data: {},
+                success: function (response) {
+                    alert(response)
+                }
+            });
+
+    }
+
+       function showFriend() {
+
+        $.ajax({
+                type: "POST",
+                url: "/api/showfriend",
+                data: {},
+                success: function (response) {
+                    let rows = response
+                    let temp_heml = ``
+                    for(let i = 0; i < rows.length; i++){
+
+
+
+                        let friend_a = rows[i]['friends_a']
+                        let friend_b = rows[i]['friends_b']
+                        let isFriend = rows[i]['friends_isFriend']
+
+                        console.log(friend_a)
+                        console.log(friend_b)
+                        console.log(isFriend)
+                        // # 접속한 userA의 경우 표현할 것
+                        // # friend_a가 userA / isFriend: 0   친구 신청 중
+                        // # friend_a가 userA / isFriend: 1   내 친구
+                        // # friend_b가 userA / isFriend: 0   친구 수락하기 전
+                        // # friend_b가 userA / isFriend: 1   내 친구
+
+                        // useraA 부분 나중에 JWT로 실제 해당 접속 아이디 넣기
+                        if (friend_a == "userA" && isFriend == 0) {
+                            temp_heml = `${i + 1}. (친구 신청 중) ${friend_b}<br>`
+                            // 친구 a가 신청했던 친구 b가 신청했던 친구일경우 상태는 똑같음
+                        }else if( ((friend_a == "userA") && (isFriend == 1)) || ((friend_b == "userA") && (isFriend == 1 ))){
+                            temp_heml = `${i + 1}. (내 친구) ${friend_b}<br>`
+                        }else if(friend_b == "userA" && isFriend == 0){
+                            temp_heml = `${i + 1}. (친구 수락하기 ) ${friend_a} <br>`
+                        }
+
+                        $('#showFriend').append(temp_heml)
+                    }
+
+                }
+        });
+
+       }
+
+    </script>
+
+
+
+</head>
+<body>
+
+<button onclick="addFriend()"> 친구추가 테스트 </button>
+
+<button onclick="showFriend()"> 친구보기 테스트 </button>
+
+<div id="showFriend">
+
+
+</div>
+
+</body>
+</html>
