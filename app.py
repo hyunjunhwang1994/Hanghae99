@@ -96,7 +96,7 @@ def written():
 def written_get(post_num):
     write_list = list(db.crud.find({}, {'_id': False}))
     return jsonify({'written': write_list})
-# edit 쪽에 보내야 할 듯.
+# edit 쪽에 보내야 할 듯.d
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
