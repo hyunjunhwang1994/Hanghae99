@@ -1,9 +1,13 @@
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
+<<<<<<< Updated upstream
 from pymongo import MongoClient
 import certifi
 import jwt
 import datetime
 import hashlib
+=======
+import math
+>>>>>>> Stashed changes
 
 app = Flask(__name__)
 
@@ -16,8 +20,6 @@ client = MongoClient("mongodb+srv://test:sparta@cluster0.vnmg85w.mongodb.net/?re
 db = client.dbsparta
 
 SECRET_KEY = 'SPARTA'
-
-
 
 
 @app.route('/')
@@ -39,6 +41,7 @@ def join():
 
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
+<<<<<<< Updated upstream
     doc = {
         'id': id_receive,
         'pw': pw_hash,
@@ -55,6 +58,125 @@ def join():
 def login():
     id_receive=
     return None
+
+=======
+    return render_template('index.html')
+>>>>>>> Stashed changes
+
+
+
+
+
+@app.route('/pagination')
+def startPagination():
+
+    # 시작시 페이지
+    nowPage_receive = int(1)
+    postsLimit = 8  # 한 페이지당 포스트 수
+    pagesLimit = 5  # 페이지 수
+
+    # 포스트의 모든 데이터
+    all_posts = list(db.posts.find({}, {'_id': False}))
+
+    # 포스트 총 갯수
+    total_count = len(list(db.posts.find({}, {'_id': False})))
+
+    # 총 페이지 수 == 마지막 페이지
+    last_page = math.ceil(total_count / postsLimit)
+
+    # 시작 번호 계산
+    block_start = nowPage_receive % pagesLimit
+
+    #
+    block_zero = nowPage_receive - (nowPage_receive % pagesLimit) + 1
+    block_last = nowPage_receive - (nowPage_receive % 10) + pagesLimit
+
+
+
+
+    if (block_last > last_page):
+        block_last = last_page
+
+
+
+
+    print("total_count: " +str(total_count))
+    print("nowPage_receive: " + str(nowPage_receive))
+    print("block_start: " + str(block_start))
+    print("block_last: " + str(block_last))
+    print("last_page: " +str(last_page))
+
+
+
+    return render_template(
+        'pagination.html',
+        all_posts=all_posts,
+        total_count=total_count,
+        postsLimit=postsLimit,
+        nowPage_receive=nowPage_receive,
+        block_start=block_start,
+        block_last=block_last,
+        last_page=last_page
+    )
+
+@app.route('/api/pagination')
+def pagination():
+
+
+
+    # 프론트에서 넘어온 사용자의 현재 페이지
+    nowPage_receive = request.args.get("nowPage_give", 1, type=int)
+    postsLimit = 8  # 한 페이지당 포스트 수
+    pagesLimit = 5  # 페이지 수
+
+    # 포스트의 모든 데이터
+    all_posts = list(db.posts.find({}, {'_id': False}))
+
+    # 포스트 총 갯수
+    total_count = len(list(db.posts.find({}, {'_id': False})))
+
+    # 총 페이지 수 == 마지막 페이지
+    last_page = math.ceil(total_count / postsLimit)
+
+    # 시작 번호 계산
+    # block_start = nowPage_receive % pagesLimit
+
+
+    block_start = nowPage_receive - (nowPage_receive % pagesLimit) + 1
+
+    # 5와, 10의 배수 처리.
+    if(nowPage_receive % 5 == 0):
+        block_start = block_start - pagesLimit
+
+
+    block_last = block_start + (pagesLimit - 1)
+    # block_last = nowPage_receive - (nowPage_receive % 10) + pagesLimit
+
+
+    if (block_last > last_page):
+        block_last = last_page
+
+
+
+
+    print("총 포스팅 수: " +str(total_count))
+    print("현재 페이지는: " + str(nowPage_receive))
+    print("block_start: " + str(block_start))
+    print("block_last: " + str(block_last))
+    print("제일 마지막 페이지는: " +str(last_page))
+
+
+
+    return render_template(
+        'pagination.html',
+        all_posts=all_posts,
+        total_count=total_count,
+        postsLimit=postsLimit,
+        nowPage_receive=nowPage_receive,
+        block_start=block_start,
+        block_last=block_last,
+        last_page=last_page
+    )
 
 
 
