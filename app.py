@@ -53,7 +53,7 @@ def join():
 
 @app.route('/member/login', methods=["POST"])
 def login():
-    id_receive=
+    # id_receive=
     return None
 
 
@@ -63,14 +63,15 @@ def test():
 
     return render_template('test.html')
 
-@app.route('/crud')
-def crud():
-    return render_template('crud.html')
-
-
-
-@app.route('/crud/write', methods=["POST"])
+@app.route('/write')
 def write():
+    return render_template('write.html')
+
+
+
+@app.route('/write/content', methods=["POST"])
+def write_content():
+    crud_title_receive = request.form['crud_title_give']
     write_receive = request.form['write_give']
     print(write_receive)
     write_list = list(db.crud.find({}, {'_id': False}))
@@ -78,14 +79,24 @@ def write():
 
     doc = {
         # ID 추가해야함
+        'crudtitle': crud_title_receive,
         'num': count,
         'write': write_receive,
-        'done': 1
+        'editable': 1  #수정가능하면 editable 1
     }
 
     db.crud.insert_one(doc)
 
     return jsonify({'msg': '저장 완료!'})
+@app.route('/written')
+def written():
+    return render_template('written.html')
+
+@app.route("/written/content/", methods=["GET"])
+def written_get():
+    write_list = list(db.crud.find({}, {'_id': False}))
+    return jsonify({'written': write_list})
+# edit 쪽에 보내야 할 듯.
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
