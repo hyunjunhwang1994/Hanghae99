@@ -30,7 +30,7 @@ def register():
     return render_template('register.html')
 
 
-@app.route('/checkID', methods=["POST"])
+@app.route('/members/checkid', methods=["POST"])
 def checkid():
     id_receive = request.form['id_give']
     chkID = db.users.find_one({'id':id_receive})
@@ -40,12 +40,16 @@ def checkid():
         return '0'
 
 
-@app.route('/api/join', methods=["POST"])
+@app.route('/members/join', methods=["POST"])
 def join():
     id_receive = request.form['id_give']
     pw_receive = request.form['pw_give']
     nick_receive = request.form['nick_give']
     email_receive = request.form['email_give']
+
+    user_list = list(db.users.find({}, {'_id': False}))
+
+    uid = len(user_list) + 1
 
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
@@ -53,7 +57,8 @@ def join():
         'id': id_receive,
         'pw': pw_hash,
         'nick': nick_receive,
-        'email': email_receive
+        'email': email_receive,
+        'uid' : uid
     }
 
     db.users.insert_one(doc)
@@ -61,7 +66,7 @@ def join():
     return '등록 완료'
 
 
-@app.route('/api/login', methods=["POST"])
+@app.route('/members/login', methods=["POST"])
 def login():
     id_receive=request.form['id_give']
     pw_receive = request.form['pw_give']

@@ -22,6 +22,7 @@
         * {
             font-family: 'Jua', sans-serif;
         }
+
         .title {
             text-align: center;
 
@@ -31,6 +32,7 @@
 
             padding-top: 40px;
         }
+
         .myLogin {
             display: flex; /*내용물 쉽게 정렬하기 4줄 세트*/
             flex-direction: column;
@@ -38,20 +40,20 @@
             align-items: center;
 
             max-width: 500px;
-          width: 95%;
-          margin: 20px auto 0px auto;
+            width: 95%;
+            margin: 20px auto 0px auto;
 
-          box-shadow: 0px 0px 3px 0px gray;
-          padding: 20px;
+            box-shadow: 0px 0px 3px 0px gray;
+            padding: 20px;
             display: none;
         }
     </style>
     <script>
-        function open_box(){
+        function open_box() {
             $('#idBox').show()
         }
 
-        function close_box(){
+        function close_box() {
             $('#idBox').hide()
         }
 
@@ -60,7 +62,7 @@
             let pw = document.getElementById('PW').value
             $.ajax({
                 type: "POST",
-                url: "/api/login",
+                url: "/members/login",
                 data: {
                     id_give: id,
                     pw_give: pw,
@@ -78,6 +80,11 @@
                 }
             });
         }
+
+        // function mypage() {
+
+        }
+
     </script>
 
 </head>
@@ -85,6 +92,7 @@
     <div class="title">
         <p> <button onclick="open_box()" type="button" class="btn btn-outline-success">로그인</button>
             <button onclick="location.href = '/register'" type="button" class="btn btn-outline-success">회원가입</button>
+            <button onclick="mypage()" type="button" class="btn btn-outline-success">마이페이지</button>
         </p>
     </div>
     <div class="login-box">
@@ -102,8 +110,6 @@
             </p>
         </div>
     </div>
-
-
 
 </body>
 </html>
