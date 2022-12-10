@@ -102,7 +102,7 @@ def startPagination():
     pagesLimit = 5  # 페이지 수
 
     # 포스트의 모든 데이터
-    all_posts = list(db.posts.find({}, {'_id': False}))
+    all_posts = list(db.posts.find().sort('_id', pymongo.ASCENDING).limit(postsLimit))
     # 포스트 총 갯수
     total_count = len(list(db.posts.find({}, {'_id': False})))
     # 총 페이지 수 == 마지막 페이지
@@ -141,21 +141,26 @@ def startPagination():
 @app.route('/api/pagination')
 def pagination():
 
-
+    # doc = {
+    #     "title":"zflqf",
+    #     "name":"zz",
+    #     "view": 555
+    # }
+    # db.posts.insert_one(doc)
 
     # 프론트에서 넘어온 사용자의 현재 페이지
     nowPage_receive = request.args.get("nowPage_give", 1, type=int)
     postsLimit = 8  # 한 페이지당 포스트 수
     pagesLimit = 5  # 페이지 수
 
-    # 페이지로 글계산하여 보여주기
-    all_posts = list(db.posts.find().sort('_id', pymongo.ASCENDING).limit(postsLimit))
+    # nowPage -> skip()
+    #   1         0
+    #   2         8
+    #   3         16
+    #   4         24  <--|
+    skip = (nowPage_receive * 4 + 4 * (nowPage_receive % 10)) - postsLimit
 
-    print(all_posts)
-
-
-    # # 포스트의 모든 데이터
-    # all_posts = list(db.posts.find({}, {'_id': False}))
+    all_posts = list(db.posts.find().sort('_id', pymongo.ASCENDING).skip(skip).limit(postsLimit))
 
     # 포스트 총 갯수
     total_count = len(list(db.posts.find({}, {'_id': False})))
