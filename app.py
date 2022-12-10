@@ -1,3 +1,4 @@
+import pymongo
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
 from pymongo import MongoClient
 import certifi
@@ -147,8 +148,14 @@ def pagination():
     postsLimit = 8  # 한 페이지당 포스트 수
     pagesLimit = 5  # 페이지 수
 
-    # 포스트의 모든 데이터
-    all_posts = list(db.posts.find({}, {'_id': False}))
+    # 페이지로 글계산하여 보여주기
+    all_posts = list(db.posts.find().sort('_id', pymongo.ASCENDING).limit(postsLimit))
+
+    print(all_posts)
+
+
+    # # 포스트의 모든 데이터
+    # all_posts = list(db.posts.find({}, {'_id': False}))
 
     # 포스트 총 갯수
     total_count = len(list(db.posts.find({}, {'_id': False})))
