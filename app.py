@@ -13,8 +13,6 @@ app = Flask(__name__)
 ca=certifi.where()
 
 
-
-
 client = MongoClient("mongodb+srv://test:sparta@cluster0.vnmg85w.mongodb.net/?retryWrites=true&w=majority")
 db = client.dbsparta
 
