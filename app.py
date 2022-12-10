@@ -5,6 +5,9 @@ import jwt
 import datetime
 import hashlib
 
+import math
+
+
 app = Flask(__name__)
 
 ca=certifi.where()
@@ -16,8 +19,6 @@ client = MongoClient("mongodb+srv://test:sparta@cluster0.vnmg85w.mongodb.net/?re
 db = client.dbsparta
 
 SECRET_KEY = 'SPARTA'
-
-
 
 
 @app.route('/')
@@ -53,6 +54,7 @@ def join():
 
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
+
     doc = {
         'id': id_receive,
         'pw': pw_hash,
@@ -68,6 +70,7 @@ def join():
 
 @app.route('/members/login', methods=["POST"])
 def login():
+
     id_receive=request.form['id_give']
     pw_receive = request.form['pw_give']
 
@@ -87,11 +90,227 @@ def login():
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
 
+
+
+@app.route('/pagination')
+def startPagination():
+
+    # 시작시 페이지
+    nowPage_receive = int(1)
+    postsLimit = 8  # 한 페이지당 포스트 수
+    pagesLimit = 5  # 페이지 수
+
+    # 포스트의 모든 데이터
+    all_posts = list(db.posts.find({}, {'_id': False}))
+    # 포스트 총 갯수
+    total_count = len(list(db.posts.find({}, {'_id': False})))
+    # 총 페이지 수 == 마지막 페이지
+    last_page = math.ceil(total_count / postsLimit)
+    # 시작 번호 계산
+    block_start = nowPage_receive % pagesLimit
+    #
+    block_zero = nowPage_receive - (nowPage_receive % pagesLimit) + 1
+    block_last = nowPage_receive - (nowPage_receive % 10) + pagesLimit
+
+    if (block_last > last_page):
+        block_last = last_page
+
+
+
+
+    print("total_count: " +str(total_count))
+    print("nowPage_receive: " + str(nowPage_receive))
+    print("block_start: " + str(block_start))
+    print("block_last: " + str(block_last))
+    print("last_page: " +str(last_page))
+
+
+
+    return render_template(
+        'pagination.html',
+        all_posts=all_posts,
+        total_count=total_count,
+        postsLimit=postsLimit,
+        nowPage_receive=nowPage_receive,
+        block_start=block_start,
+        block_last=block_last,
+        last_page=last_page
+    )
+
+@app.route('/api/pagination')
+def pagination():
+
+
+
+    # 프론트에서 넘어온 사용자의 현재 페이지
+    nowPage_receive = request.args.get("nowPage_give", 1, type=int)
+    postsLimit = 8  # 한 페이지당 포스트 수
+    pagesLimit = 5  # 페이지 수
+
+    # 포스트의 모든 데이터
+    all_posts = list(db.posts.find({}, {'_id': False}))
+
+    # 포스트 총 갯수
+    total_count = len(list(db.posts.find({}, {'_id': False})))
+
+    # 총 페이지 수 == 마지막 페이지
+    last_page = math.ceil(total_count / postsLimit)
+
+    # 시작 번호 계산
+    # block_start = nowPage_receive % pagesLimit
+
+
+    block_start = nowPage_receive - (nowPage_receive % pagesLimit) + 1
+
+    # 5와, 10의 배수 처리.
+    if(nowPage_receive % 5 == 0):
+        block_start = block_start - pagesLimit
+    block_last = block_start + (pagesLimit - 1)
+
+    if (block_last > last_page):
+        block_last = last_page
+
+    print("총 포스팅 수: " +str(total_count))
+    print("현재 페이지는: " + str(nowPage_receive))
+    print("block_start: " + str(block_start))
+    print("block_last: " + str(block_last))
+    print("제일 마지막 페이지는: " +str(last_page))
+
+    return render_template(
+        'pagination.html',
+        all_posts=all_posts,
+        total_count=total_count,
+        postsLimit=postsLimit,
+        nowPage_receive=nowPage_receive,
+        block_start=block_start,
+        block_last=block_last,
+        last_page=last_page
+    )
+
+
+
+@app.route('/addfriend')
+def goFriend():
+    return render_template("friendtest.html")
+
+@app.route('/api/addfriend', methods=["POST"])
+def addFriend():
+    # userA_receive = request.form['userA'] # 유저 세션이나 JWT 확인 (현재 유저)
+    # userB_receive = request.form['userB'] # 추가할 유저 -> html에서 클릭시 해당유저 id 가지고옴
+    # test
+    currentUser_receive = "qfqfqf"
+    targetUser_receive = "userA"
+
+
+    doc = {
+        'friends_currentUser': currentUser_receive,
+        'friends_targetUser': targetUser_receive,
+        'friends_isFriend': 0}
+
+    db.friends.insert_one(doc)
+
+    return render_template('index.html')
+
+@app.route('/api/showfriend', methods=['POST'])
+def showFriend():
+    # userA_receive = request.form['userA'] # 유저 세션이나 JWT 확인 (현재 유저)
+
+    # 나중에 JWT로 사용자 ID넣기
+    currentUser_receive = "userA"
+
+    # 접속한 userA의 경우 표현할 것
+    # friend_a가 userA / isFriend: 0   친구 신청 중
+    # friend_a가 userA / isFriend: 1   내 친구
+
+    # friend_b가 userA / isFriend: 0   친구 수락하기 전
+    # friend_b가 userA / isFriend: 1   내 친구
+    all_friends = list(db.friends.find({"$or": [{'friends_currentUser': currentUser_receive}, {"friends_targetUser": currentUser_receive}]},{'_id':False}))
+
+    print("서버 단 친구 목록보기 " + str(all_friends))
+
+    return jsonify(all_friends)
+
+
+
+@app.route('/api/deletefriend', methods=['POST'])
+def deleteFriend():
+
+    currentUser_receive = request.form['currentUser_give'] ## 나
+    targetUser_receive = request.form['targetUser_give']
+    order = request.form["order"]
+
+    # 삭제의 경우 내가 userB (상대방이 친구추가 한 경우)이여도 삭제가 가능해야 한다.
+    # -> 삭제할 아이디와 내 아이디가 일치하는 경우에만 삭제 ( friends_a, friends_b 순서상관없이 )
+
+    # 경우의 수
+    # a = 나 b = 유저  (삭제)
+    # a = 유저 b = 나  (삭제)
+    print(currentUser_receive)
+    print(targetUser_receive)
+    print(order)
+
+    if(order == "ab"):
+        db.friends.delete_one({'friends_currentUser': currentUser_receive, 'friends_targetUser': targetUser_receive})
+
+    if(order == "ba"):
+        db.friends.delete_one({'friends_targetUser': currentUser_receive, 'friends_currentUser':targetUser_receive })
+
+    return render_template('index.html')
+
+@app.route('/api/permitfriend', methods=['POST'])
+def permitFriend():
+
+    currentUser_receive = request.form['currentUser_give']
+    targetUser_receive = request.form['targetUser_give']
+
+
+
+    db.friends.update_one({'friends_currentUser': currentUser_receive ,'friends_targetUser': targetUser_receive }, {'$set': {'friends_isFriend': 1}})
+
+
+
+    return render_template('index.html')
+
+
 @app.route('/test')
 def test():
 
     return render_template('test.html')
 
+@app.route('/write')
+def write():
+    return render_template('write.html')
+
+
+
+@app.route('/write/content', methods=["POST"])
+def write_content():
+    crud_title_receive = request.form['crud_title_give']
+    write_receive = request.form['write_give']
+    print(write_receive)
+    write_list = list(db.crud.find({}, {'_id': False}))
+    count = len(write_list) + 1  # len() = ~의 리스트 수
+
+    doc = {
+        # ID 추가해야함
+        'crudtitle': crud_title_receive,
+        'num': count,
+        'write': write_receive,
+        'editable': 1  #수정가능하면 editable 1
+    }
+
+    db.crud.insert_one(doc)
+
+    return jsonify({'msg': '저장 완료!'})
+@app.route('/written')
+def written():
+    return render_template('written.html')
+
+@app.route("/written/content/", methods=["GET"])
+def written_get():
+    write_list = list(db.crud.find({}, {'_id': False}))
+    return jsonify({'written': write_list})
+# edit 쪽에 보내야 할 듯.
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
