@@ -57,11 +57,35 @@ def login():
     return None
 
 
+
 @app.route('/test')
 def test():
 
     return render_template('test.html')
 
+@app.route('/crud')
+def crud():
+    return render_template('crud.html')
+
+
+
+@app.route('/crud/write', methods=["POST"])
+def write():
+    write_receive = request.form['write_give']
+    print(write_receive)
+    write_list = list(db.crud.find({}, {'_id': False}))
+    count = len(write_list) + 1  # len() = ~의 리스트 수
+
+    doc = {
+        # ID 추가해야함
+        'num': count,
+        'write': write_receive,
+        'done': 1
+    }
+
+    db.crud.insert_one(doc)
+
+    return jsonify({'msg': '저장 완료!'})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
