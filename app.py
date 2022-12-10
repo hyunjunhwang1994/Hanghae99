@@ -75,12 +75,12 @@ def write_content():
     write_receive = request.form['write_give']
     print(write_receive)
     write_list = list(db.crud.find({}, {'_id': False}))
-    count = len(write_list) + 1  # len() = ~의 리스트 수
+    post_num = len(write_list) + 1  # len() = ~의 리스트 수
 
     doc = {
         # ID 추가해야함
         'crudtitle': crud_title_receive,
-        'num': count,
+        'post_num': post_num,
         'write': write_receive,
         'editable': 1  #수정가능하면 editable 1
     }
@@ -92,8 +92,8 @@ def write_content():
 def written():
     return render_template('written.html')
 
-@app.route("/written/content/", methods=["GET"])
-def written_get():
+@app.route("/written/content/<int:post_num>", methods=["GET"])
+def written_get(post_num):
     write_list = list(db.crud.find({}, {'_id': False}))
     return jsonify({'written': write_list})
 # edit 쪽에 보내야 할 듯.
