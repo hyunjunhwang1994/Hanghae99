@@ -30,7 +30,17 @@ def register():
     return render_template('register.html')
 
 
-@app.route('/member/join', methods=["POST"])
+@app.route('/checkID', methods=["POST"])
+def checkid():
+    id_receive = request.form['id_give']
+    chkID = db.users.find_one({'id':id_receive})
+    if chkID == None:
+        return '1'
+    if chkID != None:
+        return '0'
+
+
+@app.route('/api/join', methods=["POST"])
 def join():
     id_receive = request.form['id_give']
     pw_receive = request.form['pw_give']
@@ -48,10 +58,10 @@ def join():
 
     db.users.insert_one(doc)
 
-    return '0'
+    return '등록 완료'
 
 
-@app.route('/member/login', methods=["POST"])
+@app.route('/api/login', methods=["POST"])
 def login():
     id_receive=request.form['id_give']
     pw_receive = request.form['pw_give']
@@ -59,13 +69,18 @@ def login():
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
     val = db.users.find_one({'id': id_receive,'pw':pw_hash})
-    print(id_receive)
 
-    print(pw_hash)
+    if val != None:
+        payload = {
+            'id': id_receive,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=5)
+        }
+        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+        return jsonify({'result': 'success', 'token': token})
 
-    print(val)
+    if val == None:
+        return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
-    return '1'
 
 @app.route('/test')
 def test():
