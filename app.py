@@ -93,6 +93,54 @@ def login():
 
 
 
+
+@app.route('/api/likes')
+def click_likes():
+
+
+    # # 해당 사용자가 첫 좋아요 인지, 두번째 이상의 좋아요인지 확인
+    # # insert와 updat를 확인하기위해 id는 임의의 설정
+    # id = "human5"
+    # find_user = db.likes.find_one({'id': id})
+    # # 해당 유저가 좋아요 를 1번이라도 했다면 push
+    # if(find_user != None):
+    #     query = {"id": id}
+    #     new_values = {
+    #         "$push": {"likes_post": 6}
+    #     }
+    #     db.likes.update_one(query, new_values)
+    # # 좋아요를 한적이 없다면 insert로 테이블 구조 생성
+    # else:
+    #     doc_array1 = {"id":id, "likes_post":[1]}
+    #     db.likes.insert_one(doc_array1)
+
+
+
+    # id = "honggildong"
+    # post_id = 2
+    # find_user = db.likes.find_one({"$and": [{'id':id},{"likes_post":{"$size":1}}]})
+    #
+    # if(find_user == None):
+    #     query = {"id": id}
+    #     new_values = {
+    #         "$pull": {"likes_post": post_id}
+    #     }
+    #     db.likes.update_one(query, new_values)
+    # else:
+    #     doc_array1 = {"id":id}
+    #     db.likes.delete_one(doc_array1)
+
+    # 1. 중복 좋아요 방지
+    #
+    #
+    # 2. 해당 글 likes 1 증가
+    # click_receive = request.form["click_give"]
+
+
+
+
+    return "124"
+
 @app.route('/pagination')
 def startPagination():
 

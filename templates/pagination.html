@@ -19,7 +19,29 @@
 <!--        last_page=last_page-->
 
 
+<!-- 글 띄울 때 사용자가 어떤글에 어떤글을 좋아요
+눌렀는지 확인 후 꽉찬 하트 표시
+A사용자의 5번글에 Likes가 1인지 뭘로 확인 ?
 
+Likes DB ( 어떤 사용자가 어떤 포스트에 라이크를 눌렀는지 확인 )
+아래와 같이 ? (좋아요를 빼면 아래 데 포스트 아이디 삭제 좋아요)
+post_id를 배열로 다루기
+id          post_id
+A              1, 3
+B              3
+
+
+Post DB ( 게시글의 Likes가 몇인지만 확인 )
+post_id      Likes
+1               1
+2               0
+3               2
+
+
+
+
+
+-->
 {% if (total_count | string) | length != 0 %}
 <table>
     <thead>
