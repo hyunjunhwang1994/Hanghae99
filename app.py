@@ -29,6 +29,19 @@ def register():
     return render_template('register.html')
 
 
+@app.route('/mypage', methods=['GET'])
+def validate():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        val_ID = db.users.find_one({'id': payload['id']}, {'_id': False})
+        return render_template('myPage.html')
+    except jwt.ExpiredSignatureError:
+        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+    except jwt.exceptions.DecodeError:
+        return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+
+
 @app.route('/members/checkid', methods=["POST"])
 def checkid():
     id_receive = request.form['id_give']
@@ -49,9 +62,7 @@ def join():
     user_list = list(db.users.find({}, {'_id': False}))
 
     uid = len(user_list) + 1
-
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
-
 
     doc = {
         'id': id_receive,
@@ -73,21 +84,20 @@ def login():
     pw_receive = request.form['pw_give']
 
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
-
     val = db.users.find_one({'id': id_receive,'pw':pw_hash})
+
+
 
     if val != None:
         payload = {
             'id': id_receive,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=5)
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=3)
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
         return jsonify({'result': 'success', 'token': token})
 
     if val == None:
-        return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
-
-
+        return jsonify({'result': 'fail', 'msg': "아이디/비밀번호가 일치하지 않습니다."})
 
 
 @app.route('/pagination')
@@ -134,6 +144,7 @@ def startPagination():
         block_last=block_last,
         last_page=last_page
     )
+
 
 @app.route('/api/pagination')
 def pagination():

@@ -82,9 +82,23 @@
             });
         }
 
-        // // function mypage() {
-        //
-        // }
+        function openMy() {
+            $.ajax({
+                type: "GET",
+                url: "/mypage",
+                data: {},
+                success: function (response) {
+                    location.href='/mypage'
+                    if (response['result'] == 'fail') {
+                        location.href='/'
+                        return alert(response['msg'])
+                    }
+                    if (response['result'] == 'success') {
+                        return alert('마이페이지로 이동합니다.')
+                    }
+                }
+            })
+        }
 
     </script>
 
@@ -93,7 +107,7 @@
     <div class="title">
         <p> <button onclick="open_box()" type="button" class="btn btn-outline-success">로그인</button>
             <button onclick="location.href = '/register'" type="button" class="btn btn-outline-success">회원가입</button>
-            <button onclick="mypage()" type="button" class="btn btn-outline-success">마이페이지</button>
+            <button onclick="openMy()" type="button" class="btn btn-outline-success">마이페이지</button>
         </p>
     </div>
     <div class="login-box">
