@@ -7,6 +7,45 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
+
+
+
+
+
+    <script>
+
+             function cancelLike(post_id) {
+
+            $.ajax({
+                type: "POST",
+                url: "/api/cancellike",
+                data: {
+                    click_give : post_id
+                },
+                success: function (response) {
+                    window.location.reload()
+
+                }
+            });
+
+        }
+
+
+                     function clickLike(post_id) {
+
+            $.ajax({
+                type: "POST",
+                url: "/api/clicklike",
+                data: {
+                    click_give : post_id
+                },
+                success: function (response) {
+                    window.location.reload()
+                }
+            });
+
+        }
+    </script>
 </head>
 <body>
 
@@ -49,7 +88,6 @@ post_id      Likes
         <td>번호</td>
         <td>제목</td>
         <td>이름</td>
-        <td>날짜</td>
         <td>조회수</td>
     </tr>
     </thead>
@@ -58,10 +96,44 @@ post_id      Likes
     {% for post in all_posts %}
     <tr>
         <!-- 게시물 순서대로 번호 부여하기 -->
-        <td>{{loop.index + (nowPage_receive - 1) * postsLimit}}</td>
-        <td><a href="">{{post.title}}</a></td>
-        <td>{{post.name}}</td>
-        <td>{{post.view}}</td>
+        <!-- 아래 루프 인덱스 없애고 해당 게시글 db의 포스트번호 불러오기 -->
+<!--        <td>{{loop.index + (nowPage_receive - 1) * postsLimit}}</td>-->
+        <td>{{post.post_num}}</td>
+        <td><a href="">{{post.crudtitle}}</a></td>
+<!--        <td>{{post.name}}</td>-->
+<!--        <td>{{post.view}}</td>-->
+
+        {% set index = loop.index + (nowPage_receive - 1) * postsLimit %}
+
+        {% if (likes_array | string) | length != 0 %}
+
+        {% for like in likes_array %}
+        {% if like == index %}
+        <td>
+            <button class="like" onclick="cancelLike('{{ post.post_num }}')">❤️</button>
+        </td>
+        {% endif %}
+        {% endfor %}
+
+        {% for like in likes_array %}
+
+        {% if like == post.post_num %}
+        {% break %}
+        {% endif %}
+
+        {% if ((like != post.post_num) and ( like == 0)): %}
+        <td>
+            <button class="like" onclick="clickLike('{{ post.post_num }}')">️🤍</button>
+        </td>
+        {% break %}
+        {% endif %}
+        {% endfor %}
+
+
+
+
+
+        {% endif %}
     </tr>
     {% endfor %}
     <!-- 반복되는 구간 끝 -->
@@ -111,6 +183,8 @@ post_id      Likes
 </nav>
 
 {% endif %}
+
+
 
 </body>
 </html>

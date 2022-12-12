@@ -9,12 +9,13 @@
 
     <script>
 
-        function addFriend() {
+        function addFriend(user_id) {
+
 
             $.ajax({
                 type: "POST",
                 url: "/api/addfriend",
-                data: {},
+                data: {targetUser_give:user_id},
                 success: function (response) {
 
                 }
@@ -133,9 +134,27 @@
 </head>
 <body>
 
-<button onclick="addFriend()"> 친구추가 테스트</button>
+
 
 <button onclick="showFriend()"> 친구보기 테스트</button>
+
+<div id="all_friends" style="width: 300px;">
+
+    틴구 목록<br>
+
+    {% for user in all_users_info %}
+        {{ user['nick'] }}
+        {{ user['id'] }}
+        {% set user_id = user["id"] %}
+
+        <button onclick="addFriend('{{user_id}}')" style="width: 150px;"> 친구로 결정했다. </button><br>
+
+    {% endfor %}
+
+
+</div>
+
+
 
 <div id="showFriend">
 

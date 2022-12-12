@@ -1,25 +1,26 @@
 import pymongo
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
+from jinja2 import Environment
 from pymongo import MongoClient
 import certifi
 import jwt
 import datetime
 import hashlib
-
 import math
 
 
 app = Flask(__name__)
+app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 
 ca=certifi.where()
-
-
 
 
 client = MongoClient("mongodb+srv://test:sparta@cluster0.vnmg85w.mongodb.net/?retryWrites=true&w=majority")
 db = client.dbsparta
 
 SECRET_KEY = 'SPARTA'
+
+
 
 
 @app.route('/')
@@ -94,55 +95,93 @@ def login():
 
 
 
-@app.route('/api/likes')
+
+
+
+
+
+@app.route('/api/clicklike', methods=['POST'])
 def click_likes():
 
+    token_receive = request.cookies.get('mytoken')
 
-    # # 해당 사용자가 첫 좋아요 인지, 두번째 이상의 좋아요인지 확인
-    # # insert와 updat를 확인하기위해 id는 임의의 설정
-    # id = "human5"
-    # find_user = db.likes.find_one({'id': id})
-    # # 해당 유저가 좋아요 를 1번이라도 했다면 push
-    # if(find_user != None):
-    #     query = {"id": id}
-    #     new_values = {
-    #         "$push": {"likes_post": 6}
-    #     }
-    #     db.likes.update_one(query, new_values)
-    # # 좋아요를 한적이 없다면 insert로 테이블 구조 생성
-    # else:
-    #     doc_array1 = {"id":id, "likes_post":[1]}
-    #     db.likes.insert_one(doc_array1)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_id = payload['id']
 
+    except jwt.ExpiredSignatureError:
+        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+    except jwt.exceptions.DecodeError:
+        return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
 
+    click_receive = request.form["click_give"]
+    print("좋아요 한 글 번호" + str(click_receive))
 
-    # id = "honggildong"
-    # post_id = 2
-    # find_user = db.likes.find_one({"$and": [{'id':id},{"likes_post":{"$size":1}}]})
-    #
-    # if(find_user == None):
-    #     query = {"id": id}
-    #     new_values = {
-    #         "$pull": {"likes_post": post_id}
-    #     }
-    #     db.likes.update_one(query, new_values)
-    # else:
-    #     doc_array1 = {"id":id}
-    #     db.likes.delete_one(doc_array1)
+    post_id = int(click_receive)
 
-    # 1. 중복 좋아요 방지
-    #
-    #
-    # 2. 해당 글 likes 1 증가
-    # click_receive = request.form["click_give"]
+    find_user = db.likes.find_one({'id': user_id})
 
 
+    # 해당 유저가 좋아요 를 1번이라도 했다면 push
+    if(find_user != None):
+        query = {"id": user_id}
+        new_values = {
+            "$push": {"likes_post": post_id}
+        }
+        db.likes.update_one(query, new_values)
+        print("데이터 저장완료 : " + str(post_id))
+    # 좋아요를 한적이 없다면 insert로 테이블 구조 생성
+    else:
+        doc_array1 = {"id":user_id, "likes_post":[post_id]}
+        db.likes.insert_one(doc_array1)
+        print("데이터 저장완료 : " + str(post_id))
+    return ""
+@app.route('/api/cancellike', methods=["POST"])
+def cancel_likes():
 
 
-    return "124"
+    token_receive = request.cookies.get('mytoken')
+
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_id = payload['id']
+
+    except jwt.ExpiredSignatureError:
+        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+    except jwt.exceptions.DecodeError:
+        return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+
+    click_receive = request.form["click_give"]
+
+    post_id = int(click_receive)
+    find_user = db.likes.find_one({"$and": [{'id':user_id},{"likes_post":{"$size":1}}]})
+
+    if(find_user == None):
+        query = {"id": user_id}
+        new_values = {
+            "$pull": {"likes_post": post_id}
+        }
+        db.likes.update_one(query, new_values)
+        print("데이터삭제")
+    else:
+        doc_array1 = {"id":user_id}
+        db.likes.delete_one(doc_array1)
+        print("테이블삭제")
+    return ""
 
 @app.route('/pagination')
 def startPagination():
+
+    token_receive = request.cookies.get('mytoken')
+
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_id = payload['id']
+
+    except jwt.ExpiredSignatureError:
+        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+    except jwt.exceptions.DecodeError:
+        return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
 
     # 시작시 페이지
     nowPage_receive = int(1)
@@ -150,28 +189,69 @@ def startPagination():
     pagesLimit = 5  # 페이지 수
 
     # 포스트의 모든 데이터
-    all_posts = list(db.posts.find().sort('_id', pymongo.ASCENDING).limit(postsLimit))
+    all_posts = list(db.crud.find().sort('_id', pymongo.ASCENDING).limit(postsLimit))
     # 포스트 총 갯수
-    total_count = len(list(db.posts.find({}, {'_id': False})))
+    total_count = len(list(db.crud.find({}, {'_id': False})))
     # 총 페이지 수 == 마지막 페이지
     last_page = math.ceil(total_count / postsLimit)
-    # 시작 번호 계산
+    # 해당 글의 글번호 ( 8개씩 잘라서 )
+
+
+    # 블록 계산
     block_start = nowPage_receive % pagesLimit
-    #
     block_zero = nowPage_receive - (nowPage_receive % pagesLimit) + 1
     block_last = nowPage_receive - (nowPage_receive % 10) + pagesLimit
+
+
 
     if (block_last > last_page):
         block_last = last_page
 
+    likes_post = db.likes.find_one({"id": user_id},{'likes_post':1,'_id':False})
+
+    if likes_post != None:
+        array = likes_post['likes_post']
+        array.sort()
+        print("정렬하기전 likes_post : " + str(array))
+        likes_array = array[0:8]
+        print("정렬 후 likes_post :" + str(likes_array))
+    else:
+        likes_array = [0,0,0,0,0,0,0,0]
+        return render_template(
+            'pagination.html',
+            all_posts=all_posts,
+            total_count=total_count,
+            postsLimit=postsLimit,
+            nowPage_receive=nowPage_receive,
+            block_start=block_start,
+            block_last=block_last,
+            last_page=last_page,
+            likes_array=likes_array
+        )
 
 
+    for post in all_posts:
+        i = post['post_num']
 
-    print("total_count: " +str(total_count))
-    print("nowPage_receive: " + str(nowPage_receive))
-    print("block_start: " + str(block_start))
-    print("block_last: " + str(block_last))
-    print("last_page: " +str(last_page))
+
+    for post in likes_array[:]:
+        if i < post:
+            likes_array.remove(post)
+
+
+    # 빈값이 있는경우 +  0으로 값넣기
+    for x in range(postsLimit - len(likes_array)):
+        likes_array.append(0)
+
+    likes_array.sort(reverse=True)
+    print(likes_array)
+
+
+    # print("total_count: " +str(total_count))
+    # print("nowPage_receive: " + str(nowPage_receive))
+    # print("block_start: " + str(block_start))
+    # print("block_last: " + str(block_last))
+    # print("last_page: " +str(last_page))
 
 
 
@@ -183,18 +263,24 @@ def startPagination():
         nowPage_receive=nowPage_receive,
         block_start=block_start,
         block_last=block_last,
-        last_page=last_page
+        last_page=last_page,
+        likes_array=likes_array
     )
 
 @app.route('/api/pagination')
 def pagination():
 
-    # doc = {
-    #     "title":"zflqf",
-    #     "name":"zz",
-    #     "view": 555
-    # }
-    # db.posts.insert_one(doc)
+    token_receive = request.cookies.get('mytoken')
+
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_id = payload['id']
+
+    except jwt.ExpiredSignatureError:
+        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+    except jwt.exceptions.DecodeError:
+        return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+
 
     # 프론트에서 넘어온 사용자의 현재 페이지
     nowPage_receive = request.args.get("nowPage_give", 1, type=int)
@@ -208,17 +294,13 @@ def pagination():
     #   4         24  <--|
     skip = (nowPage_receive * 4 + 4 * (nowPage_receive % 10)) - postsLimit
 
-    all_posts = list(db.posts.find().sort('_id', pymongo.ASCENDING).skip(skip).limit(postsLimit))
+    all_posts = list(db.crud.find().sort('_id', pymongo.ASCENDING).skip(skip).limit(postsLimit))
 
     # 포스트 총 갯수
-    total_count = len(list(db.posts.find({}, {'_id': False})))
+    total_count = len(list(db.crud.find({}, {'_id': False})))
 
     # 총 페이지 수 == 마지막 페이지
     last_page = math.ceil(total_count / postsLimit)
-
-    # 시작 번호 계산
-    # block_start = nowPage_receive % pagesLimit
-
 
     block_start = nowPage_receive - (nowPage_receive % pagesLimit) + 1
 
@@ -230,11 +312,64 @@ def pagination():
     if (block_last > last_page):
         block_last = last_page
 
-    print("총 포스팅 수: " +str(total_count))
-    print("현재 페이지는: " + str(nowPage_receive))
-    print("block_start: " + str(block_start))
-    print("block_last: " + str(block_last))
-    print("제일 마지막 페이지는: " +str(last_page))
+
+    likes_post = db.likes.find_one({"id": user_id},{'likes_post':1,'_id':False})
+
+    if likes_post != None:
+        for post in all_posts:
+            i = post['post_num']
+            n = post['post_num']
+
+        likes_array = []
+        for x in range(len(likes_post['likes_post']) + 1):
+            testList = likes_post['likes_post']
+
+            # 2페이지라 가정
+            # 16 ~ 9 까지의 데이터만 있으면됨.
+            if i in testList:
+                print("있다.-------=-=" + str(i))
+                likes_array.append(i)
+                i -= 1
+
+                if i == (n - (postsLimit + 1)):
+                    break
+            else:
+                print("없다." + str(i))
+                i -= 1
+    else:
+        likes_array = [0,0,0,0,0,0,0,0]
+        return render_template(
+            'pagination.html',
+            all_posts=all_posts,
+            total_count=total_count,
+            postsLimit=postsLimit,
+            nowPage_receive=nowPage_receive,
+            block_start=block_start,
+            block_last=block_last,
+            last_page=last_page,
+            likes_array=likes_array
+        )
+
+
+    i = 0
+    for post in all_posts:
+        i = post['post_num']
+
+    # 포스팅 하는 post_num의 최댓값 보다 큰경우 삭제
+    for post in likes_array[:]:
+        if i < post:
+            likes_array.remove(post)
+
+
+    # 빈값이 있는경우 +  0으로 값넣기
+    for x in range(postsLimit - len(likes_array)):
+        likes_array.append(0)
+
+    likes_array.sort(reverse=True)
+    print("페이지에 적용될 Likes: " + str(likes_array))
+
+
+
 
     return render_template(
         'pagination.html',
@@ -244,21 +379,42 @@ def pagination():
         nowPage_receive=nowPage_receive,
         block_start=block_start,
         block_last=block_last,
-        last_page=last_page
+        last_page=last_page,
+        likes_array=likes_array
     )
 
 
 
 @app.route('/addfriend')
 def goFriend():
-    return render_template("friendtest.html")
+
+    # 모든 유저 불러와 뿌리기 ?
+    all_users_info = list(db.users.find({}, {'_id': False,'pw':False, 'email':False}))
+
+    print(all_users_info)
+
+    return render_template("friendtest.html",
+                           all_users_info=all_users_info)
 
 @app.route('/api/addfriend', methods=["POST"])
 def addFriend():
     # userA_receive = request.form['userA'] # 유저 세션이나 JWT 확인 (현재 유저)
     # userB_receive = request.form['userB'] # 추가할 유저 -> html에서 클릭시 해당유저 id 가지고옴
     # test
-    currentUser_receive = "qfqfqf"
+
+    token_receive = request.cookies.get('mytoken')
+
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_id = payload['id']
+
+    except jwt.ExpiredSignatureError:
+        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+    except jwt.exceptions.DecodeError:
+        return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+
+
+    currentUser_receive = user_id
     targetUser_receive = "userA"
 
 
