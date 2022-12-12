@@ -203,18 +203,33 @@ def startPagination():
     block_last = nowPage_receive - (nowPage_receive % 10) + pagesLimit
 
 
+    skip = (nowPage_receive * 4 + 4 * (nowPage_receive % 10)) - postsLimit
 
     if (block_last > last_page):
         block_last = last_page
 
+
     likes_post = db.likes.find_one({"id": user_id},{'likes_post':1,'_id':False})
 
     if likes_post != None:
-        array = likes_post['likes_post']
-        array.sort()
-        print("정렬하기전 likes_post : " + str(array))
-        likes_array = array[0:8]
-        print("정렬 후 likes_post :" + str(likes_array))
+        for post in all_posts:
+            i = post['post_num']
+            n = post['post_num']
+
+        likes_array = []
+        for x in range(len(likes_post['likes_post']) + 1):
+            testList = likes_post['likes_post']
+
+            if i in testList:
+                print("있다.-------=-=" + str(i))
+                likes_array.append(i)
+                i -= 1
+
+                if i == (skip):
+                    break
+            else:
+                print("없다." + str(i))
+                i -= 1
     else:
         likes_array = [0,0,0,0,0,0,0,0]
         return render_template(
@@ -230,10 +245,16 @@ def startPagination():
         )
 
 
+
+
+
+
+
+    i = 0
     for post in all_posts:
         i = post['post_num']
 
-
+    # 포스팅 하는 post_num의 최댓값 보다 큰경우 삭제
     for post in likes_array[:]:
         if i < post:
             likes_array.remove(post)
@@ -244,14 +265,8 @@ def startPagination():
         likes_array.append(0)
 
     likes_array.sort(reverse=True)
-    print(likes_array)
+    print("페이지에 적용될 Likes: " + str(likes_array))
 
-
-    # print("total_count: " +str(total_count))
-    # print("nowPage_receive: " + str(nowPage_receive))
-    # print("block_start: " + str(block_start))
-    # print("block_last: " + str(block_last))
-    # print("last_page: " +str(last_page))
 
 
 
@@ -324,15 +339,11 @@ def pagination():
         for x in range(len(likes_post['likes_post']) + 1):
             testList = likes_post['likes_post']
 
-            # 2페이지라 가정
-            # 16 ~ 9 까지의 데이터만 있으면됨.
-            # 글이 모잘라    13 ~ 9 페이지가 있다면? i, n으로 확인
             if i in testList:
                 print("있다.-------=-=" + str(i))
                 likes_array.append(i)
                 i -= 1
-                # n 13이면 아래는 8 이되야 끝나야해
-                # n 이 15여도 8이되야끝나야해
+
                 if i == (skip):
                     break
             else:
