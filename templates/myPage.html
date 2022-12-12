@@ -132,24 +132,6 @@
             transform: rotate(45deg);
         }
 
-        .popup_box .popup_btn p.close_day {
-            background: #5d5d5d;
-        }
-
-        .popup_box .popup_btn p.close_day:before, .popup_box .popup_btn p.close_day:after {
-            display: none;
-        }
-
-        /*오버레이 뒷배경*/
-        .popup_overlay {
-            position: fixed;
-            top: 0px;
-            right: 0;
-            left: 0;
-            bottom: 0;
-            z-index: 1001;;
-            background: rgba(0, 0, 0, 0.5);
-        }
 
         /*popup*/
     </style>
@@ -220,42 +202,41 @@
         document.getElementById("popup_layer").style.display = "none";
     }
 
-    function editInfo(uid) {
-        alert('1')
-        $.ajax({
-            type: "GET",
-            url: "/users/"+uid,
-            data: {},
-            success: function (response) {
+    // function editInfo(nick) {
+    //     $.ajax({
+    //         type: "GET",
+    //         url: "/mypage",
+    //         data: {},
+    //         success: function (response) {
+    //
+    //         }
+    //
+    //     });
+    // }
 
-            }
-
-        });
-    }
-
-    function validate() {
-            let id = document.getElementById('ID').value
-            let pw = document.getElementById('PW').value
-            $.ajax({
-                type: "POST",
-                url: "/users/login",
-                data: {
-                    id_give: id,
-                    pw_give: pw,
-                },
-                success: function (response) {
-                    if (response['result'] == 'success') {
-                        $.cookie('mytoken', response['token']);
-                        alert('로그인 성공');
-                        window.location.href='/';
-
-                    } else {
-                        alert(response['msg'])
-                    }
-
-                }
-            });
-        }
+    // function validate() {
+    //         let id = document.getElementById('ID').value
+    //         let pw = document.getElementById('PW').value
+    //         $.ajax({
+    //             type: "POST",
+    //             url: "/users/login",
+    //             data: {
+    //                 id_give: id,
+    //                 pw_give: pw,
+    //             },
+    //             success: function (response) {
+    //                 if (response['result'] == 'success') {
+    //                     $.cookie('mytoken', response['token']);
+    //                     alert('로그인 성공');
+    //                     window.location.href='/';
+    //
+    //                 } else {
+    //                     alert(response['msg'])
+    //                 }
+    //
+    //             }
+    //         });
+    //     }
 
 </script>
 

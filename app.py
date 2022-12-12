@@ -98,12 +98,21 @@ def login():
         return jsonify({'result': 'fail', 'msg': "아이디/비밀번호가 일치하지 않습니다."})
 
 
-@app.route('/users/uid')
-def editInfo():
+@app.route('/users')
+def userInfo():
+    return render_template('users.html')
 
-    uid = int[request.form['uid']]
 
-    return 'hi'
+@app.route('/users/<nick>',methods=["GET"])
+def showInfo(nick):
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    val_ID = db.users.find_one({'id': payload['id']}, {'_id': False})
+    nick = val_ID['nick']
+    print(nick)
+
+    render_template('users.html')
+    return jsonify({'info':val_ID})
 
 
 @app.route('/pagination')
