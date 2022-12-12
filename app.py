@@ -83,7 +83,7 @@ def login():
     if val != None:
         payload = {
             'id': id_receive,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=5)
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=10)
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
         return jsonify({'result': 'success', 'token': token})
@@ -514,42 +514,130 @@ def test():
 
     return render_template('test.html')
 
-@app.route('/write')
+
+@app.route('/content/write')
 def write():
-    return render_template('write.html')
+    token_receive = request.cookies.get('mytoken')
+
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+
+        # userinfo = db.users.find_one({'id': payload['id']}, {'_id': 0})
+        return render_template('write.html')
+    except jwt.ExpiredSignatureError:
+        # 위를 실행했는데 만료시간이 지났으면 에러가 납니다.
+        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+    except jwt.exceptions.DecodeError:
+        return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
 
 
-
-@app.route('/write/content', methods=["POST"])
+@app.route('/content/write', methods=["POST"])
 def write_content():
+    token_receive = request.cookies.get('mytoken')
     crud_title_receive = request.form['crud_title_give']
     write_receive = request.form['write_give']
-    print(write_receive)
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    userinfo = db.users.find_one({'id': payload['id']}, {'_id': 0})
+    id=userinfo["id"]
+    # print(write_receive)
     write_list = list(db.crud.find({}, {'_id': False}))
+    # print(write_list)
     post_num = len(write_list) + 1  # len() = ~의 리스트 수
 
     doc = {
-        # ID 추가해야함
+        'id' : id,
         'crudtitle': crud_title_receive,
         'post_num': post_num,
         'write': write_receive,
-        'editable': 1  #수정가능하면 editable 1
     }
 
     db.crud.insert_one(doc)
 
     return jsonify({'msg': '저장 완료!'})
-@app.route('/written')
+
+
+@app.route('/content/written', methods=["GET"])
 def written():
+
+
     return render_template('written.html')
 
-@app.route("/written/content/<int:post_num>", methods=["GET"])
+
+@app.route("/content/written/<int:post_num>", methods=["GET"])
 def written_get(post_num):
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    userinfo = db.users.find_one({'id': payload['id']}, {'_id': 0})
+    user_id = payload["id"]
+    user = db.crud.find_one({'post_num': post_num})
+    # print(user)
+    id = user["id"]
+    # print(id)
+    post_num = user["post_num"]
+    crudtitle = user["crudtitle"]
+    write = user["write"]
+    write_url2 = write.replace('<figure class="media"><oembed url=', '<iframe width="560" height="315" src=')
+    write_url1 = write_url2.replace('></oembed></figure>', ' title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
+    write_url = write_url1.replace('youtu.be', 'www.youtube.com/embed')
 
-    write_list = list(db.crud.find({}, {'_id': False}))
-
-    return jsonify({'msg': '전송 완료!'})
+    return render_template('written.html',
+                           user_id=user_id,
+                           id=id,
+                           post_num=post_num,
+                           crudtitle=crudtitle,
+                           write=write,
+                           write_url=write_url,
+                           )
 # edit 쪽에 보내야 할 듯.d
+
+
+@app.route('/content/edit', methods=["POST"])
+def edit_content():
+    crud_title_receive = request.form['crud_title_edit']
+    write_receive = request.form['write_edit']
+    # print(write_receive)
+    # print(crud_title_receive)
+
+    num_receive = request.form['num_give']
+    num_receive=int(num_receive)
+    # print(num_receive)
+    # print(type(num_receive))
+
+    db.crud.update_one({'post_num': num_receive}, {'$set': {'write': write_receive}})
+    db.crud.update_one({'post_num': num_receive}, {'$set': {'crudtitle': crud_title_receive}})
+
+    return jsonify({'msg': '수정 완료!'})
+
+
+@app.route("/content/edit/<int:post_num>", methods=["GET"])
+def edit_get(post_num):
+    user = db.crud.find_one({'post_num': post_num})
+    # print(user)
+    id = user["id"]
+    post_num = user["post_num"]
+    crudtitle = user["crudtitle"]
+    write = user["write"]
+    write_url2 = write.replace('<figure class="media"><oembed url=', '<iframe width="560" height="315" src=')
+    write_url1 = write_url2.replace('></oembed></figure>', ' title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
+    write_url = write_url1.replace('youtu.be', 'www.youtube.com/embed')
+    token_receive = request.cookies.get('mytoken')
+
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_id = payload["id"]
+        if (user_id == id): return render_template('edit.html',
+                                                   user_id=user_id,
+                                                   id=id,
+                                                   post_num=post_num,
+                                                   crudtitle=crudtitle,
+                                                   write=write,
+                                                   write_url=write_url
+                                                   )
+    except jwt.ExpiredSignatureError:
+        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+    except jwt.exceptions.DecodeError:
+        return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

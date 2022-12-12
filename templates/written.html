@@ -17,30 +17,37 @@
 
 
     <script>
-         $(document).ready(function () {
-            show_written();
-        });
+
+          $(document).ready(function () {
+             show_written();
+         });
 
 
-        function show_written() {
+         function show_written(post_num) {
 
-            $.ajax({
-                type: "GET",
-                url: "/written/content/<int:post_num>",
-                data: {},
-                success: function (response) {
+             $.ajax({
+                 type: "GET",
+                 url: "/content/written" ,
+                 data: {},
+                 success: function (response) {
+                     // alert( "{{id|safe}} + {{user_id}}" )
+                     let temp_html = ``
 
-                        let crudtitle = rows['post_num']['crudtitle']
-                        let  = rows[i]['post_num']
-                        let written = rows[i]['write']
-                         let editable = rows[i]['editable']
-                         let temp_html=`    <p id = post_num>  ${crudtitle}
-            <label for="post_num">제목 </label></p>
-`
-                     }
-                }
-            });
-        }
+
+                     if( "{{id|safe}}" == "{{user_id}}"){
+                         temp_html = `
+                    <button onclick="show_edit('{{post_num|safe}}')" ,type="button" class="btn btn-outline-secondary">수정하기</button>
+                   `
+
+                 } $('#buttonadd').append(temp_html)
+                 }
+
+             });
+         }
+         function show_edit(post_num){
+             window.location.href="http://localhost:5000/content/edit/"+post_num
+
+         }
 
     </script>
 
@@ -51,22 +58,17 @@
             color: black;
         }
 
-        .ck.ck-editor {
-            width: 100%;
-            max-width: 2000px;
-        }
-
-        .ck-editor__editable {
-            height: 700px;
-        }
-
         .crud-page {
-            /* width: 100%;*/
-            /*max-width: 2000px;*/
+            /*background-color: red;*/
+
+             width: 100%;
+            max-width: 1500px;
 
             margin-top: 40px;
-            margin-left: 200px;
-            margin-right: 200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 1%;
+            box-shadow:2px 2px 2px 2px grey;
             /* display: flex;*/
             /*flex-direction: column;*/
             /*align-items: center;*/
@@ -74,32 +76,51 @@
              /*위에 내용 설정시 editor의 width가 조정이 안됨*/
         }
 
-        .crud-page > h1 {
+        /*.crud-page > h1 {*/
+
+        /*    width: 100%;*/
+        /*    max-width: 1500px;*/
+        /*    display: flex;*/
+        /*    flex-direction: column;*/
+        /*    align-items: center;*/
+        /*    justify-content: center;*/
+        /*    margin-bottom: 20px;*/
+        /*      box-shadow: 0px 3px 0px 0px blue;*/
+
+        /*}*/
+        .crud-page > h3 {
+
             width: 100%;
-            max-width: 2000px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            max-width: 1500px;
+
             margin-bottom: 20px;
+            padding-bottom:5px;
+            box-shadow: 0px 3px 0px 0px grey;
+
+
 
         }
 
-        .crud-page > div {
-            width: 100%;
-            max-width: 2000px;
+        /*.crud-page > div {*/
+        /*    width: 100%;*/
+        /*    max-width: 2000px;*/
+        /*}*/
+
+     .crudbutton {
+
+         max-width: 1500px;
+         margin-top: 10px;
+         margin-left: auto;
+         margin-right: auto;
+
+
+         display: flex;
+         flex-direction: column;
+         align-items: end;
+         justify-content: center;
         }
 
-        .crudbutton {
-            max-width: 2000px;
-            margin-top: 10px;
-            margin-bottom: 20px;
 
-            display: flex;
-            flex-direction: column;
-            align-items: end;
-            justify-content: center;
-        }
 
 
     </style>
@@ -110,11 +131,9 @@
 </head>
 <body>
 <div class="crud-page">
-    <h1 class="crpage"> 글 내용</h1>
-    <div class="form-floating mb-3">
 
-    </div>
-
+    <h3 id = "crud_title" > {{crudtitle|safe}}</h3>
+            {{ write_url|safe }}
 
 
 
@@ -123,6 +142,7 @@
 <!--        <button onclick="save_editor()" ,type="button" class="btn btn-outline-secondary">저장</button>-->
 <!--    </div>-->
 </div>
+ <div class="crudbutton" id="buttonadd"></div>
 </body>
 </html>
 

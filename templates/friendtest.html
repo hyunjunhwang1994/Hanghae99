@@ -97,15 +97,16 @@
 
         }
 
-        function deleteFriendA(friend_a, friend_b) {
+        function deleteFriendA(currentUser, targetUser) {
 
             $.ajax({
                 type: "POST",
                 url: "/api/deletefriend",
                 data: {
-                    currentUser_give: friend_a,
-                    targetUser_give: friend_b,
-                    order: "ab"
+
+                    currentUser_give: currentUser,
+                    targetUser_give: targetUser,
+                    order:"ab"
                 },
                 success: function (response) {
                     location.reload();
@@ -114,23 +115,31 @@
 
         }
 
-        function deleteFriendB(friend_b, friend_a) {
+
+        
+
+                function deleteFriendB(targetUser, currentUser) {
+
 
             $.ajax({
                 type: "POST",
                 url: "/api/deletefriend",
                 data: {
-                    currentUser_give: friend_b,
-                    targetUser_give: friend_a,
-                    order: "ba"
+
+
+
+                    currentUser_give: targetUser,
+                    targetUser_give: currentUser,
+                    order:"ba"
+
                 },
                 success: function (response) {
                     location.reload();
 
                 }
             });
-
-        }
+}
+        
 
     </script>
 
