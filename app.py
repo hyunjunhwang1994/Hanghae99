@@ -326,12 +326,14 @@ def pagination():
 
             # 2페이지라 가정
             # 16 ~ 9 까지의 데이터만 있으면됨.
+            # 글이 모잘라    13 ~ 9 페이지가 있다면? i, n으로 확인
             if i in testList:
                 print("있다.-------=-=" + str(i))
                 likes_array.append(i)
                 i -= 1
-
-                if i == (n - (postsLimit + 1)):
+                # n 13이면 아래는 8 이되야 끝나야해
+                # n 이 15여도 8이되야끝나야해
+                if i == (skip):
                     break
             else:
                 print("없다." + str(i))
@@ -349,7 +351,6 @@ def pagination():
             last_page=last_page,
             likes_array=likes_array
         )
-
 
     i = 0
     for post in all_posts:
