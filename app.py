@@ -284,18 +284,19 @@ def test():
 
     return render_template('test.html')
 
-@app.route('/write')
+
+@app.route('/content/write')
 def write():
     return render_template('write.html')
 
 
-
-@app.route('/write/content', methods=["POST"])
+@app.route('/content/write', methods=["POST"])
 def write_content():
     crud_title_receive = request.form['crud_title_give']
     write_receive = request.form['write_give']
     # print(write_receive)
     write_list = list(db.crud.find({}, {'_id': False}))
+    print(write_list)
     post_num = len(write_list) + 1  # len() = ~의 리스트 수
 
     doc = {
@@ -303,18 +304,19 @@ def write_content():
         'crudtitle': crud_title_receive,
         'post_num': post_num,
         'write': write_receive,
-        'editable': 1  #수정가능하면 editable 1
     }
 
     db.crud.insert_one(doc)
 
     return jsonify({'msg': '저장 완료!'})
-@app.route('/written')
+
+
+@app.route('/content/written')
 def written():
     return render_template('written.html')
 
 
-@app.route("/written/content/<int:post_num>", methods=["GET"])
+@app.route("/content/written/<int:post_num>", methods=["GET"])
 def written_get(post_num):
     user = db.crud.find_one({'post_num':post_num})
     # print(user)
@@ -326,42 +328,43 @@ def written_get(post_num):
     # write_url2 = write.replace('<figure class="media"><oembed url="https://youtu.be', '<iframe width="560" height="315" src="https://www.youtube.com/embed')
     # write_url1 = write_url2.replace('></oembed></figure>',' title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
 
-    write_url = write_url1.repalce('youtu.be','www.youtube.com/embed')
+    write_url = write_url1.replace('youtu.be','www.youtube.com/embed')
 
     # print(write_url)
+    # print(write_url1)
+    # print(write_url2)
+    # print(write)
 
-    print(write_url1)
-    print(write_url2)
-    print(write)
-    editable = user["editable"]
 
-    # < figure class ="media" > < oembed url="https://youtu.be/jqNrkhMx1Ow" > < / oembed > < / figure >
 
     return render_template('written.html',
                            post_num=post_num,
                            crudtitle=crudtitle,
                            write=write,
                            write_url = write_url,
-                           editable=editable)
+                          )
 # edit 쪽에 보내야 할 듯.d
 
-@app.route('/write/content/edit', methods=["POST"])
+
+@app.route('/content/edit', methods=["POST"])
 def edit_content():
-    crud_title_receive = request.form['crud_title_give']
-    write_receive = request.form['write_give']
+    crud_title_receive = request.form['crud_title_edit']
+    write_receive = request.form['write_edit']
     # print(write_receive)
-    write_list = list(db.crud.find({}, {'_id': False}))
-    post_num = len(write_list) + 1  # len() = ~의 리스트 수
+    # print(crud_title_receive)
 
-    doc = {
-        # ID 추가해야함
-        'crudtitle': crud_title_receive,
-        'post_num': post_num,
-        'write': write_receive,
-        'editable': 1  #수정가능하면 editable 1
-    }
+    num_receive = request.form['num_give']
+    num_receive=int(num_receive)
+    # print(num_receive)
+    # print(type(num_receive))
 
-@app.route("/written/content/edit/<int:post_num>", methods=["GET"])
+    db.crud.update_one({'post_num': num_receive}, {'$set': {'write': write_receive}})
+    db.crud.update_one({'post_num': num_receive}, {'$set': {'crudtitle': crud_title_receive}})
+    # 수정해야함
+    return jsonify({'msg': '수정 완료!'})
+
+
+@app.route("/content/edit/<int:post_num>", methods=["GET"])
 def edit_get(post_num):
     user = db.crud.find_one({'post_num': post_num})
     # print(user)
@@ -369,29 +372,19 @@ def edit_get(post_num):
     crudtitle = user["crudtitle"]
     write = user["write"]
     write_url2 = write.replace('<figure class="media"><oembed url=', '<iframe width="560" height="315" src=')
-    write_url1 = write_url2.replace('></oembed></figure>',
-                                    ' title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
-    # write_url2 = write.replace('<figure class="media"><oembed url="https://youtu.be', '<iframe width="560" height="315" src="https://www.youtube.com/embed')
-    # write_url1 = write_url2.replace('></oembed></figure>',' title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
+    write_url1 = write_url2.replace('></oembed></figure>', ' title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
+    write_url = write_url1.replace('youtu.be', 'www.youtube.com/embed')
 
-    write_url = write_url1.repalce('youtu.be', 'www.youtube.com/embed')
-
-    print(write)
-    editable = user["editable"]
+    # print(write)
 
     # < figure class ="media" > < oembed url="https://youtu.be/jqNrkhMx1Ow" > < / oembed > < / figure >
 
-    return render_template('written.html',
+    return render_template('edit.html',
                            post_num=post_num,
                            crudtitle=crudtitle,
                            write=write,
-                           write_url=write_url,
-                           editable=editable)
-
-
-    #수정해야함
-
-    return jsonify({'msg': '수정 완료!'})
+                           write_url=write_url
+                       )
 
 
 if __name__ == '__main__':

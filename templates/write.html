@@ -24,7 +24,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "/write/content",
+                url: "/content/write",
                 data: {write_give: myClassicEditor.getData(), crud_title_give : crud_title},
                 success: function (response) {
                     alert(response["msg"])
@@ -53,11 +53,12 @@
         .crud-page {
             /* width: 100%;*/
             /*max-width: 2000px;*/
+            /*background-color: red;*/
 
             margin-top: 40px;
             margin-left: 200px;
             margin-right: 200px;
-            /* display: flex;*/
+            /*display: flex;*/
             /*flex-direction: column;*/
             /*align-items: center;*/
             /*justify-content: center;*/
