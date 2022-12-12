@@ -19,18 +19,25 @@
     <script>
 
 
-        function save_editor() {
-             let crud_title= $('#crud_title').val()
+        function edit_editor(post_num) {
+            let crud_title= $('#crud_title').val()
+            // alert(post_num)
 
             $.ajax({
                 type: "POST",
-                url: "/content/write",
-                data: {write_give: myClassicEditor.getData(), crud_title_give : crud_title},
+                url: "/content/edit",
+                data: {write_edit: myClassicEditor.getData(), crud_title_edit : crud_title, num_give : post_num},
                 success: function (response) {
                     alert(response["msg"])
-                    // window.location.reload()
+                    window.location.href="http://localhost:5000/content/written/"+post_num
+
                 }
             });
+        }
+        function cancle_editor(post_num){
+            alert("수정 취소")
+            window.location.href="http://localhost:5000/content/written/"+post_num
+
         }
     </script>
 
@@ -53,12 +60,11 @@
         .crud-page {
             /* width: 100%;*/
             /*max-width: 2000px;*/
-            /*background-color: red;*/
 
             margin-top: 40px;
             margin-left: 200px;
             margin-right: 200px;
-            /*display: flex;*/
+            /* display: flex;*/
             /*flex-direction: column;*/
             /*align-items: center;*/
             /*justify-content: center;*/
@@ -87,9 +93,12 @@
             margin-bottom: 20px;
 
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: end;
-            justify-content: center;
+            justify-content: end;
+        }
+        .crudbutton >button {
+            margin-left: 5px;
         }
 
 
@@ -101,15 +110,16 @@
 </head>
 <body>
 <div class="crud-page">
-    <h1 class="crpage"> 글 작성</h1>
+    <h1 class="crpage"> 글 수정</h1>
     <div class="form-floating mb-3">
-        <input type="email" class="form-control" id="crud_title" placeholder="name@example.com">
+        <input type="email" class="form-control" id="crud_title" value = "{{crudtitle|safe}}" placeholder="name@example.com">
+
         <label for="crud_title">제목 </label>
     </div>
 
 
     <form action="" method="POST">
-        <textarea name="write" id="write"></textarea>
+        <textarea name="write" id="write">{{ write|safe }}</textarea>
 
     </form>
     <script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
@@ -129,7 +139,8 @@
 
     </script>
     <div class="crudbutton">
-        <button onclick="save_editor()" ,type="button" class="btn btn-outline-secondary">저장</button>
+        <button onclick="edit_editor('{{post_num|safe}}')" ,type="button" class="btn btn-outline-secondary">수정완료</button>
+        <button onclick="cancle_editor('{{post_num|safe}}')" ,type="button" class="btn btn-outline-secondary">취소</button>
     </div>
 </div>
     <div id="test"></div>
