@@ -36,6 +36,19 @@
 </style>
 
 <script>
+    $(function () {
+        $("input[type=text]").keyup(function () {
+            let loginButton = document.querySelector('#btn_join');
+            switch (!(checkInput() == 'success')) {
+                case true :
+                    loginButton.disabled = true;
+                    break;
+                case false :
+                    loginButton.disabled = false;
+                    break
+            }
+        })
+    })
 
     function join() {
         let id = document.getElementById('inputID').value
@@ -43,9 +56,12 @@
         let nick = document.getElementById('inputNick').value
         let email = document.getElementById('inputEmail').value
 
-        if (checkInput() == 'success') {
-
-
+        if (chkId != 'success') {
+            document.getElementById('chkEmail_text').style.color = 'red'
+            return document.getElementById('chkEmail_text').innerText = '아이디 중복을 확인해주세요'
+        }
+        if (chkId == 'success'){
+            document.getElementById('chkEmail_text').innerText = ''
             $.ajax({
                 type: "POST",
                 url: "/users/join",
@@ -63,14 +79,16 @@
         }
     }
 
+    let chkId = 'fail'
     function checkId() {
         let id = document.getElementById('inputID').value
         let regID = /^[a-z]+[a-z0-9]{1,19}$/g;
 
+
         if (regID.test(id) != true) {
-            return document.getElementById('chkID_text').innerText = '아이디 형식을 확인해주세요.';
             document.getElementById('chkID_text').style.color = 'red';
-        } else {
+            return document.getElementById('chkID_text').innerText = '아이디 형식을 확인해주세요.';
+        }
 
         $.ajax({
             type: "POST",
@@ -82,13 +100,14 @@
                 if (response === '1') {
                     document.getElementById('chkID_text').innerText = '사용 가능한 아이디 입니다.'
                     document.getElementById('chkID_text').style.color = 'blue'
+                    return chkId='success'
                 } else {
                     document.getElementById('chkID_text').innerText = '이미 사용중인 아이디 입니다.'
                     document.getElementById('chkID_text').style.color = 'red'
+                    return chkId='fail'
                 }
             }
         });
-    }
     }
 
     function checkInput() {
@@ -105,29 +124,33 @@
         let email = document.getElementById('inputEmail').value
 
         // 공백 란인지 확인 공백 란이면 True
+
         if (id.replace(regBlnk, "") == "" || pw.replace(regBlnk, "") == ""
             || nick.replace(regBlnk, "") == "" || email.replace(regBlnk, "") == "") {
-            return alert('공백 란을 확인 해 주세요')
+            document.getElementById('chkEmail_text').style.color = 'red'
+            return document.getElementById('chkEmail_text').innerText = '공백 란을 확인 해 주세요'
         }
 
         // 스페이스바 체크 있으면 True
         if (id.search(/\s/) != -1 || pw.search(/\s/) != -1
             || nick.search(/\s/) != -1 || email.search(/\s/) != -1) {
-            return alert('공백이 있는지 확인 해 주세요')
+            document.getElementById('chkEmail_text').style.color = 'red'
+            return document.getElementById('chkEmail_text').innerText = '공백이 있는지 확인 해 주세요'
         }
 
         // 소문자로 시작하는 영어소문자 또는 숫자 2~20자 형식이 맞으면 True
         if (regID.test(id) != true) {
-            return alert('아이디 형식을 확인 해 주세요')
+            document.getElementById('chkEmail_text').style.color = 'red'
+            return document.getElementById('chkEmail_text').innerText = '아이디 형식을 확인 해 주세요'
         }
 
         // 이메일 형식이 맞으면 True
         if (regEmail.test(email) != true) {
-            return alert('이메일 형식을 확인 해 주세요')
+            document.getElementById('chkEmail_text').style.color = 'red'
+            return document.getElementById('chkEmail_text').innerText = '이메일 형식을 확인 해 주세요'
         }
+        document.getElementById('chkEmail_text').innerText = ''
         return 'success'
-
-
     }
 
     $(function () {
@@ -159,7 +182,7 @@
 <div class="signUpBox">
     <h1>회원등록</h1>
 
-    <p> ID (소문자로 시작하는 영어소문자 또는 숫자 2~20자)<input type="text" class="form-control" id="inputID" placeholder="ID"/>
+    <p> ID <input type="text" class="form-control" id="inputID" placeholder="ID"/>
         <button onclick="checkId()" type="button" class="btn btn-outline-primary">중복 확인</button>
         <b id="chkID_text"></b>
     </p>
@@ -171,11 +194,12 @@
     </p>
     <p> 닉네임 <input type="text" class="form-control" id="inputNick" placeholder="닉네임"/>
     </p>
-    <p> 이메일 <input type="email" class="form-control" id="inputEmail" placeholder="example@email.com"/>
+    <p> 이메일 <input type="text" class="form-control" id="inputEmail" placeholder="example@email.com"/>
+    <h6 id="chkEmail_text"></h6>
     </p>
     <div class = "buttons">
         <p>
-            <button onclick="join()">등록하기</button>
+            <button onclick="join()" id="btn_join">등록하기</button>
             <button onclick="location.href = '/'">취소</button>
         </p>
     </div>

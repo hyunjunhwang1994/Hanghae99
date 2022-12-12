@@ -98,6 +98,14 @@ def login():
         return jsonify({'result': 'fail', 'msg': "아이디/비밀번호가 일치하지 않습니다."})
 
 
+@app.route('/users/uid')
+def editInfo():
+
+    uid = int[request.form['uid']]
+
+    return 'hi'
+
+
 @app.route('/pagination')
 def startPagination():
 

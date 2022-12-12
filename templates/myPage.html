@@ -154,56 +154,108 @@
         /*popup*/
     </style>
 <body>
-    <<div class="title">
-<!--         <button onclick="open_box()" type="button" class="btn btn-outline-success">회원정보 수정</button>-->
-<!--            <button onclick="location.href = '/register'" type="button" class="btn btn-outline-success">회원가입</button>-->
-<!--            <button onclick="openMy()" type="button" class="btn btn-outline-success">마이페이지</button>-->
-        <p><button onclick="javascript:openPop()" type="button" class="btn btn-outline-success">회원정보 수정</button>
+    <div class="title">
+        <!--         <button onclick="open_box()" type="button" class="btn btn-outline-success">회원정보 수정</button>-->
+        <!--            <button onclick="location.href = '/register'" type="button" class="btn btn-outline-success">회원가입</button>-->
+        <!--            <button onclick="openMy()" type="button" class="btn btn-outline-success">마이페이지</button>-->
+        <p>
+            <button onclick="javascript:openPop()" type="button" class="btn btn-outline-success">회원정보 수정</button>
         </p>
     </div>
     <div class="popup_layer" id="popup_layer" style="display: none;">
-  <div class="popup_box">
-<!--      <div style="height: 10px; width: 375px; float: top;">-->
-<!--        <a href="javascript:closePop();"><img src="/static/img/ic_close.svg" class="m_header-banner-close" width="30px" height="30px"></a>-->
-<!--      </div>-->
-      <!--팝업 컨텐츠 영역-->
-      <div class="popup_cont">
-          <h5> 회원정보 </h5>
-          <div class="input-container">
-              <p>ID </p>
-              <p> PW <input type="password" class="form-control" id="inputPW1" placeholder="비밀번호"/>
-              </p>
-              <p> PW확인 <input type="password" class="form-control" id="inputPW2" placeholder="비밀번호 확인"/>
-              </p>
-              <p> 닉네임 <input type="text" class="form-control" id="inputNick" placeholder="닉네임"/>
-              </p>
-              <p> 이메일 <input type="email" class="form-control" id="inputEmail" placeholder="example@email.com"/>
-              </p>
-              <div class="popup_btn" style="float: bottom; margin-top: 200px;">
-                  <p>
-                      <button onclick="javascript:editInfo();" type="button" class="btn btn-outline-success">수정</button>
-                      <button onclick="javascript:closePop();" type="button" class="btn btn-outline-success">닫기</button>
-                  </p>
-              </div>
-          </div>
-      </div>
-      <!--팝업 버튼 영역-->
+        <div class="popup_box">
+            <!--팝업 컨텐츠 영역-->
+            <div class="popup_cont">
+                <h5> 회원정보 </h5>
+                <div class="input-container">
+                    <p> ID <input type="text" class="form-control" id="inputID" placeholder="ID" readonly="readonly"/>
+                    </p>
+                    <p> 닉네임 <input type="text" class="form-control" id="inputNick" placeholder="닉네임"/>
+                    </p>
+                    <p> 이메일 <input type="email" class="form-control" id="inputEmail" placeholder="example@email.com"/>
+                    </p>
+                </div>
+                <div class="popup_btn" style="float: bottom; margin-top: 200px;">
+                    <p><button onclick="javascript:editInfo();" type="button" class="btn btn-outline-success">수정</button>
+                        <button onclick="javascript:closePop();" type="button" class="btn btn-outline-success">닫기</button>
+                    </p>
+                </div>
 
-  </div>
-</div>
+            </div>
+<!--            <section id="container">-->
+<!--                <form action="/member/memberUpdate" method="post">-->
+<!--                    <div class="form-group has-feedback">-->
+<!--                        <label class="control-label" for="userId">아이디</label>-->
+<!--                        <input class="form-control" type="text" id="userId" name="userId" value="${member.userId}"-->
+<!--                               readonly="readonly"/>-->
+<!--                    </div>-->
+<!--                    <div class="form-group has-feedback">-->
+<!--                        <label class="control-label" for="userPass">패스워드</label>-->
+<!--                        <input class="form-control" type="password" id="userPass" name="userPass"/>-->
+<!--                    </div>-->
+<!--                    <div class="form-group has-feedback">-->
+<!--                        <label class="control-label" for="userName">성명</label>-->
+<!--                        <input class="form-control" type="text" id="userName" name="userName"-->
+<!--                               value="${member.userName}"/>-->
+<!--                    </div>-->
+<!--                    <div class="form-group has-feedback">-->
+<!--                        <button class="btn btn-success" type="submit" id="submit">회원정보수정</button>-->
+<!--                        <button class="cencle btn btn-danger" type="button">취소</button>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </section>-->
+            <!--팝업 버튼 영역-->
+        </div>
+    </div>
 
 
 <script>
+
     //팝업 띄우기
     function openPop() {
         document.getElementById("popup_layer").style.display = "block";
-
     }
-
     //팝업 닫기
     function closePop() {
         document.getElementById("popup_layer").style.display = "none";
     }
+
+    function editInfo(uid) {
+        alert('1')
+        $.ajax({
+            type: "GET",
+            url: "/users/"+uid,
+            data: {},
+            success: function (response) {
+
+            }
+
+        });
+    }
+
+    function validate() {
+            let id = document.getElementById('ID').value
+            let pw = document.getElementById('PW').value
+            $.ajax({
+                type: "POST",
+                url: "/users/login",
+                data: {
+                    id_give: id,
+                    pw_give: pw,
+                },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        $.cookie('mytoken', response['token']);
+                        alert('로그인 성공');
+                        window.location.href='/';
+
+                    } else {
+                        alert(response['msg'])
+                    }
+
+                }
+            });
+        }
 
 </script>
 
