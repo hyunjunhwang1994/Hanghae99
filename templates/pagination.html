@@ -88,7 +88,7 @@ post_id      Likes
         <td>번호</td>
         <td>제목</td>
         <td>이름</td>
-        <td>조회수</td>
+        <td>likes</td>
     </tr>
     </thead>
     <tbody>
@@ -115,10 +115,11 @@ post_id      Likes
         {% endif %}
         {% endfor %}
 
+
         {% for like in likes_array %}
 
         {% if like == post.post_num %}
-        {% break %}
+            {% break %}
         {% endif %}
 
         {% if ((like != post.post_num) and ( like == 0)): %}
