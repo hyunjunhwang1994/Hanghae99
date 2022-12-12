@@ -95,13 +95,9 @@ post_id      Likes
     <!-- 반복되는 구간 -->
     {% for post in all_posts %}
     <tr>
-        <!-- 게시물 순서대로 번호 부여하기 -->
-        <!-- 아래 루프 인덱스 없애고 해당 게시글 db의 포스트번호 불러오기 -->
-<!--        <td>{{loop.index + (nowPage_receive - 1) * postsLimit}}</td>-->
+
         <td>{{post.post_num}}</td>
         <td><a href="">{{post.crudtitle}}</a></td>
-<!--        <td>{{post.name}}</td>-->
-<!--        <td>{{post.view}}</td>-->
 
         {% set index = loop.index + (nowPage_receive - 1) * postsLimit %}
 
