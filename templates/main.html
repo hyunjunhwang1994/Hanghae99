@@ -63,7 +63,7 @@
             let pw = document.getElementById('PW').value
             $.ajax({
                 type: "POST",
-                url: "/members/login",
+                url: "/users/login",
                 data: {
                     id_give: id,
                     pw_give: pw,
@@ -82,10 +82,23 @@
             });
         }
 
-        // // function mypage() {
-        //
-        // }
-
+        function openMy() {
+            $.ajax({
+                type: "GET",
+                url: "/mypage",
+                data: {},
+                success: function (response) {
+                    location.href='/mypage'
+                    if (response['result'] == 'fail') {
+                        location.href='/'
+                        return alert(response['msg'])
+                    }
+                    if (response['result'] == 'success') {
+                        return alert('마이페이지로 이동합니다.')
+                    }
+                }
+            })
+        }
     </script>
 
 </head>
@@ -93,17 +106,17 @@
     <div class="title">
         <p> <button onclick="open_box()" type="button" class="btn btn-outline-success">로그인</button>
             <button onclick="location.href = '/register'" type="button" class="btn btn-outline-success">회원가입</button>
-            <button onclick="mypage()" type="button" class="btn btn-outline-success">마이페이지</button>
+            <button onclick="openMy()" type="button" class="btn btn-outline-success">마이페이지</button>
         </p>
     </div>
     <div class="login-box">
         <div class="myLogin" id="idBox">
             <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="ID" placeholder="name@example.com">
+                <input type="text" class="form-control" id="ID" placeholder="name@example.com">
                 <label for="floatingInput">ID</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="PW" placeholder="name@example.com">
+                <input type="password" class="form-control" id="PW" placeholder="name@example.com">
                 <label for="floatingInput">PW</label>
             </div>
             <p> <button onclick="login()" type="button" class="btn btn-outline-primary">로그인</button>

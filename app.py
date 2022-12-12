@@ -33,7 +33,20 @@ def register():
     return render_template('register.html')
 
 
-@app.route('/members/checkid', methods=["POST"])
+@app.route('/mypage', methods=['GET'])
+def validate():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        val_ID = db.users.find_one({'id': payload['id']}, {'_id': False})
+        return render_template('myPage.html')
+    except jwt.ExpiredSignatureError:
+        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+    except jwt.exceptions.DecodeError:
+        return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+
+
+@app.route('/users/checkid', methods=["POST"])
 def checkid():
     id_receive = request.form['id_give']
     chkID = db.users.find_one({'id':id_receive})
@@ -43,7 +56,7 @@ def checkid():
         return '0'
 
 
-@app.route('/members/join', methods=["POST"])
+@app.route('/users/join', methods=["POST"])
 def join():
     id_receive = request.form['id_give']
     pw_receive = request.form['pw_give']
@@ -53,9 +66,7 @@ def join():
     user_list = list(db.users.find({}, {'_id': False}))
 
     uid = len(user_list) + 1
-
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
-
 
     doc = {
         'id': id_receive,
@@ -70,14 +81,13 @@ def join():
     return '등록 완료'
 
 
-@app.route('/members/login', methods=["POST"])
+@app.route('/users/login', methods=["POST"])
 def login():
 
     id_receive=request.form['id_give']
     pw_receive = request.form['pw_give']
 
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
-
     val = db.users.find_one({'id': id_receive,'pw':pw_hash})
 
     if val != None:
@@ -89,9 +99,24 @@ def login():
         return jsonify({'result': 'success', 'token': token})
 
     if val == None:
-        return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
+        return jsonify({'result': 'fail', 'msg': "아이디/비밀번호가 일치하지 않습니다."})
 
 
+@app.route('/users')
+def userInfo():
+    return render_template('users.html')
+
+
+@app.route('/users/<nick>',methods=["GET"])
+def showInfo(nick):
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    val_ID = db.users.find_one({'id': payload['id']}, {'_id': False})
+    nick = val_ID['nick']
+    print(nick)
+
+    render_template('users.html')
+    return jsonify({'info':val_ID})
 
 
 
@@ -266,6 +291,7 @@ def startPagination():
         last_page=last_page,
         likes_array=likes_array
     )
+
 
 @app.route('/api/pagination')
 def pagination():
