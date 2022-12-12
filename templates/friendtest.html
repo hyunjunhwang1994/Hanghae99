@@ -15,24 +15,28 @@
             $.ajax({
                 type: "POST",
                 url: "/api/addfriend",
-                data: {targetUser_give:user_id},
+                data: {targetUser_give: user_id},
                 success: function (response) {
-
+                    window.location.reload()
                 }
             });
 
         }
 
-        function showFriend() {
 
+
+
+
+        function showFriend() {
             $.ajax({
                 type: "POST",
                 url: "/api/showfriend",
                 data: {},
                 success: function (response) {
+
                     let rows = response
                     let temp_heml = ``
-                    let userId = "userA"
+                    let userId = '{{ user_id }}'
                     for (let i = 0; i < rows.length; i++) {
                         let currentUser = rows[i]['friends_currentUser']
                         let targetUser = rows[i]['friends_targetUser']
@@ -76,8 +80,8 @@
 
         }
 
-        function permitFriend(currentUser, targetUser){
-                    $.ajax({
+        function permitFriend(currentUser, targetUser) {
+            $.ajax({
                 type: "POST",
                 url: "/api/permitfriend",
                 data: {
@@ -101,7 +105,7 @@
                 data: {
                     currentUser_give: friend_a,
                     targetUser_give: friend_b,
-                    order:"ab"
+                    order: "ab"
                 },
                 success: function (response) {
                     location.reload();
@@ -110,7 +114,7 @@
 
         }
 
-                function deleteFriendB(friend_b, friend_a) {
+        function deleteFriendB(friend_b, friend_a) {
 
             $.ajax({
                 type: "POST",
@@ -118,7 +122,7 @@
                 data: {
                     currentUser_give: friend_b,
                     targetUser_give: friend_a,
-                    order:"ba"
+                    order: "ba"
                 },
                 success: function (response) {
                     location.reload();
@@ -135,7 +139,6 @@
 <body>
 
 
-
 <button onclick="showFriend()"> 친구보기 테스트</button>
 
 <div id="all_friends" style="width: 300px;">
@@ -143,17 +146,17 @@
     틴구 목록<br>
 
     {% for user in all_users_info %}
-        {{ user['nick'] }}
-        {{ user['id'] }}
-        {% set user_id = user["id"] %}
+    {{ user['nick'] }}
+    {{ user['id'] }}
+    {% set target_user_id = user["id"] %}
 
-        <button onclick="addFriend('{{user_id}}')" style="width: 150px;"> 친구로 결정했다. </button><br>
+    <button onclick="addFriend('{{target_user_id}}')" style="width: 150px;"> 친구로 결정했다.</button>
+    <br>
 
     {% endfor %}
 
 
 </div>
-
 
 
 <div id="showFriend">

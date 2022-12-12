@@ -387,6 +387,16 @@ def pagination():
 
 @app.route('/addfriend')
 def goFriend():
+    token_receive = request.cookies.get('mytoken')
+
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_id = payload['id']
+
+    except jwt.ExpiredSignatureError:
+        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+    except jwt.exceptions.DecodeError:
+        return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
 
     # 모든 유저 불러와 뿌리기 ?
     all_users_info = list(db.users.find({}, {'_id': False,'pw':False, 'email':False}))
@@ -394,13 +404,14 @@ def goFriend():
     print(all_users_info)
 
     return render_template("friendtest.html",
-                           all_users_info=all_users_info)
+                           all_users_info=all_users_info,
+                           user_id=user_id)
 
 @app.route('/api/addfriend', methods=["POST"])
 def addFriend():
-    # userA_receive = request.form['userA'] # 유저 세션이나 JWT 확인 (현재 유저)
-    # userB_receive = request.form['userB'] # 추가할 유저 -> html에서 클릭시 해당유저 id 가지고옴
-    # test
+
+
+
 
     token_receive = request.cookies.get('mytoken')
 
@@ -413,9 +424,8 @@ def addFriend():
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
 
-
-    currentUser_receive = user_id
-    targetUser_receive = "userA"
+    currentUser_receive = user_id  # 유저 세션이나 JWT 확인 (현재 유저)
+    targetUser_receive = request.form['targetUser_give']  # 추가할 유저 -> html에서 클릭시 해당유저 id 가지고옴
 
 
     doc = {
@@ -425,21 +435,25 @@ def addFriend():
 
     db.friends.insert_one(doc)
 
-    return render_template('index.html')
+    return jsonify({"msg":"success"})
 
 @app.route('/api/showfriend', methods=['POST'])
 def showFriend():
-    # userA_receive = request.form['userA'] # 유저 세션이나 JWT 확인 (현재 유저)
 
-    # 나중에 JWT로 사용자 ID넣기
-    currentUser_receive = "userA"
 
-    # 접속한 userA의 경우 표현할 것
-    # friend_a가 userA / isFriend: 0   친구 신청 중
-    # friend_a가 userA / isFriend: 1   내 친구
+    token_receive = request.cookies.get('mytoken')
 
-    # friend_b가 userA / isFriend: 0   친구 수락하기 전
-    # friend_b가 userA / isFriend: 1   내 친구
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_id = payload['id']
+
+    except jwt.ExpiredSignatureError:
+        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+    except jwt.exceptions.DecodeError:
+        return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+
+    currentUser_receive = user_id  # 유저 세션이나 JWT 확인 (현재 유저)
+
     all_friends = list(db.friends.find({"$or": [{'friends_currentUser': currentUser_receive}, {"friends_targetUser": currentUser_receive}]},{'_id':False}))
 
     print("서버 단 친구 목록보기 " + str(all_friends))
@@ -451,16 +465,22 @@ def showFriend():
 @app.route('/api/deletefriend', methods=['POST'])
 def deleteFriend():
 
-    currentUser_receive = request.form['currentUser_give'] ## 나
+    token_receive = request.cookies.get('mytoken')
+
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_id = payload['id']
+
+    except jwt.ExpiredSignatureError:
+        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+    except jwt.exceptions.DecodeError:
+        return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+
+    currentUser_receive = user_id
     targetUser_receive = request.form['targetUser_give']
     order = request.form["order"]
 
-    # 삭제의 경우 내가 userB (상대방이 친구추가 한 경우)이여도 삭제가 가능해야 한다.
-    # -> 삭제할 아이디와 내 아이디가 일치하는 경우에만 삭제 ( friends_a, friends_b 순서상관없이 )
 
-    # 경우의 수
-    # a = 나 b = 유저  (삭제)
-    # a = 유저 b = 나  (삭제)
     print(currentUser_receive)
     print(targetUser_receive)
     print(order)
@@ -472,6 +492,7 @@ def deleteFriend():
         db.friends.delete_one({'friends_targetUser': currentUser_receive, 'friends_currentUser':targetUser_receive })
 
     return render_template('index.html')
+
 
 @app.route('/api/permitfriend', methods=['POST'])
 def permitFriend():
