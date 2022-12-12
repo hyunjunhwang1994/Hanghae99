@@ -63,7 +63,7 @@
             let pw = document.getElementById('PW').value
             $.ajax({
                 type: "POST",
-                url: "/members/login",
+                url: "/users/login",
                 data: {
                     id_give: id,
                     pw_give: pw,
@@ -99,7 +99,6 @@
                 }
             })
         }
-
     </script>
 
 </head>
@@ -113,11 +112,11 @@
     <div class="login-box">
         <div class="myLogin" id="idBox">
             <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="ID" placeholder="name@example.com">
+                <input type="text" class="form-control" id="ID" placeholder="name@example.com">
                 <label for="floatingInput">ID</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="PW" placeholder="name@example.com">
+                <input type="password" class="form-control" id="PW" placeholder="name@example.com">
                 <label for="floatingInput">PW</label>
             </div>
             <p> <button onclick="login()" type="button" class="btn btn-outline-primary">로그인</button>

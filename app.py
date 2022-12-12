@@ -42,7 +42,7 @@ def validate():
         return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
 
 
-@app.route('/members/checkid', methods=["POST"])
+@app.route('/users/checkid', methods=["POST"])
 def checkid():
     id_receive = request.form['id_give']
     chkID = db.users.find_one({'id':id_receive})
@@ -52,7 +52,7 @@ def checkid():
         return '0'
 
 
-@app.route('/members/join', methods=["POST"])
+@app.route('/users/join', methods=["POST"])
 def join():
     id_receive = request.form['id_give']
     pw_receive = request.form['pw_give']
@@ -77,7 +77,7 @@ def join():
     return '등록 완료'
 
 
-@app.route('/members/login', methods=["POST"])
+@app.route('/users/login', methods=["POST"])
 def login():
 
     id_receive=request.form['id_give']
@@ -85,8 +85,6 @@ def login():
 
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
     val = db.users.find_one({'id': id_receive,'pw':pw_hash})
-
-
 
     if val != None:
         payload = {
