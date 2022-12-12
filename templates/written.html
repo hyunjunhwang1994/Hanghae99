@@ -18,30 +18,36 @@
 
     <script>
 
-//          $(document).ready(function () {
-//             show_written();
-//         });
-//
-//
-//         function show_written() {
-//
-//             $.ajax({
-//                 // type: "GET",
-//                 // url: "/written/content/<int:post_num>",
-//                 // data: {},
-//                 success: function (response) {
-//
-//                     let crudtitle = rows['post_num']['crudtitle']
-//                     let post_num =  rows[i]['post_num']
-//                     let written = rows[i]['write']
-//                     let editable = rows[i]['editable']
-//                     let temp_html = `    <p id = post_num>  ${crudtitle}
-//             <label for="post_num">제목 </label></p>
-// `
-//                 }
-//
-//             });
-//         }
+          $(document).ready(function () {
+             show_written();
+         });
+
+
+         function show_written(post_num) {
+
+             $.ajax({
+                 type: "GET",
+                 url: "/content/written" ,
+                 data: {},
+                 success: function (response) {
+                     // alert( "{{id|safe}} + {{user_id}}" )
+                     let temp_html = ``
+
+
+                     if( "{{id|safe}}" == "{{user_id}}"){
+                         temp_html = `
+                    <button onclick="show_edit('{{post_num|safe}}')" ,type="button" class="btn btn-outline-secondary">수정하기</button>
+                   `
+
+                 } $('#buttonadd').append(temp_html)
+                 }
+
+             });
+         }
+         function show_edit(post_num){
+             window.location.href="http://localhost:5000/content/edit/"+post_num
+
+         }
 
     </script>
 
@@ -100,16 +106,21 @@
         /*    max-width: 2000px;*/
         /*}*/
 
-        /*.crudbutton {*/
-        /*    max-width: 2000px;*/
-        /*    margin-top: 10px;*/
-        /*    margin-bottom: 20px;*/
+     .crudbutton {
 
-        /*    display: flex;*/
-        /*    flex-direction: column;*/
-        /*    align-items: end;*/
-        /*    justify-content: center;*/
-        /*}*/
+         max-width: 1500px;
+         margin-top: 10px;
+         margin-left: auto;
+         margin-right: auto;
+
+
+         display: flex;
+         flex-direction: column;
+         align-items: end;
+         justify-content: center;
+        }
+
+
 
 
     </style>
@@ -126,10 +137,12 @@
 
 
 
+
 <!--    <div class="crudbutton">-->
 <!--        <button onclick="save_editor()" ,type="button" class="btn btn-outline-secondary">저장</button>-->
 <!--    </div>-->
 </div>
+ <div class="crudbutton" id="buttonadd"></div>
 </body>
 </html>
 
