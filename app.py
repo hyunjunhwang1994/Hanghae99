@@ -297,7 +297,7 @@ def write():
 def write_content():
     crud_title_receive = request.form['crud_title_give']
     write_receive = request.form['write_give']
-    print(write_receive)
+    # print(write_receive)
     write_list = list(db.crud.find({}, {'_id': False}))
     post_num = len(write_list) + 1  # len() = ~의 리스트 수
 
@@ -316,13 +316,86 @@ def write_content():
 def written():
     return render_template('written.html')
 
+
 @app.route("/written/content/<int:post_num>", methods=["GET"])
 def written_get(post_num):
+    user = db.crud.find_one({'post_num':post_num})
+    # print(user)
+    post_num = user["post_num"]
+    crudtitle = user["crudtitle"]
+    write = user["write"]
+    write_url2 = write.replace('<figure class="media"><oembed url=', '<iframe width="560" height="315" src=')
+    write_url1 = write_url2.replace('></oembed></figure>',' title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
+    # write_url2 = write.replace('<figure class="media"><oembed url="https://youtu.be', '<iframe width="560" height="315" src="https://www.youtube.com/embed')
+    # write_url1 = write_url2.replace('></oembed></figure>',' title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
 
-    write_list = list(db.crud.find({}, {'_id': False}))
+    write_url = write_url1.repalce('youtu.be','www.youtube.com/embed')
 
-    return jsonify({'msg': '전송 완료!'})
+    # print(write_url)
+
+    print(write_url1)
+    print(write_url2)
+    print(write)
+    editable = user["editable"]
+
+    # < figure class ="media" > < oembed url="https://youtu.be/jqNrkhMx1Ow" > < / oembed > < / figure >
+
+    return render_template('written.html',
+                           post_num=post_num,
+                           crudtitle=crudtitle,
+                           write=write,
+                           write_url = write_url,
+                           editable=editable)
 # edit 쪽에 보내야 할 듯.d
+
+@app.route('/write/content/edit', methods=["POST"])
+def edit_content():
+    crud_title_receive = request.form['crud_title_give']
+    write_receive = request.form['write_give']
+    # print(write_receive)
+    write_list = list(db.crud.find({}, {'_id': False}))
+    post_num = len(write_list) + 1  # len() = ~의 리스트 수
+
+    doc = {
+        # ID 추가해야함
+        'crudtitle': crud_title_receive,
+        'post_num': post_num,
+        'write': write_receive,
+        'editable': 1  #수정가능하면 editable 1
+    }
+
+@app.route("/written/content/edit/<int:post_num>", methods=["GET"])
+def edit_get(post_num):
+    user = db.crud.find_one({'post_num': post_num})
+    # print(user)
+    post_num = user["post_num"]
+    crudtitle = user["crudtitle"]
+    write = user["write"]
+    write_url2 = write.replace('<figure class="media"><oembed url=', '<iframe width="560" height="315" src=')
+    write_url1 = write_url2.replace('></oembed></figure>',
+                                    ' title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
+    # write_url2 = write.replace('<figure class="media"><oembed url="https://youtu.be', '<iframe width="560" height="315" src="https://www.youtube.com/embed')
+    # write_url1 = write_url2.replace('></oembed></figure>',' title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
+
+    write_url = write_url1.repalce('youtu.be', 'www.youtube.com/embed')
+
+    print(write)
+    editable = user["editable"]
+
+    # < figure class ="media" > < oembed url="https://youtu.be/jqNrkhMx1Ow" > < / oembed > < / figure >
+
+    return render_template('written.html',
+                           post_num=post_num,
+                           crudtitle=crudtitle,
+                           write=write,
+                           write_url=write_url,
+                           editable=editable)
+
+
+    #수정해야함
+
+    return jsonify({'msg': '수정 완료!'})
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
