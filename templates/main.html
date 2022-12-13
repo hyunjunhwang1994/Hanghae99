@@ -119,10 +119,10 @@
         function openMy() {
             $.ajax({
                 type: "GET",
-                url: "/mypage",
+                url: "/users",
                 data: {},
                 success: function (response) {
-                    location.href='/mypage'
+                    location.href='/users'
                     if (response['result'] == 'fail') {
                         location.href='/'
                         return alert(response['msg'])

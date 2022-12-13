@@ -33,8 +33,8 @@ def register():
     return render_template('register.html')
 
 
-@app.route('/mypage', methods=['GET'])
-def validate():
+@app.route('/users')
+def mypage():
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
@@ -44,6 +44,34 @@ def validate():
         return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+
+
+@app.route('/users/info', methods=['GET','POST'])
+def getInfo():
+    token_receive = request.cookies.get('mytoken')
+    if request.method == 'GET':
+        try:
+            payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+            val_ID = db.users.find_one({'id': payload['id']}, {'_id': False})
+            return jsonify({'info':val_ID})
+        except jwt.ExpiredSignatureError:
+            return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+        except jwt.exceptions.DecodeError:
+            return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+    if request.method == 'POST':
+        nick_receive = request.form['nick_give']
+        email_receive = request.form['email_give']
+        try:
+            payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+            val_ID = db.users.find_one({'id': payload['id']}, {'_id': False})
+            id_found = val_ID['id']
+            db.users.update_one({'id': id_found}, {'$set': {'nick': nick_receive, 'email': email_receive}})
+            print(db.users.find_one({'id': id_found}))
+            return '수정 완료'
+        except jwt.ExpiredSignatureError:
+            return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+        except jwt.exceptions.DecodeError:
+            return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
 
 
 @app.route('/users/checkid', methods=["POST"])
@@ -93,32 +121,13 @@ def login():
     if val != None:
         payload = {
             'id': id_receive,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=10)
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=100)
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
         return jsonify({'result': 'success', 'token': token})
 
     if val == None:
         return jsonify({'result': 'fail', 'msg': "아이디/비밀번호가 일치하지 않습니다."})
-
-
-@app.route('/users')
-def userInfo():
-    return render_template('users.html')
-
-
-@app.route('/users/<nick>',methods=["GET"])
-def showInfo(nick):
-    token_receive = request.cookies.get('mytoken')
-    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-    val_ID = db.users.find_one({'id': payload['id']}, {'_id': False})
-    nick = val_ID['nick']
-    print(nick)
-
-    render_template('users.html')
-    return jsonify({'info':val_ID})
-
-
 
 
 
@@ -225,7 +234,6 @@ def go_submainpage():
         last_page=last_page,
         likes_array=likes_array
     )
-
 
 
 
