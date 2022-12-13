@@ -540,7 +540,7 @@ def deleteFriend():
     if(order == "ba"):
         db.friends.delete_one({'friends_targetUser': currentUser_receive, 'friends_currentUser':targetUser_receive })
 
-    return render_template('index.html')
+    return jsonify({"msg":"success"})
 
 
 @app.route('/api/permitfriend', methods=['POST'])
@@ -555,7 +555,7 @@ def permitFriend():
 
 
 
-    return render_template('index.html')
+    return jsonify({"msg":"success"})
 
 
 
