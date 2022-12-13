@@ -149,13 +149,7 @@
             <!--팝업 컨텐츠 영역-->
             <div class="popup_cont">
                 <h5> 회원정보 </h5>
-                <div class="input-container">
-                    <p> ID <input type="text" class="form-control" id="inputID" placeholder="ID" readonly="readonly"/>
-                    </p>
-                    <p> 닉네임 <input type="text" class="form-control" id="inputNick" placeholder="닉네임"/>
-                    </p>
-                    <p> 이메일 <input type="email" class="form-control" id="inputEmail" placeholder="example@email.com"/>
-                    </p>
+                <div class="input-container" id="info-box">
                 </div>
                 <div class="popup_btn" style="float: bottom; margin-top: 200px;">
                     <p><button onclick="javascript:editInfo();" type="button" class="btn btn-outline-success">수정</button>
@@ -192,6 +186,9 @@
 
 
 <script>
+    $(document).ready(function () {
+        getInfo();
+    });
 
     //팝업 띄우기
     function openPop() {
@@ -202,17 +199,50 @@
         document.getElementById("popup_layer").style.display = "none";
     }
 
-    // function editInfo(nick) {
-    //     $.ajax({
-    //         type: "GET",
-    //         url: "/mypage",
-    //         data: {},
-    //         success: function (response) {
-    //
-    //         }
-    //
-    //     });
-    // }
+    function getInfo() {
+        $.ajax({
+            type: "GET",
+            url: "/users/info",
+            data: {},
+            success: function (response) {
+                for (let key in response) {
+                    console.log(response[key])
+                    key = response[key]
+
+                    let id = key['id']
+                    let nick = key['nick']
+                    let email = key['email']
+
+                    let temp_html = ``
+                    temp_html = `<p> ID <input type="text" class="form-control" id="inputID" placeholder="${id}" readonly="readonly"/>
+                            </p>
+                            <p> 닉네임 <input type="text" class="form-control" id="inputNick" placeholder="${nick}"/>
+                            </p>
+                            <p> 이메일 <input type="email" class="form-control" id="inputEmail" placeholder="${email}"/>
+                            </p>`
+                    $('#info-box').append(temp_html)
+                }
+            }
+        })
+    }
+
+    function editInfo() {
+        let nick = document.getElementById('inputNick').value
+        let email = document.getElementById('inputEmail').value
+
+        $.ajax({
+            type: "POST",
+            url: "/users/info",
+            data: {
+                nick_give:nick,
+                email_give:email
+            },
+            success: function (response) {
+                alert(response);
+                window.location.reload()
+            }
+        });
+    }
 
     // function validate() {
     //         let id = document.getElementById('ID').value
