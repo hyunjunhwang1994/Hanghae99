@@ -26,7 +26,7 @@ $(document).ready(function() {
                 data: {},
                 success: function (response) {
 
-
+                    $('#showFriend').empty()
 
                     let rows = response
                     let temp_heml = ``
@@ -49,7 +49,8 @@ $(document).ready(function() {
 
                         if (currentUser == userId && isFriend == 0) {
                             console.log("친구 신청 중")
-                            temp_heml = `⛔︎${targetUser}<br>`
+                            temp_heml = `⛔︎${targetUser}
+                    <button class="btn btn-outline-danger" onclick="deleteFriendA('${currentUser}', '${targetUser}')"> 취소</button><br>`
 
                         } else if ((currentUser == userId) && (isFriend == 1)) {
                             console.log("내 친구 a->b")
@@ -102,7 +103,9 @@ $(document).ready(function() {
                 url: "/api/addfriend",
                 data: {targetUser_give: user_id},
                 success: function (response) {
-                    window.location.reload()
+
+                    location.reload()
+
                 }
             });
 
