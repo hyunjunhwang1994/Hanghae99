@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<script src="{{ url_for('static', filename='JS/submainpage_pagination.js') }}" > </script>
-<script src="{{ url_for('static', filename='JS/submainpage_friendpopup.js') }}" > </script>
+    <script src="{{ url_for('static', filename='JS/submainpage_pagination.js') }}"></script>
+    <script src="{{ url_for('static', filename='JS/submainpage_friendpopup.js') }}"></script>
 
     <link rel="stylesheet" href="../static/CSS/submainpage.css">
 
@@ -23,146 +23,138 @@
     <div id="close_button" style="cursor: pointer;">
         ❌
     </div>
-    <h2>세상 사람들</h2>
+    <div class="pop_title">
+    <h2>세상 사람들</h2><button class="showButton" onclick="showFriend('{{user_id}}')">친구 보기</button>
+    </div>
+
     <div class="pop_content">
-        <div id="all_friends" style="width: 300px;">
-            <table style="border: 1px solid  black">
-                <thead>
-                    <tr>
-                        <td>nickname</td>
-                        <td>id</td>
-                        <td></td>
-                    </tr>
-                </thead>
+        <div id="all_friends" class="all_people" style="width: 300px;">
+            <table class="all_people_table">
+
+                <tbody>
                 {% for user in all_users_info %}
                 {% set target_user_id = user["id"] %}
-                <tbody>
-                    <td>{{ user['nick'] }}</td>
-                    <td>{{ user['id'] }}</td>
-                    <td><button id="addButton" onclick="addFriend('{{target_user_id}}')" style="width: 30px;">+</button>
-            <br></td>
+                <tr>
+                    <td>{{ user['nick'] }} ({{ user['id'] }})</td>
+                    <td>
+                        <button id="addButton" onclick="addFriend('{{target_user_id}}')" style="width: 30px;">+</button>
+                        <br></td>
+                </tr>
+                {% endfor %}
                 </tbody>
             </table>
-            {% endfor %}
 
+            <div id="showFriend">
+            </div>
 
         </div>
+
 
     </div>
 
-    <button onclick="showFriend('{{user_id}}')">친구 보기</button>
-        <div id="showFriend">
-        </div>
+
 </div>
-
-
 
 
 <div class="postBox">
-{% if (total_count | string) | length != 0 %}
-<table>
-    <thead>
-    <tr>
-        <td class="testtest">번호</td>
-        <td>제목</td>
-        <td>글쓴이</td>
-        <td>likes</td>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- 반복되는 구간 -->
-    {% for post in all_posts %}
-    <tr>
+    {% if (total_count | string) | length != 0 %}
+    <table>
+        <thead>
+        <tr>
+            <td class="testtest">번호</td>
+            <td>제목</td>
+            <td>글쓴이</td>
+            <td>likes</td>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 반복되는 구간 -->
+        {% for post in all_posts %}
+        <tr>
 
-        <td>{{post.post_num}}</td>
-        <td><a href="/content/written/{{post.post_num}}">{{post.crudtitle}}</a></td>
-        <td>{{ post.id }}</td>
-        <td>{{ post.likes }}</td>
-        {% set index = loop.index + (nowPage_receive - 1) * postsLimit %}
+            <td>{{post.post_num}}</td>
+            <td><a href="/content/written/{{post.post_num}}">{{post.crudtitle}}</a></td>
+            <td>{{ post.id }}</td>
+            <td>{{ post.likes }}</td>
+            {% set index = loop.index + (nowPage_receive - 1) * postsLimit %}
 
-        {% if (likes_array | string) | length != 0 %}
+            {% if (likes_array | string) | length != 0 %}
 
-        {% for like in likes_array %}
-        {% if like == index %}
-        <td>
-            <button class="like" onclick="cancelLike('{{ post.post_num }}')">❤️</button>
-        </td>
-        {% endif %}
-        {% endfor %}
+            {% for like in likes_array %}
+            {% if like == index %}
+            <td>
+                <button class="like" onclick="cancelLike('{{ post.post_num }}')">❤️</button>
+            </td>
+            {% endif %}
+            {% endfor %}
 
 
-        {% for like in likes_array %}
+            {% for like in likes_array %}
 
-        {% if like == post.post_num %}
+            {% if like == post.post_num %}
             {% break %}
-        {% endif %}
+            {% endif %}
 
-        {% if ((like != post.post_num) and ( like == 0)): %}
-        <td>
-            <button class="like" onclick="clickLike('{{ post.post_num }}')">️🤍</button>
-        </td>
-        {% break %}
-        {% endif %}
+            {% if ((like != post.post_num) and ( like == 0)): %}
+            <td>
+                <button class="like" onclick="clickLike('{{ post.post_num }}')">️🤍</button>
+            </td>
+            {% break %}
+            {% endif %}
+            {% endfor %}
+
+
+            {% endif %}
+        </tr>
         {% endfor %}
-
-
-
-
-
-        {% endif %}
-    </tr>
-    {% endfor %}
-    <!-- 반복되는 구간 끝 -->
-    </tbody>
+        <!-- 반복되는 구간 끝 -->
+        </tbody>
     </table>
 
 
-<nav aria-label="...">
-    <ul class="pagination">
+    <nav aria-label="...">
+        <ul class="pagination">
 
-{% if block_start - 1 > 0 %}
-    <li class="page-item">
-      <a class="page-link" href="{{url_for('pagination', nowPage_give=block_start - 1)}}">Previous</a>
-    </li>
-        {% else %}
-    <li class="page-item disabled">
-      <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-    </li>
-{% endif %}
-
-        {% for i in range(block_start, block_last + 1) %}
-                <!-- 데이터가 존재하지 않는 페이지는 화면에 나타내지 않기 위한 조건문 -->
-        {% if i > last_page %}
-
-        {% else %}
-            {% if i == nowPage_receive %}
-        <li class="page-item active" aria-current="page">
-            <a class="page-link" href="#">{{ i }}</a>
-        </li>
+            {% if block_start - 1 > 0 %}
+            <li class="page-item">
+                <a class="page-link" href="{{url_for('pagination', nowPage_give=block_start - 1)}}">Previous</a>
+            </li>
             {% else %}
-                <li class="page-item"><a class="page-link" href="{{url_for('pagination', nowPage_give=i)}}">{{ i }}</a></li>
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+            </li>
             {% endif %}
-        {% endif %}
-{% endfor %}
 
-{% if block_last < last_page %}
-    <li class="page-item">
-      <a class="page-link" href="{{url_for('pagination', nowPage_give=block_last + 1)}}">Next</a>
-    </li>
-        {% else %}
-    <li class="page-item disabled">
-      <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a>
-    </li>
-{% endif %}
+            {% for i in range(block_start, block_last + 1) %}
+            <!-- 데이터가 존재하지 않는 페이지는 화면에 나타내지 않기 위한 조건문 -->
+            {% if i > last_page %}
 
-  </ul>
-</nav>
+            {% else %}
+            {% if i == nowPage_receive %}
+            <li class="page-item active" aria-current="page">
+                <a class="page-link" href="#">{{ i }}</a>
+            </li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="{{url_for('pagination', nowPage_give=i)}}">{{ i }}</a></li>
+            {% endif %}
+            {% endif %}
+            {% endfor %}
 
-{% endif %}
+            {% if block_last < last_page %}
+            <li class="page-item">
+                <a class="page-link" href="{{url_for('pagination', nowPage_give=block_last + 1)}}">Next</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a>
+            </li>
+            {% endif %}
+
+        </ul>
+    </nav>
+
+    {% endif %}
 </div>
-
-
-
 
 
 </body>
