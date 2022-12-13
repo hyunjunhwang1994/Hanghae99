@@ -1,4 +1,4 @@
-   <script>
+
 
              function cancelLike(post_id) {
 

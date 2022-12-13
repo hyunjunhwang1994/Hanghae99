@@ -155,20 +155,27 @@ def go_submainpage():
 
     skip = (nowPage_receive * 4 + 4 * (nowPage_receive % 10)) - postsLimit
 
+    if skip == 0:
+        skip = 1
+
     if (block_last > last_page):
         block_last = last_page
 
     likes_post = db.likes.find_one({"id": user_id}, {'likes_post': 1, '_id': False})
-
     if likes_post != None:
         for post in all_posts:
             i = post['post_num']
             n = post['post_num']
 
+            print("나는 likes_post" + str(likes_post))
+            print("나는 post" + str(post))
+            print("나는 i " + str(i))
+
         likes_array = []
-        for x in range(len(likes_post['likes_post']) + 1):
+        for x in range(postsLimit):
             testList = likes_post['likes_post']
 
+            print("나는 testList " + str(testList))
             if i in testList:
                 print("있다.-------=-=" + str(i))
                 likes_array.append(i)
@@ -254,11 +261,15 @@ def click_likes():
         }
         db.likes.update_one(query, new_values)
         print("데이터 저장완료 : " + str(post_id))
+        db.crud.update_one({'post_num': post_id}, {"$inc": {'likes': 1}})
+
+
     # 좋아요를 한적이 없다면 insert로 테이블 구조 생성
     else:
         doc_array1 = {"id":user_id, "likes_post":[post_id]}
         db.likes.insert_one(doc_array1)
         print("데이터 저장완료 : " + str(post_id))
+        db.crud.update_one({'post_num': post_id}, {'$inc': {'likes': 1}})
     return ""
 @app.route('/api/cancellike', methods=["POST"])
 def cancel_likes():
@@ -287,10 +298,12 @@ def cancel_likes():
         }
         db.likes.update_one(query, new_values)
         print("데이터삭제")
+        db.crud.update_one({'post_num': post_id}, {'$inc': {'likes': -1}})
     else:
         doc_array1 = {"id":user_id}
         db.likes.delete_one(doc_array1)
         print("테이블삭제")
+        db.crud.update_one({'post_num': post_id}, {'$inc': {'likes': -1}})
     return ""
 
 @app.route('/pagination')
@@ -465,7 +478,7 @@ def pagination():
     else:
         likes_array = [0,0,0,0,0,0,0,0]
         return render_template(
-            'pagination.html',
+            'submainpage.html',
             all_posts=all_posts,
             total_count=total_count,
             postsLimit=postsLimit,
@@ -497,7 +510,7 @@ def pagination():
 
 
     return render_template(
-        'pagination.html',
+        'submainpage.html',
         all_posts=all_posts,
         total_count=total_count,
         postsLimit=postsLimit,
@@ -632,6 +645,8 @@ def permitFriend():
 
 
     return render_template('index.html')
+
+
 
 
 @app.route('/test')
