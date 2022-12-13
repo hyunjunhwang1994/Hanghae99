@@ -6,19 +6,42 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 <script src="{{ url_for('static', filename='JS/submainpage_pagination.js') }}" > </script>
-<link rel="stylesheet" href="../static/CSS/submainpage.css">
+<script src="{{ url_for('static', filename='JS/submainpage_friendpopup.js') }}" > </script>
+
+    <link rel="stylesheet" href="../static/CSS/submainpage.css">
 
     <title>코딩 도우미</title>
 </head>
 <body>
 
+<button type="button" id="openModalPop">친구👬</button>
+<div id= "modal">
+</div>
+    <div id = "banner_online">
+        <div id="close_button" style ="cursor: pointer;">
+            ❌
+        </div>
+        <h2>CATEGORIES</h2>
+        <div class="pop_content">
+            <p>1) Algorithm</p>
+            <p>2) 영어공부</P>
+            <p>3) Deep Learning</p>
+            <p>4) Web</p>
+            <p class="p_bottom">- spring</p>
+            <p class="p_bottom">- javaScript</p>
+            <a style= "float: right; margin-right: 13px;" href="https://bbo-blog.tistory.com/" target="_blank" >뽀블로그 클릭</a>
+        </div>
+    </div>
+
+
+<div class="postBox">
 {% if (total_count | string) | length != 0 %}
 <table>
     <thead>
     <tr>
         <td class="testtest">번호</td>
         <td>제목</td>
-        <td>이름</td>
+        <td>글쓴이</td>
         <td>likes</td>
     </tr>
     </thead>
@@ -28,8 +51,9 @@
     <tr>
 
         <td>{{post.post_num}}</td>
-        <td><a href="">{{post.crudtitle}}</a></td>
-
+        <td><a href="/content/written/{{post.post_num}}">{{post.crudtitle}}</a></td>
+        <td>{{ post.id }}</td>
+        <td>{{ post.likes }}</td>
         {% set index = loop.index + (nowPage_receive - 1) * postsLimit %}
 
         {% if (likes_array | string) | length != 0 %}
@@ -111,11 +135,11 @@
 </nav>
 
 {% endif %}
-
-
-<div>
-    <button></button>
 </div>
+
+
+
+
 
 </body>
 </html>
