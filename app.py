@@ -155,8 +155,6 @@ def go_submainpage():
 
     skip = (nowPage_receive * 4 + 4 * (nowPage_receive % 10)) - postsLimit
 
-    if skip == 0:
-        skip = 1
 
     if (block_last > last_page):
         block_last = last_page
