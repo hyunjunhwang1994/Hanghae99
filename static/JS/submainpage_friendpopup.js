@@ -50,22 +50,22 @@ $(document).ready(function() {
                         if (currentUser == userId && isFriend == 0) {
                             console.log("친구 신청 중")
                             temp_heml = `⛔︎${targetUser}
-                    <button class="btn btn-outline-danger" onclick="deleteFriendA('${currentUser}', '${targetUser}')"> 취소</button><br>`
+                    <button class="btn btn-outline-warning" onclick="deleteFriendA('${currentUser}', '${targetUser}')"> 취소</button><br>`
 
                         } else if ((currentUser == userId) && (isFriend == 1)) {
                             console.log("내 친구 a->b")
                             temp_heml = `👬${targetUser}
-                            <button onclick="deleteFriendA('${currentUser}', '${targetUser}')"> 절교</button><br>`
+                            <button class="btn btn-outline-danger" onclick="deleteFriendA('${currentUser}', '${targetUser}')"> 절교</button><br>`
 
                         } else if ((targetUser == userId) && (isFriend == 1)) {
                             console.log("내 친구 b->a")
                             temp_heml = `👭${currentUser}
-                            <button onclick="deleteFriendB('${targetUser}', '${currentUser}')"> 절교</button><br>`
+                            <button class="btn btn-outline-danger" onclick="deleteFriendB('${targetUser}', '${currentUser}')"> 절교</button><br>`
 
                         } else if (targetUser == userId && isFriend == 0) {
                             console.log("수락 대기 중")
                             temp_heml = `✓${currentUser}
-                            <button onclick="permitFriend('${currentUser}', '${targetUser}')"> 수락하기</button><br>`
+                            <button class="btn btn-outline-primary" onclick="permitFriend('${currentUser}', '${targetUser}')"> 수락하기</button><br>`
 
                         }
 

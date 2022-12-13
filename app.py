@@ -101,14 +101,23 @@ def login():
 def go_submainpage():
     token_receive = request.cookies.get('mytoken')
 
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_id = payload['id']
 
-    except jwt.ExpiredSignatureError:
-        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
-    except jwt.exceptions.DecodeError:
-        return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+
+    if token_receive == None:
+        print("비공개 유저 접속")
+        user_id = "unknown"
+
+    else:
+        try:
+            payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+            user_id = payload['id']
+
+        except jwt.ExpiredSignatureError:
+            print("비공개 유저 접속")
+            user_id = "unknown"
+        except jwt.exceptions.DecodeError:
+            print("비공개 유저 접속")
+            user_id = "unknown"
 
     # all_uesrs_info 친구 추가할 모든 유저들 보여줌.
     # 1. all user 데이터에서 자신 제외하기
@@ -304,14 +313,21 @@ def pagination():
 
     token_receive = request.cookies.get('mytoken')
 
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_id = payload['id']
+    if token_receive == None:
+        print("비공개 유저 접속")
+        user_id = "unknown"
 
-    except jwt.ExpiredSignatureError:
-        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
-    except jwt.exceptions.DecodeError:
-        return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+    else:
+        try:
+            payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+            user_id = payload['id']
+
+        except jwt.ExpiredSignatureError:
+            print("비공개 유저 접속")
+            user_id = "unknown"
+        except jwt.exceptions.DecodeError:
+            print("비공개 유저 접속")
+            user_id = "unknown"
 
 
     # all_uesrs_info 친구 추가할 모든 유저들 보여줌.
