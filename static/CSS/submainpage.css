@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@100&display=swap');
 *{
 font-family: 'Noto Sans KR', sans-serif;
-    font-size: 23px;
+    font-size: 17px;
 
 }
 
@@ -30,7 +30,7 @@ font-family: 'Noto Sans KR', sans-serif;
 
 .head_container{
       width: 400px;
-    margin: 0px 0px 0px auto;
+    margin: 20px 0px 0px auto;
 }
 
 .post_container {
@@ -39,6 +39,9 @@ font-family: 'Noto Sans KR', sans-serif;
     justify-content: center;
     align-items: center;
 
+}
+.post_container > h3{
+    margin: 40px 0px 50px 0px;
 }
 
 .paginationBox{
@@ -50,8 +53,8 @@ font-family: 'Noto Sans KR', sans-serif;
 
 
 #banner_online {
-    height: 270px;
-    width: 350px;
+    height: 400px;
+    width: 500px;
     border: 1px solid black;
     box-shadow: 3px 3px 7px 1px grey;
     background-color: white;
