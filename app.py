@@ -21,14 +21,25 @@ db = client.dbsparta
 SECRET_KEY = 'SPARTA'
 
 
-
-
 @app.route('/')
 def home():
     return render_template('main.html')
 
 
-@app.route('/register')
+@app.route('/islogin', methods=["GET"])
+def isLogin():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        val_ID = db.users.find_one({'id': payload['id']}, {'_id': False})
+        return 'success'
+    except jwt.ExpiredSignatureError:
+        return 'fail'
+    except jwt.exceptions.DecodeError:
+        return 'fail'
+
+
+@app.route('/user/join')
 def register():
     return render_template('register.html')
 
@@ -49,7 +60,7 @@ def mypage():
 @app.route('/users/info', methods=['GET','POST'])
 def getInfo():
     token_receive = request.cookies.get('mytoken')
-    if request.method == 'GET':
+    if request.method == 'GET':    # GET 요청일때
         try:
             payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
             val_ID = db.users.find_one({'id': payload['id']}, {'_id': False})
@@ -58,7 +69,7 @@ def getInfo():
             return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
         except jwt.exceptions.DecodeError:
             return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
-    if request.method == 'POST':
+    if request.method == 'POST':     # POST 요청일때
         nick_receive = request.form['nick_give']
         email_receive = request.form['email_give']
         try:
@@ -78,6 +89,7 @@ def getInfo():
 def checkid():
     id_receive = request.form['id_give']
     chkID = db.users.find_one({'id':id_receive})
+
     if chkID == None:
         return '1'
     if chkID != None:
@@ -92,7 +104,6 @@ def join():
     email_receive = request.form['email_give']
 
     user_list = list(db.users.find({}, {'_id': False}))
-
     uid = len(user_list) + 1
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
@@ -103,7 +114,6 @@ def join():
         'email': email_receive,
         'uid' : uid
     }
-
     db.users.insert_one(doc)
 
     return '등록 완료'
@@ -111,7 +121,6 @@ def join():
 
 @app.route('/users/login', methods=["POST"])
 def login():
-
     id_receive=request.form['id_give']
     pw_receive = request.form['pw_give']
 
@@ -121,14 +130,13 @@ def login():
     if val != None:
         payload = {
             'id': id_receive,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=100)
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=10)
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
         return jsonify({'result': 'success', 'token': token})
 
     if val == None:
         return jsonify({'result': 'fail', 'msg': "아이디/비밀번호가 일치하지 않습니다."})
-
 
 
 @app.route('/submainpage')
