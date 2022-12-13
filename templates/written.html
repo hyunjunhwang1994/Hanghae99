@@ -20,6 +20,8 @@
 
           $(document).ready(function () {
              show_written();
+             show_comment();
+             // written_comment();
          });
 
 
@@ -33,21 +35,63 @@
                      // alert( "{{id|safe}} + {{user_id}}" )
                      let temp_html = ``
 
-
-                     if( "{{id|safe}}" == "{{user_id}}"){
+                     if ("{{id|safe}}" == "{{user_id}}") {
                          temp_html = `
-                    <button onclick="show_edit('{{post_num|safe}}')" ,type="button" class="btn btn-outline-secondary">수정하기</button>
+                    <button onclick="show_edit('{{post_num|safe}}')" ,type="button" class="btn btn-outline-success">수정하기</button>
                    `
+                     } $('#buttonadd').append(temp_html)
 
-                 } $('#buttonadd').append(temp_html)
                  }
 
              });
          }
+         function  show_comment(post_num){
+              $.ajax({
+                  type: "GET",
+                  url: "/content/written",
+                  data: {},
+                  success: function (response) {
+                      let temp_html2 = ``
+                      if ("{{user_id}}" == "") {
+                          // temp_html2 = ``
+                      } else {
+                          temp_html2 = `<div class="form-floating">
+                         <textarea class="form-control" placeholder="Leave a comment here" id="commentadder" style="height: 100px"></textarea>
+                         <label for="commentadder">댓글</label>
+                         <button onclick="save_comment('{{post_num|safe}}')" type="button" class="btn btn-outline-success">댓글 작성</button>
+                                                 </div>
+
+
+`
+                      }$('#commentbox').append(temp_html2)
+                  }
+              })
+
+         }
+          function save_comment(post_num) {
+               let comment = $('#commentadder').val()
+
+            $.ajax({
+                type: 'POST',
+                url: '/content/comment',
+                data: {comment_give : comment, num_give : post_num},
+                success: function (response) {
+                    alert(response['msg'])
+                    window.location.reload()
+                }
+            })
+        }
+
+
          function show_edit(post_num){
              window.location.href="http://localhost:5000/content/edit/"+post_num
 
          }
+
+          // function written_comment() {
+          //
+          // }
+
 
     </script>
 
@@ -101,11 +145,6 @@
 
         }
 
-        /*.crud-page > div {*/
-        /*    width: 100%;*/
-        /*    max-width: 2000px;*/
-        /*}*/
-
      .crudbutton {
 
          max-width: 1500px;
@@ -119,6 +158,42 @@
          align-items: end;
          justify-content: center;
         }
+
+     .commentbox {
+
+         max-width: 1500px;
+         margin-top: 10px;
+         margin-left: auto;
+         margin-right: auto;
+
+
+        }
+     .commentbox >div {
+          margin-left: auto;
+         margin-right: auto;
+         width: 60%;
+
+
+     }
+     .commentbox >div >button{
+         margin-top:  5px;
+         margin-right: 2px;
+         display: flex;
+         margin-left: auto;
+
+     }
+
+     .commentlist {
+
+         max-width: 1500px;
+         margin-top: 10px;
+         margin-left: auto;
+         margin-right: auto;
+
+        }
+
+
+
 
 
 
@@ -138,11 +213,17 @@
 
 
 
-<!--    <div class="crudbutton">-->
-<!--        <button onclick="save_editor()" ,type="button" class="btn btn-outline-secondary">저장</button>-->
-<!--    </div>-->
+
 </div>
  <div class="crudbutton" id="buttonadd"></div>
+    <div class="commentbox" id="commentbox">
+
+
+    </div>
+
+
+
+
 </body>
 </html>
 

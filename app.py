@@ -645,6 +645,7 @@ def write_content():
     post_num = len(write_list) + 1  # len() = ~의 리스트 수
 
     doc = {
+        'likes' : 0,
         'id' : id,
         'crudtitle': crud_title_receive,
         'post_num': post_num,
@@ -659,16 +660,13 @@ def write_content():
 @app.route('/content/written', methods=["GET"])
 def written():
 
-
     return render_template('written.html')
 
 
 @app.route("/content/written/<int:post_num>", methods=["GET"])
 def written_get(post_num):
     token_receive = request.cookies.get('mytoken')
-    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-    userinfo = db.users.find_one({'id': payload['id']}, {'_id': 0})
-    user_id = payload["id"]
+
     user = db.crud.find_one({'post_num': post_num})
     # print(user)
     id = user["id"]
@@ -679,17 +677,32 @@ def written_get(post_num):
     write_url2 = write.replace('<figure class="media"><oembed url=', '<iframe width="560" height="315" src=')
     write_url1 = write_url2.replace('></oembed></figure>', ' title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
     write_url = write_url1.replace('youtu.be', 'www.youtube.com/embed')
+    comment_list = list(db.crudcomment.find({'post_num': post_num}, {'_id': False}))
+    comments=comment_list
+    print(comments)
 
-    return render_template('written.html',
-                           user_id=user_id,
-                           id=id,
-                           post_num=post_num,
-                           crudtitle=crudtitle,
-                           write=write,
-                           write_url=write_url,
+
+    try :
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_id = payload["id"]
+        return render_template('written.html',
+                               comments=comments,
+                               user_id=user_id,
+                               id=id,
+                               post_num=post_num,
+                               crudtitle=crudtitle,
+                               write=write,
+                               write_url=write_url
+                               )
+    except:
+        return render_template('written.html',
+                               comments=comments,
+                               id=id,
+                               post_num=post_num,
+                               crudtitle=crudtitle,
+                               write=write,
+                               write_url=write_url,
                            )
-# edit 쪽에 보내야 할 듯.d
-
 
 @app.route('/content/edit', methods=["POST"])
 def edit_content():
@@ -737,6 +750,28 @@ def edit_get(post_num):
         return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+
+
+@app.route("/content/comment", methods=["POST"])
+def add_comment():
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    userinfo = db.users.find_one({'id': payload['id']}, {'_id': 0})
+    nick = userinfo["nick"]
+    id = userinfo["id"]
+    num_receive = request.form['num_give']
+    num_receive= int(num_receive)
+    comment_receive = request.form['comment_give']
+
+    doc = {
+        'id': id,
+        'nick': nick,
+        'post_num': num_receive,
+        'comment': comment_receive
+    }
+    db.crudcomment.insert_one(doc)
+
+    return jsonify({'msg': '작성 완료!'})
 
 
 if __name__ == '__main__':
