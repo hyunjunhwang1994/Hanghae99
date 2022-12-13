@@ -158,6 +158,19 @@
          align-items: end;
          justify-content: center;
         }
+     .crudbutton2 {
+
+         max-width: 1500px;
+         margin-top: 10px;
+         margin-left: auto;
+         margin-right: auto;
+
+
+         display: flex;
+         flex-direction: column;
+         align-items: end;
+         justify-content: center;
+        }
 
      .commentbox {
 
@@ -221,7 +234,14 @@
 
 
 </div>
-    <div class="crudbutton" id="buttonadd"></div>
+
+    <div class="crudbutton" id="buttonadd">
+
+    </div>
+    <div class=" crudbutton2">
+        <b> <button onclick= 'location.href="/"'  ,type="button" class="btn btn-outline-secondary">홈으로</button></b>
+    </div>
+
     <div class="commentbox" id="commentbox">
     <div class="commentlist" id="commentlist">
             {%for comment in comments%}
