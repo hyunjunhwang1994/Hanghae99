@@ -88,9 +88,12 @@
             margin-bottom: 20px;
 
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: end;
             justify-content: center;
+        }
+        .crudbutton>button {
+            margin-right: 10px;
         }
 
 
@@ -131,6 +134,8 @@
     </script>
     <div class="crudbutton">
         <button onclick="save_editor()" ,type="button" class="btn btn-outline-secondary">저장</button>
+        <button onclick= 'location.href="/"'  ,type="button" class="btn btn-outline-secondary">취소</button>
+
     </div>
 </div>
     <div id="test"></div>

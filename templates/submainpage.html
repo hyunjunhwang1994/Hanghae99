@@ -14,14 +14,45 @@
     <title>코딩 도우미</title>
 
 
+    <script>
+
+
+function logout() {
+
+
+    $.removeCookie('mytoken')
+
+    window.location.href = '/'
+
+}
+
+
+function deletePost(post_id){
+
+            $.ajax({
+                type: "POST",
+                url: "/api/deletepost",
+                data: { postId_give : post_id
+                },
+                success: function (response) {
+                    location.reload();
+
+                }
+            });
+
+
+}
+
+
+    </script>
 </head>
 <body>
 <div class="main_box">
 
     <div class="head_container">
-        <button onclick="location.href='content/write'" type="button" class="btn btn-outline-info">글 작성📝</button>
+        <button onclick="location.href='../content/write'" type="button" class="btn btn-outline-info">글 작성📝</button>
 
-        <button type="button" id="openModalPop" class="btn btn-outline-success">친구👬</button>
+        <button  type="button" id="openModalPop" class="btn btn-outline-success">친구👬</button>
 
         <button onclick="logout()" type="button" class="btn btn-outline-danger">로그아웃</button>
 
@@ -45,7 +76,7 @@
             <div class="pop_title">
                 <span class="d-block p-2 text-bg-primary" style="margin-left: 20px">모든 유저</span>
                 <button onclick="showFriend('{{user_id}}')" type="button" class="btn btn-outline-info"
-                        style="margin-left: 40px">친구 보기
+                        style="margin-left: 80px">친구 보기
                 </button>
 
             </div>
@@ -130,6 +161,13 @@
 
 
                     {% endif %}
+
+                    {% if post.id == user_id %}
+                    <td>
+                        <button onclick="deletePost('{{ post.post_num }}')">❌️</button>
+                    </td>
+                    {% endif %}
+
                 </tr>
                 {% endfor %}
                 <!-- 반복되는 구간 끝 -->

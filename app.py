@@ -485,7 +485,34 @@ def pagination():
         likes_array=likes_array,
         all_users_info=all_users_info,
         user_id=user_id
+
     )
+
+@app.route('/api/deletepost', methods=["POST"])
+def deletePost():
+
+    token_receive = request.cookies.get('mytoken')
+
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+
+        user_id = payload['id']
+
+        val_ID = db.users.find_one({'id': payload['id']}, {'_id': False})
+        return render_template('myPage.html')
+    except jwt.ExpiredSignatureError:
+        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+    except jwt.exceptions.DecodeError:
+        return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+
+
+
+    postId_receive = request.form['postId_give']
+
+    find_user = db.likes.find_one({"$and": [{'id':user_id},{"likes_post":{"$size":1}}]})
+
+
+    db.crud.delete_one({"$and": [{"id":user_id},{"post_num":postId_receive}] })
 
 
 
