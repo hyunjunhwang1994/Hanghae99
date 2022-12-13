@@ -219,6 +219,7 @@ def go_submainpage():
 
 
         likes_array = []
+        i=0
         for x in range(postsLimit):
             testList = likes_post['likes_post']
 
