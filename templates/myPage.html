@@ -50,7 +50,7 @@
             top: 50%;
             left: 50%;
             overflow: auto;
-            height: 800px;
+            height: 730px;
             width: 550px;
             transform: translate(-50%, -50%);
             z-index: 1002;
@@ -66,12 +66,6 @@
             padding: 50px;
             line-height: 1.4rem;
             font-size: 14px;
-        }
-
-        .popup_box .popup_cont h2 {
-            padding: 15px 0;
-            color: #333;
-            margin: 0;
         }
 
         .popup_box .popup_cont p {
@@ -131,17 +125,11 @@
             -o-transform: rotate(45deg);
             transform: rotate(45deg);
         }
-
-
         /*popup*/
     </style>
 <body>
     <div class="title">
-        <!--         <button onclick="open_box()" type="button" class="btn btn-outline-success">회원정보 수정</button>-->
-        <!--            <button onclick="location.href = '/register'" type="button" class="btn btn-outline-success">회원가입</button>-->
-        <!--            <button onclick="openMy()" type="button" class="btn btn-outline-success">마이페이지</button>-->
-        <p>
-            <button onclick="javascript:openPop()" type="button" class="btn btn-outline-success">회원정보 수정</button>
+        <p><button onclick="javascript:openPop()" type="button" class="btn btn-outline-success">회원정보 수정</button>
         </p>
     </div>
     <div class="popup_layer" id="popup_layer" style="display: none;">
@@ -149,50 +137,20 @@
             <!--팝업 컨텐츠 영역-->
             <div class="popup_cont">
                 <h5> 회원정보 </h5>
-                <div class="input-container">
-                    <p> ID <input type="text" class="form-control" id="inputID" placeholder="ID" readonly="readonly"/>
-                    </p>
-                    <p> 닉네임 <input type="text" class="form-control" id="inputNick" placeholder="닉네임"/>
-                    </p>
-                    <p> 이메일 <input type="email" class="form-control" id="inputEmail" placeholder="example@email.com"/>
-                    </p>
+                <div class="input-container" id="info-box">
                 </div>
                 <div class="popup_btn" style="float: bottom; margin-top: 200px;">
                     <p><button onclick="javascript:editInfo();" type="button" class="btn btn-outline-success">수정</button>
                         <button onclick="javascript:closePop();" type="button" class="btn btn-outline-success">닫기</button>
                     </p>
                 </div>
-
             </div>
-<!--            <section id="container">-->
-<!--                <form action="/member/memberUpdate" method="post">-->
-<!--                    <div class="form-group has-feedback">-->
-<!--                        <label class="control-label" for="userId">아이디</label>-->
-<!--                        <input class="form-control" type="text" id="userId" name="userId" value="${member.userId}"-->
-<!--                               readonly="readonly"/>-->
-<!--                    </div>-->
-<!--                    <div class="form-group has-feedback">-->
-<!--                        <label class="control-label" for="userPass">패스워드</label>-->
-<!--                        <input class="form-control" type="password" id="userPass" name="userPass"/>-->
-<!--                    </div>-->
-<!--                    <div class="form-group has-feedback">-->
-<!--                        <label class="control-label" for="userName">성명</label>-->
-<!--                        <input class="form-control" type="text" id="userName" name="userName"-->
-<!--                               value="${member.userName}"/>-->
-<!--                    </div>-->
-<!--                    <div class="form-group has-feedback">-->
-<!--                        <button class="btn btn-success" type="submit" id="submit">회원정보수정</button>-->
-<!--                        <button class="cencle btn btn-danger" type="button">취소</button>-->
-<!--                    </div>-->
-<!--                </form>-->
-<!--            </section>-->
-            <!--팝업 버튼 영역-->
         </div>
     </div>
-
-
 <script>
-
+    $(document).ready(function () {
+        getInfo();
+    });
     //팝업 띄우기
     function openPop() {
         document.getElementById("popup_layer").style.display = "block";
@@ -202,42 +160,50 @@
         document.getElementById("popup_layer").style.display = "none";
     }
 
-    // function editInfo(nick) {
-    //     $.ajax({
-    //         type: "GET",
-    //         url: "/mypage",
-    //         data: {},
-    //         success: function (response) {
-    //
-    //         }
-    //
-    //     });
-    // }
+    function getInfo() {
+        $.ajax({
+            type: "GET",
+            url: "/users/info",
+            data: {},
+            success: function (response) {
+                for (let key in response) {
+                    console.log(response[key])
+                    key = response[key]
 
-    // function validate() {
-    //         let id = document.getElementById('ID').value
-    //         let pw = document.getElementById('PW').value
-    //         $.ajax({
-    //             type: "POST",
-    //             url: "/users/login",
-    //             data: {
-    //                 id_give: id,
-    //                 pw_give: pw,
-    //             },
-    //             success: function (response) {
-    //                 if (response['result'] == 'success') {
-    //                     $.cookie('mytoken', response['token']);
-    //                     alert('로그인 성공');
-    //                     window.location.href='/';
-    //
-    //                 } else {
-    //                     alert(response['msg'])
-    //                 }
-    //
-    //             }
-    //         });
-    //     }
+                    let id = key['id']
+                    let nick = key['nick']
+                    let email = key['email']
 
+                    let temp_html = ``
+                    temp_html = `<p> ID <input type="text" class="form-control" id="inputID" placeholder="${id}" readonly="readonly"/>
+                            </p>
+                            <p> 닉네임 <input type="text" class="form-control" id="inputNick" placeholder="${nick}"/>
+                            </p>
+                            <p> 이메일 <input type="email" class="form-control" id="inputEmail" placeholder="${email}"/>
+                            </p>`
+                    $('#info-box').append(temp_html)
+                }
+            }
+        })
+    }
+
+    function editInfo() {
+        let nick = document.getElementById('inputNick').value
+        let email = document.getElementById('inputEmail').value
+
+        $.ajax({
+            type: "POST",
+            url: "/users/info",
+            data: {
+                nick_give:nick,
+                email_give:email
+            },
+            success: function (response) {
+                alert(response);
+                window.location.reload()
+            }
+        });
+    }
 </script>
 
 </body>
