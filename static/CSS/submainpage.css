@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@100&display=swap');
 *{
 font-family: 'Noto Sans KR', sans-serif;
-    font-size: 15px;
+    font-size: 17px;
 
 }
 
@@ -46,7 +46,7 @@ font-family: 'Noto Sans KR', sans-serif;
 
 .paginationBox{
     width: 300px;
-    margin: 50px auto 0px auto;
+    margin: 0px auto 0px auto;
 }
 
 
