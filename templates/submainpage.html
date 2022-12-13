@@ -86,10 +86,10 @@
             <table>
                 <thead>
                 <tr>
-                    <td class="testtest">번호</td>
-                    <td>제목</td>
-                    <td>글쓴이</td>
-                    <td>likes</td>
+                    <td class="testtest">post&nbsp;&nbsp;&nbsp;</td>
+                    <td style="text-align: center">title</td>
+                    <td style="text-align: center">autor</td>
+                    <td style="text-align: center">likes</td>
                 </tr>
                 </thead>
                 <tbody>
@@ -97,7 +97,7 @@
                 {% for post in all_posts %}
                 <tr>
 
-                    <td>{{post.post_num}}</td>
+                    <td style="text-align: center">{{post.post_num}}&nbsp;&nbsp;&nbsp;</td>
                     <td><a href="/content/written/{{post.post_num}}">{{post.crudtitle}}</a></td>
                     <td>{{ post.id }}</td>
                     <td>{{ post.likes }}</td>
