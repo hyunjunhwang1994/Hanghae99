@@ -13,15 +13,6 @@
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
 
-<script type="text/javascript" src="<%=ctxPath %>/script/RSA/rsa.js">
-</script>
-<script type="text/javascript" src="<%=ctxPath %>/script/RSA/jsbn.js">
-</script>
-<script type="text/javascript" src="<%=ctxPath %>/script/RSA/prng4.js">
-</script>
-<script type="text/javascript" src="<%=ctxPath %>/script/RSA/rng.js">
-</script>
-
 <style>
     .signUpBox {
         width: 95%;
@@ -29,13 +20,35 @@
         margin: 20px auto 0 auto;
         padding: 20px;
         box-shadow: 0 0 3px 0 gray;
-
     }
-
 
 </style>
 
-<script>
+<body>
+<div class="signUpBox">
+    <h1>회원등록</h1>
+
+    <p> ID <input type="text" class="form-control" id="inputID" placeholder="ID"/>
+        <button onclick="checkId()" type="button" class="btn btn-outline-primary">중복 확인</button>
+        <b id="chkID_text"></b>
+    </p>
+    <!--    <button onclick="dupCheck()">중복확인</button> -->
+    <p> PW <input type="password" class="form-control" id="inputPW1" placeholder="비밀번호"/>
+    </p>
+    <p> PW확인 <input type="password" class="form-control" id="inputPW2" placeholder="비밀번호 확인"/>
+    <h6 id="chkPW_text"></h6>
+    </p>
+    <p> 닉네임 <input type="text" class="form-control" id="inputNick" placeholder="닉네임"/>
+    </p>
+    <p> 이메일 <input type="text" class="form-control" id="inputEmail" placeholder="example@email.com"/>
+    <h6 id="chkEmail_text"></h6>
+    </p>
+    <div class = "buttons">
+        <p><button onclick="join()" id="btn_join" type="button" class="btn btn-outline-success">등록하기</button>
+            <button onclick="location.href = '/'" type="button" class="btn btn-outline-success">취소</button>
+        </p>
+    </div>
+    <script>
     $(function () {
         $("input[type=text]").keyup(function () {
             let loginButton = document.querySelector('#btn_join');
@@ -177,55 +190,6 @@
 
 
 </script>
-
-<body>
-<div class="signUpBox">
-    <h1>회원등록</h1>
-
-    <p> ID <input type="text" class="form-control" id="inputID" placeholder="ID"/>
-        <button onclick="checkId()" type="button" class="btn btn-outline-primary">중복 확인</button>
-        <b id="chkID_text"></b>
-    </p>
-    <!--    <button onclick="dupCheck()">중복확인</button> -->
-    <p> PW <input type="password" class="form-control" id="inputPW1" placeholder="비밀번호"/>
-    </p>
-    <p> PW확인 <input type="password" class="form-control" id="inputPW2" placeholder="비밀번호 확인"/>
-    <h6 id="chkPW_text"></h6>
-    </p>
-    <p> 닉네임 <input type="text" class="form-control" id="inputNick" placeholder="닉네임"/>
-    </p>
-    <p> 이메일 <input type="text" class="form-control" id="inputEmail" placeholder="example@email.com"/>
-    <h6 id="chkEmail_text"></h6>
-    </p>
-    <div class = "buttons">
-        <p>
-            <button onclick="join()" id="btn_join">등록하기</button>
-            <button onclick="location.href = '/'">취소</button>
-        </p>
-    </div>
-
-    <!--    <div class="row g-2">-->
-    <!--        <div class="col-md">-->
-    <!--            <div class="form-floating">-->
-    <!--                <input type="email" class="form-control" id="floatingInputGrid" placeholder="name@example.com"-->
-    <!--                       value="example">-->
-    <!--                <label for="floatingInputGrid">Email Id</label>-->
-    <!--            </div>-->
-    <!--        </div>-->
-    <!--        <div class="col-md">-->
-    <!--            <div class="form-floating">-->
-    <!--                <select class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">-->
-    <!--                    <option selected>Open this select menu</option>-->
-    <!--                    <option value="@naver.com">naver.com</option>-->
-    <!--                    <option value="@gmail.com">gmail.com</option>-->
-    <!--                    <option value="@kakao.com">kakao.com</option>-->
-    <!--                </select>-->
-    <!--                <label for="floatingSelectGrid">email.com</label>-->
-    <!--            </div>-->
-    <!--        </div>-->
-    <!--    </div>-->
-
-    <!--        <button onclick="doubleCheck()">중복확인</button> -->
 </div>
 </body>
 </html>
