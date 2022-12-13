@@ -131,6 +131,112 @@ def login():
 
 
 
+@app.route('/submainpage')
+def go_submainpage():
+    token_receive = request.cookies.get('mytoken')
+
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_id = payload['id']
+
+    except jwt.ExpiredSignatureError:
+        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+    except jwt.exceptions.DecodeError:
+        return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+
+        # 시작시 페이지
+    nowPage_receive = int(1)
+    postsLimit = 8  # 한 페이지당 포스트 수
+    pagesLimit = 5  # 페이지 수
+
+    # 포스트의 모든 데이터
+    all_posts = list(db.crud.find().sort('_id', pymongo.ASCENDING).limit(postsLimit))
+    # 포스트 총 갯수
+    total_count = len(list(db.crud.find({}, {'_id': False})))
+    # 총 페이지 수 == 마지막 페이지
+    last_page = math.ceil(total_count / postsLimit)
+    # 해당 글의 글번호 ( 8개씩 잘라서 )
+
+    # 블록 계산
+    block_start = nowPage_receive % pagesLimit
+    block_zero = nowPage_receive - (nowPage_receive % pagesLimit) + 1
+    block_last = nowPage_receive - (nowPage_receive % 10) + pagesLimit
+
+    skip = (nowPage_receive * 4 + 4 * (nowPage_receive % 10)) - postsLimit
+
+
+    if (block_last > last_page):
+        block_last = last_page
+
+    likes_post = db.likes.find_one({"id": user_id}, {'likes_post': 1, '_id': False})
+    if likes_post != None:
+        for post in all_posts:
+            i = post['post_num']
+            n = post['post_num']
+
+            print("나는 likes_post" + str(likes_post))
+            print("나는 post" + str(post))
+            print("나는 i " + str(i))
+
+        likes_array = []
+        for x in range(postsLimit):
+            testList = likes_post['likes_post']
+
+            print("나는 testList " + str(testList))
+            if i in testList:
+                print("있다.-------=-=" + str(i))
+                likes_array.append(i)
+                i -= 1
+
+                if i == (skip):
+                    break
+            else:
+                print("없다." + str(i))
+                i -= 1
+    else:
+        likes_array = [0, 0, 0, 0, 0, 0, 0, 0]
+        return render_template(
+            'submainpage.html',
+            all_posts=all_posts,
+            total_count=total_count,
+            postsLimit=postsLimit,
+            nowPage_receive=nowPage_receive,
+            block_start=block_start,
+            block_last=block_last,
+            last_page=last_page,
+            likes_array=likes_array
+        )
+
+    i = 0
+    for post in all_posts:
+        i = post['post_num']
+
+    # 포스팅 하는 post_num의 최댓값 보다 큰경우 삭제
+    for post in likes_array[:]:
+        if i < post:
+            likes_array.remove(post)
+
+    # 빈값이 있는경우 +  0으로 값넣기
+    for x in range(postsLimit - len(likes_array)):
+        likes_array.append(0)
+
+    likes_array.sort(reverse=True)
+    print("페이지에 적용될 Likes: " + str(likes_array))
+
+    return render_template(
+        'submainpage.html',
+        all_posts=all_posts,
+        total_count=total_count,
+        postsLimit=postsLimit,
+        nowPage_receive=nowPage_receive,
+        block_start=block_start,
+        block_last=block_last,
+        last_page=last_page,
+        likes_array=likes_array
+    )
+
+
+
 @app.route('/api/clicklike', methods=['POST'])
 def click_likes():
 
@@ -161,11 +267,15 @@ def click_likes():
         }
         db.likes.update_one(query, new_values)
         print("데이터 저장완료 : " + str(post_id))
+        db.crud.update_one({'post_num': post_id}, {"$inc": {'likes': 1}})
+
+
     # 좋아요를 한적이 없다면 insert로 테이블 구조 생성
     else:
         doc_array1 = {"id":user_id, "likes_post":[post_id]}
         db.likes.insert_one(doc_array1)
         print("데이터 저장완료 : " + str(post_id))
+        db.crud.update_one({'post_num': post_id}, {'$inc': {'likes': 1}})
     return ""
 @app.route('/api/cancellike', methods=["POST"])
 def cancel_likes():
@@ -194,10 +304,12 @@ def cancel_likes():
         }
         db.likes.update_one(query, new_values)
         print("데이터삭제")
+        db.crud.update_one({'post_num': post_id}, {'$inc': {'likes': -1}})
     else:
         doc_array1 = {"id":user_id}
         db.likes.delete_one(doc_array1)
         print("테이블삭제")
+        db.crud.update_one({'post_num': post_id}, {'$inc': {'likes': -1}})
     return ""
 
 @app.route('/pagination')
@@ -214,7 +326,8 @@ def startPagination():
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
 
-    # 시작시 페이지
+
+        # 시작시 페이지
     nowPage_receive = int(1)
     postsLimit = 8  # 한 페이지당 포스트 수
     pagesLimit = 5  # 페이지 수
@@ -227,29 +340,41 @@ def startPagination():
     last_page = math.ceil(total_count / postsLimit)
     # 해당 글의 글번호 ( 8개씩 잘라서 )
 
-
     # 블록 계산
     block_start = nowPage_receive % pagesLimit
     block_zero = nowPage_receive - (nowPage_receive % pagesLimit) + 1
     block_last = nowPage_receive - (nowPage_receive % 10) + pagesLimit
 
-
+    skip = (nowPage_receive * 4 + 4 * (nowPage_receive % 10)) - postsLimit
 
     if (block_last > last_page):
         block_last = last_page
 
-    likes_post = db.likes.find_one({"id": user_id},{'likes_post':1,'_id':False})
+    likes_post = db.likes.find_one({"id": user_id}, {'likes_post': 1, '_id': False})
 
     if likes_post != None:
-        array = likes_post['likes_post']
-        array.sort()
-        print("정렬하기전 likes_post : " + str(array))
-        likes_array = array[0:8]
-        print("정렬 후 likes_post :" + str(likes_array))
+        for post in all_posts:
+            i = post['post_num']
+            n = post['post_num']
+
+        likes_array = []
+        for x in range(len(likes_post['likes_post']) + 1):
+            testList = likes_post['likes_post']
+
+            if i in testList:
+                print("있다.-------=-=" + str(i))
+                likes_array.append(i)
+                i -= 1
+
+                if i == (skip):
+                    break
+            else:
+                print("없다." + str(i))
+                i -= 1
     else:
-        likes_array = [0,0,0,0,0,0,0,0]
+        likes_array = [0, 0, 0, 0, 0, 0, 0, 0]
         return render_template(
-            'pagination.html',
+            'submainpage.html',
             all_posts=all_posts,
             total_count=total_count,
             postsLimit=postsLimit,
@@ -260,34 +385,24 @@ def startPagination():
             likes_array=likes_array
         )
 
-
+    i = 0
     for post in all_posts:
         i = post['post_num']
 
-
+    # 포스팅 하는 post_num의 최댓값 보다 큰경우 삭제
     for post in likes_array[:]:
         if i < post:
             likes_array.remove(post)
-
 
     # 빈값이 있는경우 +  0으로 값넣기
     for x in range(postsLimit - len(likes_array)):
         likes_array.append(0)
 
     likes_array.sort(reverse=True)
-    print(likes_array)
-
-
-    # print("total_count: " +str(total_count))
-    # print("nowPage_receive: " + str(nowPage_receive))
-    # print("block_start: " + str(block_start))
-    # print("block_last: " + str(block_last))
-    # print("last_page: " +str(last_page))
-
-
+    print("페이지에 적용될 Likes: " + str(likes_array))
 
     return render_template(
-        'pagination.html',
+        'submainpage.html',
         all_posts=all_posts,
         total_count=total_count,
         postsLimit=postsLimit,
@@ -356,14 +471,12 @@ def pagination():
         for x in range(len(likes_post['likes_post']) + 1):
             testList = likes_post['likes_post']
 
-            # 2페이지라 가정
-            # 16 ~ 9 까지의 데이터만 있으면됨.
             if i in testList:
                 print("있다.-------=-=" + str(i))
                 likes_array.append(i)
                 i -= 1
 
-                if i == (n - (postsLimit + 1)):
+                if i == (skip):
                     break
             else:
                 print("없다." + str(i))
@@ -371,7 +484,7 @@ def pagination():
     else:
         likes_array = [0,0,0,0,0,0,0,0]
         return render_template(
-            'pagination.html',
+            'submainpage.html',
             all_posts=all_posts,
             total_count=total_count,
             postsLimit=postsLimit,
@@ -381,7 +494,6 @@ def pagination():
             last_page=last_page,
             likes_array=likes_array
         )
-
 
     i = 0
     for post in all_posts:
@@ -404,7 +516,7 @@ def pagination():
 
 
     return render_template(
-        'pagination.html',
+        'submainpage.html',
         all_posts=all_posts,
         total_count=total_count,
         postsLimit=postsLimit,
@@ -539,6 +651,8 @@ def permitFriend():
 
 
     return render_template('index.html')
+
+
 
 
 @app.route('/test')
