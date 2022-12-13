@@ -33,7 +33,48 @@ def register():
     return render_template('register.html')
 
 
-@app.route('/members/checkid', methods=["POST"])
+@app.route('/users')
+def mypage():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        val_ID = db.users.find_one({'id': payload['id']}, {'_id': False})
+        return render_template('myPage.html')
+    except jwt.ExpiredSignatureError:
+        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+    except jwt.exceptions.DecodeError:
+        return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+
+
+@app.route('/users/info', methods=['GET','POST'])
+def getInfo():
+    token_receive = request.cookies.get('mytoken')
+    if request.method == 'GET':
+        try:
+            payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+            val_ID = db.users.find_one({'id': payload['id']}, {'_id': False})
+            return jsonify({'info':val_ID})
+        except jwt.ExpiredSignatureError:
+            return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+        except jwt.exceptions.DecodeError:
+            return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+    if request.method == 'POST':
+        nick_receive = request.form['nick_give']
+        email_receive = request.form['email_give']
+        try:
+            payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+            val_ID = db.users.find_one({'id': payload['id']}, {'_id': False})
+            id_found = val_ID['id']
+            db.users.update_one({'id': id_found}, {'$set': {'nick': nick_receive, 'email': email_receive}})
+            print(db.users.find_one({'id': id_found}))
+            return '수정 완료'
+        except jwt.ExpiredSignatureError:
+            return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+        except jwt.exceptions.DecodeError:
+            return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+
+
+@app.route('/users/checkid', methods=["POST"])
 def checkid():
     id_receive = request.form['id_give']
     chkID = db.users.find_one({'id':id_receive})
@@ -43,7 +84,7 @@ def checkid():
         return '0'
 
 
-@app.route('/members/join', methods=["POST"])
+@app.route('/users/join', methods=["POST"])
 def join():
     id_receive = request.form['id_give']
     pw_receive = request.form['pw_give']
@@ -53,9 +94,7 @@ def join():
     user_list = list(db.users.find({}, {'_id': False}))
 
     uid = len(user_list) + 1
-
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
-
 
     doc = {
         'id': id_receive,
@@ -70,30 +109,25 @@ def join():
     return '등록 완료'
 
 
-@app.route('/members/login', methods=["POST"])
+@app.route('/users/login', methods=["POST"])
 def login():
 
     id_receive=request.form['id_give']
     pw_receive = request.form['pw_give']
 
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
-
     val = db.users.find_one({'id': id_receive,'pw':pw_hash})
 
     if val != None:
         payload = {
             'id': id_receive,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=10)
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=100)
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
         return jsonify({'result': 'success', 'token': token})
 
     if val == None:
-        return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
-
-
-
-
+        return jsonify({'result': 'fail', 'msg': "아이디/비밀번호가 일치하지 않습니다."})
 
 
 
@@ -226,7 +260,6 @@ def go_submainpage():
         all_users_info = all_users_info,
         user_id=user_id
     )
-
 
 
 
@@ -612,6 +645,7 @@ def write_content():
     post_num = len(write_list) + 1  # len() = ~의 리스트 수
 
     doc = {
+        'likes' : 0,
         'id' : id,
         'crudtitle': crud_title_receive,
         'post_num': post_num,
@@ -626,16 +660,13 @@ def write_content():
 @app.route('/content/written', methods=["GET"])
 def written():
 
-
     return render_template('written.html')
 
 
 @app.route("/content/written/<int:post_num>", methods=["GET"])
 def written_get(post_num):
     token_receive = request.cookies.get('mytoken')
-    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-    userinfo = db.users.find_one({'id': payload['id']}, {'_id': 0})
-    user_id = payload["id"]
+
     user = db.crud.find_one({'post_num': post_num})
     # print(user)
     id = user["id"]
@@ -646,17 +677,32 @@ def written_get(post_num):
     write_url2 = write.replace('<figure class="media"><oembed url=', '<iframe width="560" height="315" src=')
     write_url1 = write_url2.replace('></oembed></figure>', ' title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
     write_url = write_url1.replace('youtu.be', 'www.youtube.com/embed')
+    comment_list = list(db.crudcomment.find({'post_num': post_num}, {'_id': False}))
+    comments=comment_list
+    print(comments)
 
-    return render_template('written.html',
-                           user_id=user_id,
-                           id=id,
-                           post_num=post_num,
-                           crudtitle=crudtitle,
-                           write=write,
-                           write_url=write_url,
+
+    try :
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_id = payload["id"]
+        return render_template('written.html',
+                               comments=comments,
+                               user_id=user_id,
+                               id=id,
+                               post_num=post_num,
+                               crudtitle=crudtitle,
+                               write=write,
+                               write_url=write_url
+                               )
+    except:
+        return render_template('written.html',
+                               comments=comments,
+                               id=id,
+                               post_num=post_num,
+                               crudtitle=crudtitle,
+                               write=write,
+                               write_url=write_url,
                            )
-# edit 쪽에 보내야 할 듯.d
-
 
 @app.route('/content/edit', methods=["POST"])
 def edit_content():
@@ -704,6 +750,28 @@ def edit_get(post_num):
         return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+
+
+@app.route("/content/comment", methods=["POST"])
+def add_comment():
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    userinfo = db.users.find_one({'id': payload['id']}, {'_id': 0})
+    nick = userinfo["nick"]
+    id = userinfo["id"]
+    num_receive = request.form['num_give']
+    num_receive= int(num_receive)
+    comment_receive = request.form['comment_give']
+
+    doc = {
+        'id': id,
+        'nick': nick,
+        'post_num': num_receive,
+        'comment': comment_receive
+    }
+    db.crudcomment.insert_one(doc)
+
+    return jsonify({'msg': '작성 완료!'})
 
 
 if __name__ == '__main__':

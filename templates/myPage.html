@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>대충 메인 페이지 1</title>
+
+        <!-- Jquery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <!--Bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <!--Font-->
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Jua', sans-serif;
+        }
+
+        .title {
+            text-align: center;
+
+            /*background-color: red;*/
+            background-size: cover;
+            background-position: center;
+
+            padding-top: 40px;
+        }
+
+        /*popup*/
+        .popup_layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10000;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        /*팝업 박스*/
+        .popup_box {
+            position: relative;
+            top: 50%;
+            left: 50%;
+            overflow: auto;
+            height: 800px;
+            width: 550px;
+            transform: translate(-50%, -50%);
+            z-index: 1002;
+            box-sizing: border-box;
+            background: #fff;
+            box-shadow: 2px 5px 10px 0px rgba(0, 0, 0, 0.35);
+            -webkit-box-shadow: 2px 5px 10px 0px rgba(0, 0, 0, 0.35);
+            -moz-box-shadow: 2px 5px 10px 0px rgba(0, 0, 0, 0.35);
+        }
+
+        /*컨텐츠 영역*/
+        .popup_box .popup_cont {
+            padding: 50px;
+            line-height: 1.4rem;
+            font-size: 14px;
+        }
+
+        .popup_box .popup_cont h2 {
+            padding: 15px 0;
+            color: #333;
+            margin: 0;
+        }
+
+        .popup_box .popup_cont p {
+            border-top: 1px solid #666;
+            padding-top: 30px;
+        }
+
+        /*버튼영역*/
+        .popup_box .popup_btn {
+            display: table;
+            table-layout: fixed;
+            width: 100%;
+            height: 70px;
+            background: #ECECEC;
+            word-break: break-word;
+        }
+
+        .popup_box .popup_btn p {
+            position: relative;
+            display: table-cell;
+            height: 70px;
+            font-size: 17px;
+            text-align: center;
+            vertical-align: middle;
+            text-decoration: none;
+            background: #ECECEC;
+        }
+
+        .popup_box .popup_btn p:before {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 26px;
+            right: 29px;
+            width: 1px;
+            height: 21px;
+            background: #fff;
+            -moz-transform: rotate(-45deg);
+            -webkit-transform: rotate(-45deg);
+            -ms-transform: rotate(-45deg);
+            -o-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+        }
+
+        .popup_box .popup_btn p:after {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 26px;
+            right: 29px;
+            width: 1px;
+            height: 21px;
+            background: #fff;
+            -moz-transform: rotate(45deg);
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            -o-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+
+
+        /*popup*/
+    </style>
+<body>
+    <div class="title">
+        <!--         <button onclick="open_box()" type="button" class="btn btn-outline-success">회원정보 수정</button>-->
+        <!--            <button onclick="location.href = '/register'" type="button" class="btn btn-outline-success">회원가입</button>-->
+        <!--            <button onclick="openMy()" type="button" class="btn btn-outline-success">마이페이지</button>-->
+        <p>
+            <button onclick="javascript:openPop()" type="button" class="btn btn-outline-success">회원정보 수정</button>
+        </p>
+    </div>
+    <div class="popup_layer" id="popup_layer" style="display: none;">
+        <div class="popup_box">
+            <!--팝업 컨텐츠 영역-->
+            <div class="popup_cont">
+                <h5> 회원정보 </h5>
+                <div class="input-container" id="info-box">
+                </div>
+                <div class="popup_btn" style="float: bottom; margin-top: 200px;">
+                    <p><button onclick="javascript:editInfo();" type="button" class="btn btn-outline-success">수정</button>
+                        <button onclick="javascript:closePop();" type="button" class="btn btn-outline-success">닫기</button>
+                    </p>
+                </div>
+
+            </div>
+<!--            <section id="container">-->
+<!--                <form action="/member/memberUpdate" method="post">-->
+<!--                    <div class="form-group has-feedback">-->
+<!--                        <label class="control-label" for="userId">아이디</label>-->
+<!--                        <input class="form-control" type="text" id="userId" name="userId" value="${member.userId}"-->
+<!--                               readonly="readonly"/>-->
+<!--                    </div>-->
+<!--                    <div class="form-group has-feedback">-->
+<!--                        <label class="control-label" for="userPass">패스워드</label>-->
+<!--                        <input class="form-control" type="password" id="userPass" name="userPass"/>-->
+<!--                    </div>-->
+<!--                    <div class="form-group has-feedback">-->
+<!--                        <label class="control-label" for="userName">성명</label>-->
+<!--                        <input class="form-control" type="text" id="userName" name="userName"-->
+<!--                               value="${member.userName}"/>-->
+<!--                    </div>-->
+<!--                    <div class="form-group has-feedback">-->
+<!--                        <button class="btn btn-success" type="submit" id="submit">회원정보수정</button>-->
+<!--                        <button class="cencle btn btn-danger" type="button">취소</button>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </section>-->
+            <!--팝업 버튼 영역-->
+        </div>
+    </div>
+
+
+<script>
+    $(document).ready(function () {
+        getInfo();
+    });
+
+    //팝업 띄우기
+    function openPop() {
+        document.getElementById("popup_layer").style.display = "block";
+    }
+    //팝업 닫기
+    function closePop() {
+        document.getElementById("popup_layer").style.display = "none";
+    }
+
+    function getInfo() {
+        $.ajax({
+            type: "GET",
+            url: "/users/info",
+            data: {},
+            success: function (response) {
+                for (let key in response) {
+                    console.log(response[key])
+                    key = response[key]
+
+                    let id = key['id']
+                    let nick = key['nick']
+                    let email = key['email']
+
+                    let temp_html = ``
+                    temp_html = `<p> ID <input type="text" class="form-control" id="inputID" placeholder="${id}" readonly="readonly"/>
+                            </p>
+                            <p> 닉네임 <input type="text" class="form-control" id="inputNick" placeholder="${nick}"/>
+                            </p>
+                            <p> 이메일 <input type="email" class="form-control" id="inputEmail" placeholder="${email}"/>
+                            </p>`
+                    $('#info-box').append(temp_html)
+                }
+            }
+        })
+    }
+
+    function editInfo() {
+        let nick = document.getElementById('inputNick').value
+        let email = document.getElementById('inputEmail').value
+
+        $.ajax({
+            type: "POST",
+            url: "/users/info",
+            data: {
+                nick_give:nick,
+                email_give:email
+            },
+            success: function (response) {
+                alert(response);
+                window.location.reload()
+            }
+        });
+    }
+
+    // function validate() {
+    //         let id = document.getElementById('ID').value
+    //         let pw = document.getElementById('PW').value
+    //         $.ajax({
+    //             type: "POST",
+    //             url: "/users/login",
+    //             data: {
+    //                 id_give: id,
+    //                 pw_give: pw,
+    //             },
+    //             success: function (response) {
+    //                 if (response['result'] == 'success') {
+    //                     $.cookie('mytoken', response['token']);
+    //                     alert('로그인 성공');
+    //                     window.location.href='/';
+    //
+    //                 } else {
+    //                     alert(response['msg'])
+    //                 }
+    //
+    //             }
+    //         });
+    //     }
+
+</script>
+
+</body>
+</html>
