@@ -144,6 +144,29 @@ def go_submainpage():
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
 
+    # all_uesrs_info 친구 추가할 모든 유저들 보여줌.
+    # 1. all user 데이터에서 자신 제외하기
+    # 2. 해당유저가 이미 친구인 사람은 제외하고 보여주기
+    currentUser_receive = user_id
+    all_users_info = list(db.users.find({}, {'_id': False, 'pw': False, 'email': False}))
+    all_friends = list(db.friends.find(
+        {"$or": [{'friends_currentUser': currentUser_receive}, {"friends_targetUser": currentUser_receive}]},
+        {'_id': False}))
+
+    # 자신 삭제.
+    for user in all_users_info:
+        if user['id'] == user_id:
+            all_users_info.remove(user)
+
+
+    # 해당유저의 친구 제외하고 보여주기.
+    for friend in all_friends:
+        if (friend['friends_currentUser'] == user_id) or (friend['friends_targetUser'] == user_id):
+            for user in all_users_info:
+                if user['id'] == friend['friends_currentUser'] or user['id'] == friend['friends_targetUser']:
+                    all_users_info.remove(user)
+
+
         # 시작시 페이지
     nowPage_receive = int(1)
     postsLimit = 8  # 한 페이지당 포스트 수
@@ -169,20 +192,19 @@ def go_submainpage():
         block_last = last_page
 
     likes_post = db.likes.find_one({"id": user_id}, {'likes_post': 1, '_id': False})
+    if likes_post == None:
+        likes_post = {'likes_post': []}
+
     if likes_post != None:
         for post in all_posts:
             i = post['post_num']
             n = post['post_num']
 
-            print("나는 likes_post" + str(likes_post))
-            print("나는 post" + str(post))
-            print("나는 i " + str(i))
 
         likes_array = []
         for x in range(postsLimit):
             testList = likes_post['likes_post']
 
-            print("나는 testList " + str(testList))
             if i in testList:
                 print("있다.-------=-=" + str(i))
                 likes_array.append(i)
@@ -193,19 +215,7 @@ def go_submainpage():
             else:
                 print("없다." + str(i))
                 i -= 1
-    else:
-        likes_array = [0, 0, 0, 0, 0, 0, 0, 0]
-        return render_template(
-            'submainpage.html',
-            all_posts=all_posts,
-            total_count=total_count,
-            postsLimit=postsLimit,
-            nowPage_receive=nowPage_receive,
-            block_start=block_start,
-            block_last=block_last,
-            last_page=last_page,
-            likes_array=likes_array
-        )
+
 
     i = 0
     for post in all_posts:
@@ -223,6 +233,11 @@ def go_submainpage():
     likes_array.sort(reverse=True)
     print("페이지에 적용될 Likes: " + str(likes_array))
 
+
+
+
+
+
     return render_template(
         'submainpage.html',
         all_posts=all_posts,
@@ -232,7 +247,9 @@ def go_submainpage():
         block_start=block_start,
         block_last=block_last,
         last_page=last_page,
-        likes_array=likes_array
+        likes_array=likes_array,
+        all_users_info = all_users_info,
+        user_id=user_id
     )
 
 
@@ -312,106 +329,7 @@ def cancel_likes():
         db.crud.update_one({'post_num': post_id}, {'$inc': {'likes': -1}})
     return ""
 
-@app.route('/pagination')
-def startPagination():
 
-    token_receive = request.cookies.get('mytoken')
-
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_id = payload['id']
-
-    except jwt.ExpiredSignatureError:
-        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
-    except jwt.exceptions.DecodeError:
-        return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
-
-
-        # 시작시 페이지
-    nowPage_receive = int(1)
-    postsLimit = 8  # 한 페이지당 포스트 수
-    pagesLimit = 5  # 페이지 수
-
-    # 포스트의 모든 데이터
-    all_posts = list(db.crud.find().sort('_id', pymongo.ASCENDING).limit(postsLimit))
-    # 포스트 총 갯수
-    total_count = len(list(db.crud.find({}, {'_id': False})))
-    # 총 페이지 수 == 마지막 페이지
-    last_page = math.ceil(total_count / postsLimit)
-    # 해당 글의 글번호 ( 8개씩 잘라서 )
-
-    # 블록 계산
-    block_start = nowPage_receive % pagesLimit
-    block_zero = nowPage_receive - (nowPage_receive % pagesLimit) + 1
-    block_last = nowPage_receive - (nowPage_receive % 10) + pagesLimit
-
-    skip = (nowPage_receive * 4 + 4 * (nowPage_receive % 10)) - postsLimit
-
-    if (block_last > last_page):
-        block_last = last_page
-
-    likes_post = db.likes.find_one({"id": user_id}, {'likes_post': 1, '_id': False})
-
-    if likes_post != None:
-        for post in all_posts:
-            i = post['post_num']
-            n = post['post_num']
-
-        likes_array = []
-        for x in range(len(likes_post['likes_post']) + 1):
-            testList = likes_post['likes_post']
-
-            if i in testList:
-                print("있다.-------=-=" + str(i))
-                likes_array.append(i)
-                i -= 1
-
-                if i == (skip):
-                    break
-            else:
-                print("없다." + str(i))
-                i -= 1
-    else:
-        likes_array = [0, 0, 0, 0, 0, 0, 0, 0]
-        return render_template(
-            'submainpage.html',
-            all_posts=all_posts,
-            total_count=total_count,
-            postsLimit=postsLimit,
-            nowPage_receive=nowPage_receive,
-            block_start=block_start,
-            block_last=block_last,
-            last_page=last_page,
-            likes_array=likes_array
-        )
-
-    i = 0
-    for post in all_posts:
-        i = post['post_num']
-
-    # 포스팅 하는 post_num의 최댓값 보다 큰경우 삭제
-    for post in likes_array[:]:
-        if i < post:
-            likes_array.remove(post)
-
-    # 빈값이 있는경우 +  0으로 값넣기
-    for x in range(postsLimit - len(likes_array)):
-        likes_array.append(0)
-
-    likes_array.sort(reverse=True)
-    print("페이지에 적용될 Likes: " + str(likes_array))
-
-    return render_template(
-        'submainpage.html',
-        all_posts=all_posts,
-        total_count=total_count,
-        postsLimit=postsLimit,
-        nowPage_receive=nowPage_receive,
-        block_start=block_start,
-        block_last=block_last,
-        last_page=last_page,
-        likes_array=likes_array
-    )
 
 
 @app.route('/api/pagination')
@@ -428,6 +346,26 @@ def pagination():
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
 
+
+    # all_uesrs_info 친구 추가할 모든 유저들 보여줌.
+    # 1. all user 데이터에서 자신 제외하기
+    # 2. 해당유저가 이미 친구인 사람은 제외하고 보여주기
+    currentUser_receive = user_id
+    all_users_info = list(db.users.find({}, {'_id': False, 'pw': False, 'email': False}))
+    all_friends = list(db.friends.find({"$or": [{'friends_currentUser': currentUser_receive}, {"friends_targetUser": currentUser_receive}]},{'_id':False}))
+
+    # 자신 삭제.
+    for user in all_users_info:
+        if user['id'] == user_id:
+            all_users_info.remove(user)
+
+
+    # 해당유저의 친구 제외하고 보여주기.
+    for friend in all_friends:
+        if (friend['friends_currentUser'] == user_id) or (friend['friends_targetUser'] == user_id):
+            for user in all_users_info:
+                if user['id'] == friend['friends_currentUser'] or user['id'] == friend['friends_targetUser']:
+                    all_users_info.remove(user)
 
     # 프론트에서 넘어온 사용자의 현재 페이지
     nowPage_receive = request.args.get("nowPage_give", 1, type=int)
@@ -462,13 +400,21 @@ def pagination():
 
     likes_post = db.likes.find_one({"id": user_id},{'likes_post':1,'_id':False})
 
+    if likes_post == None:
+        likes_post = {'likes_post':[]}
+
+    print(likes_post)
+
     if likes_post != None:
         for post in all_posts:
             i = post['post_num']
+
             n = post['post_num']
 
         likes_array = []
-        for x in range(len(likes_post['likes_post']) + 1):
+        print("i:" + str(i))
+        # 아래의 함수 가 한페이지당 표시된 글의 수만큼 돌ㅇ야함.
+        for x in range(postsLimit):
             testList = likes_post['likes_post']
 
             if i in testList:
@@ -481,19 +427,7 @@ def pagination():
             else:
                 print("없다." + str(i))
                 i -= 1
-    else:
-        likes_array = [0,0,0,0,0,0,0,0]
-        return render_template(
-            'submainpage.html',
-            all_posts=all_posts,
-            total_count=total_count,
-            postsLimit=postsLimit,
-            nowPage_receive=nowPage_receive,
-            block_start=block_start,
-            block_last=block_last,
-            last_page=last_page,
-            likes_array=likes_array
-        )
+
 
     i = 0
     for post in all_posts:
@@ -524,7 +458,9 @@ def pagination():
         block_start=block_start,
         block_last=block_last,
         last_page=last_page,
-        likes_array=likes_array
+        likes_array=likes_array,
+        all_users_info=all_users_info,
+        user_id=user_id
     )
 
 
@@ -599,6 +535,8 @@ def showFriend():
     currentUser_receive = user_id  # 유저 세션이나 JWT 확인 (현재 유저)
 
     all_friends = list(db.friends.find({"$or": [{'friends_currentUser': currentUser_receive}, {"friends_targetUser": currentUser_receive}]},{'_id':False}))
+
+
 
     print("서버 단 친구 목록보기 " + str(all_friends))
 

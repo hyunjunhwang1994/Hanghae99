@@ -34,6 +34,7 @@
     margin-top: 22px;
 }
 
+
 #banner_online_how h3 {
     font-size: 12px;
     margin-left: 6px;
@@ -47,6 +48,41 @@
 
 .p_bottom {
     margin-left: 30px;
+
+}
+
+#banner_online{
+    position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 20px 10px;
+  overflow: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.all_people_table{
+    border: 1px solid  black;
+}
+.all_people{
+                display: flex;
+            flex-direction: row;
+            justify-content: left;
+            align-items: flex-start;
+}
+
+.pop_title{
+                    display: flex;
+            flex-direction: row;
+            justify-content: left;
+            align-items: flex-start;
+
+}
+.showButton{
+    height: 25px;
+    margin-bottom: 10px;
 }
 
 #modal {
