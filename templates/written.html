@@ -189,8 +189,15 @@
          margin-top: 10px;
          margin-left: auto;
          margin-right: auto;
+         box-shadow: 0px 0px 1px 0px grey;
+
 
         }
+
+     .commentlist > div {
+         padding: 10px;
+            box-shadow: 0px 1px 0px 0px lightblue;
+     }
 
 
 
@@ -213,13 +220,18 @@
 
 
 
+</div>
+    <div class="crudbutton" id="buttonadd"></div>
+    <div class="commentbox" id="commentbox">
+    <div class="commentlist" id="commentlist">
+            {%for comment in comments%}
+  <div>  {{comment['nick']}} 의 댓글 : {{comment['comment']}} </div>
+    {%endfor%}
+    </div>
+
+
 
 </div>
- <div class="crudbutton" id="buttonadd"></div>
-    <div class="commentbox" id="commentbox">
-
-
-    </div>
 
 
 
