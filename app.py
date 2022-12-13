@@ -496,10 +496,10 @@ def deletePost():
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_id = payload['id']
+
         postId_receive = request.form['postId_give']
-        db.crud.delete_one({"id":user_id, "post_num":postId_receive})
-        print(user_id)
-        print(postId_receive)
+        db.crud.delete_one({"id":user_id, "post_num":int(postId_receive)})
+
         return jsonify({"result": 'suceess'})
 
     except jwt.ExpiredSignatureError:
