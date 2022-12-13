@@ -27,6 +27,22 @@ function logout() {
 }
 
 
+function deletePost(post_id){
+
+            $.ajax({
+                type: "POST",
+                url: "/api/deletepost",
+                data: { postId_give : post_id
+                },
+                success: function (response) {
+                    location.reload();
+
+                }
+            });
+
+
+}
+
 
     </script>
 </head>
@@ -34,7 +50,7 @@ function logout() {
 <div class="main_box">
 
     <div class="head_container">
-        <button onclick="location.href='content/write'" type="button" class="btn btn-outline-info">글 작성📝</button>
+        <button onclick="location.href='../content/write'" type="button" class="btn btn-outline-info">글 작성📝</button>
 
         <button  type="button" id="openModalPop" class="btn btn-outline-success">친구👬</button>
 
@@ -145,6 +161,13 @@ function logout() {
 
 
                     {% endif %}
+
+                    {% if post.id == user_id %}
+                    <td>
+                        <button onclick="deletePost('{{ post.post_num }}')">❌️</button>
+                    </td>
+                    {% endif %}
+
                 </tr>
                 {% endfor %}
                 <!-- 반복되는 구간 끝 -->
