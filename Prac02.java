@@ -1,7 +1,4 @@
-import java.io.IOException;
-import java.util.Scanner;
-
-public class Prac02_2 {
+public class Prac02 {
 
     public static void main(String[] args) throws Exception {
 
