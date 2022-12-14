@@ -29,14 +29,14 @@
                 data: {write_edit: myClassicEditor.getData(), crud_title_edit : crud_title, num_give : post_num},
                 success: function (response) {
                     alert(response["msg"])
-                    window.location.href="http://localhost:5000/content/written/"+post_num
+                    window.location.href="http://iamhyunjun.shop/content/written/"+post_num
 
                 }
             });
         }
         function cancle_editor(post_num){
             alert("수정 취소")
-            window.location.href="http://localhost:5000/content/written/"+post_num
+            window.location.href="http://iamhyunjun.shop/content/written/"+post_num
 
         }
     </script>
