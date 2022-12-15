@@ -1,4 +1,4 @@
-package sec03.examl01;
+package sec03.exam01;
 
 public abstract class Phone {
 
