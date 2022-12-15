@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b942a5e5-1df3-4e9c-afa2-652ca5aa42b7" name="Changes" comment="Add Main class">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+    <list default="true" id="b942a5e5-1df3-4e9c-afa2-652ca5aa42b7" name="Changes" comment="prac04_1 생성">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Prac02_2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Prac04_1.java" beforeDir="false" afterPath="$PROJECT_DIR$/Prac04_1.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/BasicOfJava/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/BasicOfJava/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/BasicOfJava/Prac03_2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/BasicOfJava/Prac03_2.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,6 +18,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -33,14 +35,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "jdk.selected.JAVA_MODULE": "11"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;11&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -64,7 +69,49 @@
       <option name="project" value="LOCAL" />
       <updated>1670994844697</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Self Study Java Chapter 2">
+      <created>1671002076698</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1671002076698</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Update Prac02 name,&#10;Create Prac03">
+      <created>1671002267162</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1671002267162</updated>
+    </task>
+    <task id="LOCAL-00005" summary="prac03_2완료">
+      <created>1671006040545</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1671006040545</updated>
+    </task>
+    <task id="LOCAL-00006" summary="prac03_3 생성">
+      <created>1671006086298</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1671006086298</updated>
+    </task>
+    <task id="LOCAL-00007" summary="prac03_3 생성">
+      <created>1671006235638</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1671006235638</updated>
+    </task>
+    <task id="LOCAL-00008" summary="prac04_1 생성">
+      <created>1671006351942</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1671006351942</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -80,6 +127,11 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Add Main class" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add Main class" />
+    <MESSAGE value="Self Study Java Chapter 2" />
+    <MESSAGE value="Update Prac02 name,&#10;Create Prac03" />
+    <MESSAGE value="prac03_2완료" />
+    <MESSAGE value="prac03_3 생성" />
+    <MESSAGE value="prac04_1 생성" />
+    <option name="LAST_COMMIT_MESSAGE" value="prac04_1 생성" />
   </component>
 </project>
