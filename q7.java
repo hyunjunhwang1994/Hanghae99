@@ -19,6 +19,13 @@ public class q7 {
         int length = (int)(Math.log10(n)+1);
         int[] answer = new int[length];
 
+//        // 자릿수 Math 함수 없이 구하기
+//        int cnt = 0;
+//        while (n != 0){
+//            n /= 10;
+//            cnt ++;
+//        }
+
 
         for(int i=0; i<length; i++){
             answer[i] = (int)(n % 10);
