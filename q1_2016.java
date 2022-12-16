@@ -3,7 +3,7 @@ public class q1_2016 {
     public static void main(String[] args) {
 
 
-        System.out.println(solution(1,1));
+        System.out.println(solution(2,1));
 
 
     }
@@ -20,6 +20,7 @@ public class q1_2016 {
             date += month[i];
         }
         date += b - 1;
+
 
         return day[date % 7];
 
