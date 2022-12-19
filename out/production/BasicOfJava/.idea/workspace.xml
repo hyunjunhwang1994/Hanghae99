@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b942a5e5-1df3-4e9c-afa2-652ca5aa42b7" name="Changes" comment="챕터 9 까지완료">
+    <list default="true" id="b942a5e5-1df3-4e9c-afa2-652ca5aa42b7" name="Changes" comment="09-2 // anonymous class">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sec03/examl01/Phone.java" beforeDir="false" afterPath="$PROJECT_DIR$/sec03/exam01/Phone.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sec03/examl01/SmartPhone.java" beforeDir="false" afterPath="$PROJECT_DIR$/sec03/exam01/SmartPhone.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/BasicOfJava/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/BasicOfJava/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,18 +34,39 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "jdk.selected.JAVA_MODULE": "11",
-    "last_opened_file_path": "/Users/hyunjun/Library/Mobile Documents/com~apple~CloudDocs/IT/Hanghae99/Java/BasicOfJava",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.0"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;11&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/hyunjun/Library/Mobile Documents/com~apple~CloudDocs/IT/Hanghae99/Java/BasicOfJava&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
+}</component>
+  <component name="RunManager">
+    <configuration name="ArrayListExample" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="sec13.exam01.ArrayListExample" />
+      <module name="BasicOfJava" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="sec13.exam01.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="애플리케이션.ArrayListExample" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -119,7 +139,21 @@
       <option name="project" value="LOCAL" />
       <updated>1671089731096</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="09-2 // anonymous class">
+      <created>1671103820045</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1671103820045</updated>
+    </task>
+    <task id="LOCAL-00011" summary="09-2 // anonymous class">
+      <created>1671105836585</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1671105836585</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -141,6 +175,11 @@
     <MESSAGE value="prac03_3 생성" />
     <MESSAGE value="prac04_1 생성" />
     <MESSAGE value="챕터 9 까지완료" />
-    <option name="LAST_COMMIT_MESSAGE" value="챕터 9 까지완료" />
+    <MESSAGE value="09-2 // anonymous class" />
+    <option name="LAST_COMMIT_MESSAGE" value="09-2 // anonymous class" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
