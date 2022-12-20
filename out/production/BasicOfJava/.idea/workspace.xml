@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b942a5e5-1df3-4e9c-afa2-652ca5aa42b7" name="Changes" comment="09-2 // anonymous class">
+    <list default="true" id="b942a5e5-1df3-4e9c-afa2-652ca5aa42b7" name="Changes" comment="collection framework">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chapter02/type.java" beforeDir="false" afterPath="$PROJECT_DIR$/chapter02/type.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/BasicOfJava/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/BasicOfJava/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -47,9 +48,9 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
-  <component name="RunManager">
-    <configuration name="ArrayListExample" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="sec13.exam01.ArrayListExample" />
+  <component name="RunManager" selected="애플리케이션.WriteExample">
+    <configuration name="HashSetExample" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="sec13.exam01.HashSetExample" />
       <module name="BasicOfJava" />
       <extension name="coverage">
         <pattern>
@@ -61,9 +62,65 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="LinkedListExample" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="sec13.exam01.LinkedListExample" />
+      <module name="BasicOfJava" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="sec13.exam01.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="QueueExample" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="sec13.exam01.QueueExample" />
+      <module name="BasicOfJava" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="sec13.exam01.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="StackExample" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="sec13.exam01.StackExample" />
+      <module name="BasicOfJava" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="sec13.exam01.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="WriteExample" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="sec14.WriteExample" />
+      <module name="BasicOfJava" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="sec14.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="애플리케이션.ArrayListExample" />
+        <item itemvalue="애플리케이션.WriteExample" />
+        <item itemvalue="애플리케이션.QueueExample" />
+        <item itemvalue="애플리케이션.StackExample" />
+        <item itemvalue="애플리케이션.HashSetExample" />
+        <item itemvalue="애플리케이션.LinkedListExample" />
       </list>
     </recent_temporary>
   </component>
@@ -153,7 +210,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671105836585</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="collection framework">
+      <created>1671431553293</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1671431553293</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -176,7 +240,8 @@
     <MESSAGE value="prac04_1 생성" />
     <MESSAGE value="챕터 9 까지완료" />
     <MESSAGE value="09-2 // anonymous class" />
-    <option name="LAST_COMMIT_MESSAGE" value="09-2 // anonymous class" />
+    <MESSAGE value="collection framework" />
+    <option name="LAST_COMMIT_MESSAGE" value="collection framework" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
