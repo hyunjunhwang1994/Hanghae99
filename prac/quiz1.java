@@ -27,6 +27,8 @@ public class quiz1 {
         quotient = N / 5; // 몫
         remainder = N % 5; // 나머지
 
+
+
         // 5로 나누어 떨어지면 N/5
         if(remainder == 0){
             System.out.println(N/5);
