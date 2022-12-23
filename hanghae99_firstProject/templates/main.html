@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:color="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+
+    <title>코딩 도우미</title>
+
+        <!-- Jquery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <!--Bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <!--Font-->
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Jua', sans-serif;
+        }
+
+        .title {
+            text-align: center;
+            /*background-color: red;*/
+            background-size: cover;
+            background-position: center;
+
+            padding-top: 40px;
+        }
+
+        .mypic {
+            max-width: 1700px;
+            width: 100%;
+            height: 500px;
+
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), url('data:image/png;base64,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');
+            background-position: center 20%;
+            margin-right: auto;
+            margin-left: auto;
+            background-size: contain;
+            background-repeat: no-repeat;
+
+            color: white;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mypagename {
+            margin-top: 40px;
+            color: darkcyan;
+            font-size: 60px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        /*popup*/
+        .popup_layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10000;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        /*팝업 박스*/
+        .popup_box {
+            position: relative;
+            top: 50%;
+            left: 50%;
+            overflow: auto;
+            height: 450px;
+            width: 550px;
+            transform: translate(-50%, -50%);
+            z-index: 1002;
+            box-sizing: border-box;
+            background: #fff;
+            box-shadow: 2px 5px 10px 0px rgba(0, 0, 0, 0.35);
+            -webkit-box-shadow: 2px 5px 10px 0px rgba(0, 0, 0, 0.35);
+            -moz-box-shadow: 2px 5px 10px 0px rgba(0, 0, 0, 0.35);
+        }
+        /*컨텐츠 영역*/
+        .popup_box .popup_cont {
+            padding: 50px;
+            line-height: 1.4rem;
+            font-size: 20px;
+        }
+
+        .popup_box .popup_cont p {
+            border-top: 1px solid #666;
+            padding-top: 30px;
+        }
+        /*popup*/
+
+    </style>
+</head>
+<body>
+      <h1><a class="mypagename" href="/submainpage" onfocus="this.blur()" rel="nofollow">코딩도우미</a></h1>
+      <div class="mypic"></div>
+      <div class="title" >
+          <button onclick="location.href = '/submainpage'" type="button" class="btn btn-outline-success">전체글</button>
+          <button onclick="openWrite()" type="button" class="btn btn-outline-success">글쓰기</button>
+          <b id="btns"></b>
+      </div>
+      <div class="popup_layer" id="popup_layer" style="display: none;">
+          <div class="popup_box">
+              <!--팝업 컨텐츠 영역-->
+              <div class="popup_cont">
+                  <h3> 로그인 </h3>
+                  <p> ID <input type="text" class="form-control" id="inputID" placeholder="아이디"/>
+                  </p>
+                  <p> PW <input type="password" class="form-control" id="inputPW" placeholder="비밀번호"/>
+                  </p>
+                  <p><button onclick="javascript:login();" type="button" class="btn btn-outline-success" id="btn_login">로그인</button>
+                      <button onclick="javascript:closePop();" type="button" class="btn btn-outline-success">취소</button>
+                  </p>
+              </div>
+          </div>
+      </div>
+
+      <script>
+          $(document).ready(function () {
+              isLogin();
+          });
+
+          $(function () {
+              $('#inputID').keyup(function () {
+                  let loginButton = document.querySelector('#btn_login');
+                  let regBlnk = /^\s+|\s$/g;
+                  let id = document.getElementById('inputID').value
+                  let pw = document.getElementById('inputPW').value
+                  if (id.replace(regBlnk, "") == "" || pw.replace(regBlnk, "") == "") {
+                      loginButton.disabled = true;
+                  } else {
+                      loginButton.disabled = false;
+                  }
+              });
+              $('#inputPW').keyup(function () {
+                  let loginButton = document.querySelector('#btn_login');
+                  let regBlnk = /^\s+|\s$/g;
+                  let id = document.getElementById('inputID').value
+                  let pw = document.getElementById('inputPW').value
+                  if (id.replace(regBlnk, "") == "" || pw.replace(regBlnk, "") == "") {
+                      loginButton.disabled = true;
+                  } else {
+                      loginButton.disabled = false;
+                  }
+              });
+          })
+
+          //팝업 띄우기
+          function openPop() {
+              document.getElementById("popup_layer").style.display = "block";
+          }
+
+          //팝업 닫기
+          function closePop() {
+              document.getElementById("popup_layer").style.display = "none";
+          }
+
+          function isLogin() {
+              $.ajax({
+                  type: "GET",
+                  url: "/islogin",
+                  data: {},
+                  success: function (response) {
+                      let temp_html = ``
+                      if (response == 'success') {
+                          temp_html = `<button onclick="openMy()" type="button" class="btn btn-outline-success">마이페이지</button>
+                                    <button onclick="logout()" type="button" class="btn btn-outline-success">로그아웃</button>
+                                    `
+                          return $('#btns').append(temp_html)
+                      }
+                      if (response == 'fail') {
+                          temp_html = `<button onclick="openPop()" type="button" class="btn btn-outline-success">로그인</button>
+                                    <button onclick="location.href = '/user/join'" type="button" class="btn btn-outline-success">회원가입</button>
+                                    `
+                          return $('#btns').append(temp_html)
+                      }
+                  }
+              })
+          }
+
+          function login() {
+              let id = document.getElementById('inputID').value
+              let pw = document.getElementById('inputPW').value
+              $.ajax({
+                  type: "POST",
+                  url: "/users/login",
+                  data: {
+                      id_give: id,
+                      pw_give: pw,
+                  },
+                  success: function (response) {
+                      if (response['result'] == 'success') {
+                          $.cookie('mytoken', response['token']);
+                          alert('로그인 성공');
+                          window.location.href = '/';
+                          return isLogin();
+                      } else {
+                          alert(response['msg'])
+                          return isLogin();
+                      }
+                  }
+              });
+          }
+
+          function logout() {
+              $.removeCookie('mytoken');
+              alert('로그아웃!')
+              window.location.href = '/'
+          }
+
+          function openMy() {
+              $.ajax({
+                  type: "GET",
+                  url: "/users",
+                  data: {},
+                  success: function (response) {
+                      location.href = '/users'
+                      if (response['result'] == 'fail') {
+                          location.href = '/'
+                          return alert(response['msg'])
+                      }
+                      if (response['result'] == 'success') {
+                          return alert('마이페이지로 이동합니다.')
+                      }
+                  }
+              })
+          }
+
+          function openWrite() {
+              $.ajax({
+                  type: "GET",
+                  url: "/users",
+                  data: {},
+                  success: function (response) {
+                      location.href = '/content/write'
+                      if (response['result'] == 'fail') {
+                          location.href = '/'
+                          return alert(response['msg'])
+                      }
+                      if (response['result'] == 'success') {
+                          return alert('마이페이지로 이동합니다.')
+                      }
+                  }
+              })
+          }
+      </script>
+</body>
+</html>

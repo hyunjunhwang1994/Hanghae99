@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="{{ url_for('static', filename='JS/submainpage_pagination.js') }}"></script>
+    <script src="{{ url_for('static', filename='JS/submainpage_friendpopup.js') }}"></script>
+    <script src="{{ url_for('static', filename='JS/submainpage_logout.js') }}"></script>
+
+    <link rel="stylesheet" href="../static/CSS/submainpage.css">
+
+    <title>코딩 도우미</title>
+
+
+    <script>
+
+
+function logout() {
+
+    window.location.href = '/'
+
+}
+
+
+function deletePost(post_id){
+
+            $.ajax({
+                type: "POST",
+                url: "/api/deletepost",
+                data: { postId_give : post_id
+                },
+                success: function (response) {
+                    location.reload();
+
+                }
+            });
+
+
+}
+
+
+    </script>
+</head>
+<body>
+<div class="main_box">
+
+    <div class="head_container">
+        <button onclick="location.href='../content/write'" type="button" class="btn btn-outline-info">글 작성📝</button>
+
+        <button  type="button" id="openModalPop" class="btn btn-outline-success">친구👬</button>
+
+        <button onclick="logout()" type="button" class="btn btn-outline-danger">홈</button>
+
+
+    </div>
+
+
+    <div class="post_container">
+
+        {% if user_id != 'unknown' %}
+        <h3>{{user_id}} 님 어서오세요.</h3>
+        {% endif %}
+
+
+        <div id="modal">
+        </div>
+        <div id="banner_online">
+            <div id="close_button" style="cursor: pointer;">
+                ❌
+            </div>
+            <div class="pop_title">
+                <span class="d-block p-2 text-bg-primary" style="margin-left: 20px">모든 유저</span>
+                <button onclick="showFriend('{{user_id}}')" type="button" class="btn btn-outline-info"
+                        style="margin-left: 80px">친구 보기
+                </button>
+
+            </div>
+
+            <div class="pop_content">
+                <div id="all_friends" class="all_people" style="width: 300px;">
+                    <table class="all_people_table">
+
+                        <tbody>
+                        {% for user in all_users_info %}
+                        {% set target_user_id = user["id"] %}
+                        <tr>
+                            <td id="user_index">{{ user['nick'] }} ({{ user['id'] }})</td>
+                            <td>
+                                <button id="addButton" onclick="addFriend('{{target_user_id}}')" style="width: 30px;">
+                                    +
+                                </button>
+                                <br></td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <div id="showFriend">
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+        <div class="postBox">
+            {% if (total_count | string) | length != 0 %}
+            <table>
+                <thead>
+                <tr>
+                    <td class="testtest">post&nbsp;&nbsp;&nbsp;</td>
+                    <td style="text-align: center">title</td>
+                    <td style="text-align: center">autor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    <td style="text-align: center">likes</td>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- 반복되는 구간 -->
+                {% for post in all_posts %}
+                <tr>
+
+                    <td style="text-align: center">{{post.post_num}}</td>
+                    <td><a href="/content/written/{{post.post_num}}">{{post.crudtitle}}</a></td>
+                    <td>{{ post.id }}</td>
+                    <td>{{ post.likes }}</td>
+                    {% set index = loop.index + (nowPage_receive - 1) * postsLimit %}
+
+                    {% if (likes_array | string) | length != 0 %}
+
+                    {% for like in likes_array %}
+                    {% if like == index %}
+                    <td>
+                        <button class="like" onclick="cancelLike('{{ post.post_num }}')">❤️</button>
+                    </td>
+                    {% endif %}
+                    {% endfor %}
+
+
+                    {% for like in likes_array %}
+
+                    {% if like == post.post_num %}
+                    {% break %}
+                    {% endif %}
+
+                    {% if ((like != post.post_num) and ( like == 0)): %}
+                    <td>
+                        <button class="like" onclick="clickLike('{{ post.post_num }}')">️🤍</button>
+                    </td>
+                    {% break %}
+                    {% endif %}
+                    {% endfor %}
+
+
+                    {% endif %}
+
+
+
+                </tr>
+                {% endfor %}
+                <!-- 반복되는 구간 끝 -->
+                </tbody>
+            </table>
+
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+         <div class="paginationBox">
+            <nav aria-label="...">
+                <ul class="pagination">
+
+                    {% if block_start - 1 > 0 %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{url_for('pagination', nowPage_give=block_start - 1)}}">Previous</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                    </li>
+                    {% endif %}
+
+                    {% for i in range(block_start, block_last + 1) %}
+                    <!-- 데이터가 존재하지 않는 페이지는 화면에 나타내지 않기 위한 조건문 -->
+                    {% if i > last_page %}
+
+                    {% else %}
+                    {% if i == nowPage_receive %}
+                    <li class="page-item active" aria-current="page">
+                        <a class="page-link" href="#">{{ i }}</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="{{url_for('pagination', nowPage_give=i)}}">{{ i
+                        }}</a></li>
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if block_last < last_page %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{url_for('pagination', nowPage_give=block_last + 1)}}">Next</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a>
+                    </li>
+                    {% endif %}
+
+                </ul>
+            </nav>
+                </div>
+
+            {% endif %}
+</body>
+</html>

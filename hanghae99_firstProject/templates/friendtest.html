@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <script>
+
+        function addFriend(user_id) {
+
+
+            $.ajax({
+                type: "POST",
+                url: "/api/addfriend",
+                data: {targetUser_give: user_id},
+                success: function (response) {
+                    window.location.reload()
+                }
+            });
+
+        }
+
+
+
+
+
+        function showFriend() {
+            $.ajax({
+                type: "POST",
+                url: "/api/showfriend",
+                data: {},
+                success: function (response) {
+
+                    let rows = response
+                    let temp_heml = ``
+                    let userId = '{{ user_id }}'
+                    for (let i = 0; i < rows.length; i++) {
+                        let currentUser = rows[i]['friends_currentUser']
+                        let targetUser = rows[i]['friends_targetUser']
+                        let isFriend = rows[i]['friends_isFriend']
+
+
+                        console.log(currentUser)
+                        console.log(targetUser)
+                        console.log(isFriend)
+                        // # 접속한 userA의 경우 표현할 것
+                        // # friend_a가 userA / isFriend: 0   친구 신청 중
+                        // # friend_a가 userA / isFriend: 1   내 친구
+                        // # friend_b가 userA / isFriend: 0   친구 수락하기 전
+                        // # friend_b가 userA / isFriend: 1   내 친구
+
+                        if (currentUser == userId && isFriend == 0) {
+                            temp_heml = `${i + 1}. (친구 신청 중) ${targetUser}<br>`
+
+                        } else if ((currentUser == userId) && (isFriend == 1)) {
+
+                            temp_heml = `${i + 1}. (내 친구[내가 신청]) ${targetUser}
+                            <button onclick="deleteFriendA('${currentUser}', '${targetUser}')"> 절교</button><br>`
+
+                        } else if ((targetUser == userId) && (isFriend == 1)) {
+
+                            temp_heml = `${i + 1}. (내 친구[친구가 신청]) ${currentUser}
+                            <button onclick="deleteFriendB('${targetUser}', '${currentUser}')"> 절교</button><br>`
+
+                        } else if (targetUser == userId && isFriend == 0) {
+
+                            temp_heml = `${i + 1}. (친구 수락하기 ) ${currentUser}
+                            <button onclick="permitFriend('${currentUser}', '${targetUser}')"> 수락하기</button><br>`
+
+                        }
+
+                        $('#showFriend').append(temp_heml)
+                    }
+
+                }
+            });
+
+        }
+
+        function permitFriend(currentUser, targetUser) {
+            $.ajax({
+                type: "POST",
+                url: "/api/permitfriend",
+                data: {
+                    currentUser_give: currentUser,
+                    targetUser_give: targetUser
+
+                },
+                success: function (response) {
+                    location.reload();
+
+                }
+            });
+
+        }
+
+        function deleteFriendA(currentUser, targetUser) {
+
+            $.ajax({
+                type: "POST",
+                url: "/api/deletefriend",
+                data: {
+
+                    currentUser_give: currentUser,
+                    targetUser_give: targetUser,
+                    order:"ab"
+                },
+                success: function (response) {
+                    location.reload();
+                }
+            });
+
+        }
+
+
+        
+
+                function deleteFriendB(targetUser, currentUser) {
+
+
+            $.ajax({
+                type: "POST",
+                url: "/api/deletefriend",
+                data: {
+
+
+
+                    currentUser_give: targetUser,
+                    targetUser_give: currentUser,
+                    order:"ba"
+
+                },
+                success: function (response) {
+                    location.reload();
+
+                }
+            });
+}
+        
+
+    </script>
+
+
+</head>
+<body>
+
+
+<button onclick="showFriend()"> 친구보기 테스트</button>
+
+<div id="all_friends" style="width: 300px;">
+
+    틴구 목록<br>
+
+    {% for user in all_users_info %}
+    {{ user['nick'] }}
+    {{ user['id'] }}
+    {% set target_user_id = user["id"] %}
+
+    <button onclick="addFriend('{{target_user_id}}')" style="width: 150px;"> 친구로 결정했다.</button>
+    <br>
+
+    {% endfor %}
+
+
+</div>
+
+
+<div id="showFriend">
+
+
+</div>
+
+
+</body>
+</html>
