@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- 현준 -->
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+    <script>
+        function show_reservation() {
+             $('#reservation-list').empty()
+
+            $.ajax({
+                type: "POST",
+                url: "/show_reservation",
+                data: { "name_give": $('#name').val() },
+                success: function (response) {
+
+                    let rows = response['reservation_list']
+
+                    if (rows.length == 0){
+                        let temp_html = `예약 내역이 없잖아..`
+                        $('#reservation-list').append(temp_html)
+                    }else{
+
+
+                        let username = rows[0]['username']
+                    let temp_html =  `${username}님의 예약 내역 입니다.`
+                    $('#reservation-list').append(temp_html)
+
+                    console.log(response)
+                    for (let i = 0; i < rows.length; i++){
+                        let name = rows[i]['name']
+                        let comment = rows[i]['store']
+                        let count = rows[i]['count']
+                        let username = rows[i]['username']
+                        let date = rows[i]['date']
+
+                        let temp_html = `
+<table class="table table-striped table-hover w-25">
+  <thead>
+    <tr>
+      <th scope="col">빵 이름:</th>
+      <th scope="col">${name}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">지점:</th>
+      <td>${comment}</td>
+    </tr>
+    <tr>
+      <th scope="row">갯수:</th>
+      <td>${count}</td>
+    </tr>
+    <tr>
+      <th scope="row">날짜:</th>
+      <td colspan="1">${date}</td>
+    </tr>
+  </tbody>
+</table>
+`
+                        $('#reservation-list').append(temp_html)
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+
+
+
+<div class="input-group mb-3 w-25">
+  <input type="text" class="form-control" id="name" placeholder="조회할 ID 입력..." aria-label="R조회할 ID 입력..." aria-describedby="button-addon2">
+  <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="show_reservation()">예약 조회</button>
+</div>
+<div id="reservation-list">
+</div>
+
+
+</body>
+</html>

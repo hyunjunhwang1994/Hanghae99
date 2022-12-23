@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>포켓몬빵찾기</title>
+
+   <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+
+    <style>
+        *{
+            font-family: 'Jua', sans-serif;
+        }
+        h1{
+            color: #0d62fd;
+        }
+        .login-and-out{
+            margin: 0px 0px 50px 15px;
+        }
+        .login-and-out2 {
+            width: 300px;
+        }
+        .title{
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 3rem;
+        }
+        .mybtn{
+            width: 550px;
+            margin:50px auto 50px auto;
+        }
+        .container {
+            margin-left: 50px;
+        }
+        .name{
+            color: #3B44F6;
+        }
+        .stock{
+            color:#D61C4E;
+        }
+        .poketmon {
+            color: #FED049;
+        }
+
+
+    </style>
+    <script>
+      $(document).ready(function () {
+            listing();
+        });
+
+
+       //전체조회
+        function listing(){
+            $('#cards-box').empty()
+            $.ajax({
+                type: "GET",
+                url: "/poketmon",
+                data: {},
+                success: function (response) {
+                    let rows = response['poketmons']
+                    for (let i=0; i < rows.length; i++){
+                        let img = rows[i]['image']
+                        let name = rows[i]['name']
+                        let store = rows[i]['store']
+                        let stock = rows[i]['stock']
+                        let temp_html = `<div class="card" style="width: 270px;">
+                                              <img src="${img}" class="card-img-top" alt="빵이미지${i}번째">
+                                              <div class="card-body">
+                                                <h5 class="card-title name">${name}</h5>
+                                                <p class="card-text">${store} <span class="stock">&nbsp&nbsp&nbsp재고 ${stock} 개</span> </p>
+                                              </div>
+                                        </div>`
+                        $('#cards-box').append(temp_html)
+                    }
+                }
+            });
+        }
+
+        //검색조회
+        function search(){
+            let count = 0;
+            let keyword = $('#keyword').val()
+            if (keyword == '') {
+                count = -1;
+                alert('검색어를 입력하세요')
+            }else{
+                $('#cards-box').empty()
+            }
+
+            $.ajax({
+                type: "GET",
+                url: "/search",
+                data: {},
+                success: function (response) {
+                    let rows = response['poketmon_list']
+                    for (let i=0; i < rows.length; i++){
+                        let img = rows[i]['image']
+                        let name = rows[i]['name']
+                        let store = rows[i]['store']
+                        let stock = rows[i]['stock']
+                        if(name==keyword){
+                            let temp_html = `<div class="card" id="${i}" style="width: 270px;">
+                                              <img src="${img}" class="card-img-top" alt="빵이미지${i}번째">
+                                              <div class="card-body reservation">
+                                              <h5 class="card-title" id="bread-name">${name}</h5>
+                                                <p class="card-text">${store} 재고 : ${stock} 개 </p>
+                                              </div>
+                                        </div>`
+                        $('#cards-box').append(temp_html)
+                        count += 1
+                        }
+                    }
+
+                    if(count ==0){
+                        alert('조회결과없음')
+                        listing();
+
+                    }
+
+                }
+            });
+        }
+
+
+//예약하기
+        function reservation() {
+            if (document.cookie == '') {
+                alert('먼저 로그인하세요')
+                location.href = 'login'
+            } else {
+                location.href = 'reservation'
+            }
+        }
+
+         //로그아웃
+        function logout(){
+                //console.log("작동함")
+                $.ajax({
+                    type: "GET",
+                    url: "/delcookie",
+                    data: {},
+                    success: function (response) {
+                        alert(response['msg'])
+                    }
+                })
+        }
+
+
+        //로그인할때..
+        function login() {
+            if (document.cookie == '') {
+                location.href = 'login'
+            } else {
+                alert('이미 로그인 되어있습니다')
+            }
+        }
+
+
+    </script>
+
+
+</head>
+<body>
+
+
+    <nav class="nav nav-pills nav-fill">
+      <a class="nav-link active" aria-current="page" href="index">포켓몬빵찾기</a>
+      <a class="nav-link" onclick="reservation()">예약하기</a>
+      <a class="nav-link" href="reservation-list">예약조회</a>
+      <a class="nav-link" href="" onclick="ask()">문의하기</a>
+    </nav>
+    <div class="col">
+        <div id="login-and-out col" class="login-and-out">
+            <div class="login-and-out2 navbar">
+                <a class="nav-link" onclick="login()">로그인</a>
+                <a class="nav-link" onclick="logout()">로그아웃</a>
+                <a class="nav-link" href="signup">회원가입</a>
+            </div>
+        </div>
+    </div>
+
+
+   <h1 class="title">내 주변 <span class="poketmon">포켓몬빵</span>을 찾고 예약해보세요</h1>
+
+    <div class="container">
+        <div class="mybtn">
+            <input type="text" id="keyword">
+            <button type="button" class="btn btn-dark" onclick="search()">포켓몬빵 검색</button>
+            <button type="button" class="btn btn-outline-dark">등록(임시)</button>
+        </div>
+        <div id="cards-box" class="row row-cols-1 row-cols-md-4 g-4">
+            <div class="card " style="width: 18rem;">
+                <img src="..." class="card-img-top cards-box" alt="포켓몬빵이미지">
+                <div class="card-body">
+                    <h5 class="card-title">포켓몬빵이름</h5>
+                    <p class="card-text">편의점정보</p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
