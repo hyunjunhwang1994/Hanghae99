@@ -41,7 +41,7 @@ public class Bus implements PublicTransport{
     }
 
     @Override
-    public void showFill() {
+    public void showFual() {
         System.out.println("주유량 = " + this.gasStatus);
 
         if(this.gasStatus <= 5){

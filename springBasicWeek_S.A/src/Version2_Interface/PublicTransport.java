@@ -6,7 +6,7 @@ public interface PublicTransport {
     public void boardingPassengers(int passengers);
 
     public void fillUp(int amount);
-    public void showFill();
+    public void showFual();
 
     public void changeStatus();
     public void showStatus();
