@@ -1,11 +1,10 @@
 public class PublicTransport {
 
-    int number;
+
     int gasStatus = 100;
     int currentSpeed = 0;
     boolean status = true;
 
-    int gasMileage;
 
 
     public void startDriving (){

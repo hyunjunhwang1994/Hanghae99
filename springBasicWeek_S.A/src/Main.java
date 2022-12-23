@@ -27,8 +27,6 @@ public class Main {
 
 
 
-//        bus1.startDriving();
-
 
     }
 }

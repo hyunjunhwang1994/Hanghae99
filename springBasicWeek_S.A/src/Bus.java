@@ -3,10 +3,10 @@ public class Bus extends PublicTransport{
     int currentPassengers = 1;
     int maxPassengers = 30;
     int fare = 1000;
-
+    int number;
     boolean status;
 
-
+    int gasMileage;
 
     public Bus(int number) {
         this.status = true;
@@ -21,12 +21,12 @@ public class Bus extends PublicTransport{
 
         while (super.gasStatus > 0){
 
-            super.gasMileage--;
+            gasMileage--;
 
-            if(super.gasMileage == 0){
+            if(gasMileage == 0){
                 super.gasStatus--;
                 super.getGasStatus();
-                super.gasMileage=50;
+                gasMileage=50;
             }
 
         }
