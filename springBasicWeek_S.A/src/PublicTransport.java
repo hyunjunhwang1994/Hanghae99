@@ -1,6 +1,6 @@
-public class PublicTransport {
+public abstract class PublicTransport {
 
-
+    int number;
     int gasStatus = 100;
     int currentSpeed = 0;
     boolean status = true;
@@ -61,9 +61,9 @@ public class PublicTransport {
 
     }
 
+    public abstract void bill();
 
 
-
-
-
+    public abstract void boardingPassengers(int passengersNumber, String destination,
+                                            int distance);
 }

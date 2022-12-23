@@ -10,7 +10,7 @@ public class Bus extends PublicTransport{
 
     public Bus(int number) {
         this.status = true;
-        this.number = number;
+        super.number = number;
         System.out.println(number + "번 버스객체 만들어짐!");
 
     }
@@ -54,6 +54,16 @@ public class Bus extends PublicTransport{
 
 
 
+
+    }
+
+    @Override
+    public void bill() {
+
+    }
+
+    @Override
+    public void boardingPassengers(int passengersNumber, String destination, int distance) {
 
     }
 }

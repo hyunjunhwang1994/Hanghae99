@@ -1,20 +1,25 @@
 public class Taxi extends PublicTransport{
 
     int currentPassengers = 1;
-    int maxPassengers = 30;
-    int fare = 8000;
-    int number;
+    int maxPassengers = 5;
+
+    int basicFare = 3000;
+    int fare = 0;
+    int myMoney = 0;
+
     boolean status;
 
     int gasMileage;
 
 
-    public Taxi(int number) {
+    public Taxi (int number) {
         this.status = true;
-        this.number = number;
+        super.number = number;
         System.out.println(number + "번 택시객체 만들어짐!");
 
     }
+
+
 
     @Override
     public int getGasStatus() {
@@ -43,11 +48,100 @@ public class Taxi extends PublicTransport{
 
     @Override
     public boolean isStatus() {
-        return super.isStatus();
+        if(this.status == true){
+            System.out.println("상태 = 운행");
+        }else{
+            System.out.println("상태 = 운행불가");
+
+        }
+        return status;
+    }
+
+    @Override
+    public void bill(){
+
+
+        if(getGasStatus() <= 0){
+            setStatus(false);
+            isStatus();
+            System.out.println("누적 요금 =" + myMoney);
+
+        }else {
+
+            myMoney += fare;
+            currentPassengers=1;
+
+            System.out.println("누적 요금 =" + myMoney);
+        }
+
+
     }
 
     @Override
     public void boardingPassengers(int passengersNumber) {
-        super.boardingPassengers(passengersNumber);
+
+
+        if(passengersNumber > (maxPassengers - currentPassengers)  ){
+            System.out.println("최대 승객 수를 초과했습니다.");
+        }else{
+
+            currentPassengers += passengersNumber;
+
+            System.out.println("탑승 승객 수 = " + passengersNumber);
+            System.out.println("잔여 승객 수 = " + (maxPassengers - currentPassengers));
+            System.out.println("요금 확인 = " + fare * passengersNumber);
+
+
+
+
+        }
+
+
+
+
+    }
+
+    @Override
+    public void boardingPassengers(int passengersNumber, String destination,
+                                   int distance) {
+
+        if(passengersNumber > (maxPassengers - currentPassengers)  ){
+            System.out.println("최대 승객 수를 초과했습니다.");
+        }else{
+
+            currentPassengers += passengersNumber;
+
+            System.out.println("탑승 승객 수 = " + passengersNumber);
+            System.out.println("잔여 승객 수 = " + (maxPassengers - currentPassengers));
+            System.out.println("기본 요금 확인 = " + basicFare);
+
+            if(destination.equals("서울역")){
+                fare = basicFare + 1000;
+
+                System.out.println("목적지 = " + destination);
+                System.out.println("목적지까지 거리 =" + distance);
+                System.out.println("지불할 요금 =" + fare);
+
+
+
+
+            }else if(destination.equals("구로디지털단지역")){
+                fare = basicFare + 11000;
+
+                System.out.println("목적지 = " + destination);
+                System.out.println("목적지까지 거리 =" + distance);
+                System.out.println("지불할 요금 =" + fare);
+
+
+
+            }
+
+
+
+        }
+
+
+
+
     }
 }
