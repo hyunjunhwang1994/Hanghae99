@@ -7,7 +7,7 @@ public class Taxi extends PublicTransport{
     int fare = 0;
     int myMoney = 0;
 
-    boolean status;
+    boolean status = true;
 
     int gasMileage;
 
@@ -38,7 +38,8 @@ public class Taxi extends PublicTransport{
 
     @Override
     public void setStatus(boolean status) {
-        super.setStatus(status);
+
+        this.status = status;
     }
 
     @Override
@@ -64,6 +65,7 @@ public class Taxi extends PublicTransport{
         if(getGasStatus() <= 0){
             setStatus(false);
             isStatus();
+            myMoney += fare;
             System.out.println("누적 요금 =" + myMoney);
 
         }else {
