@@ -1,3 +1,5 @@
+package Version1;
+
 public class Taxi extends PublicTransport{
 
     int currentPassengers = 1;

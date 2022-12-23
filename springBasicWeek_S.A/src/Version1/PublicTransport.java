@@ -1,3 +1,5 @@
+package Version1;
+
 public abstract class PublicTransport {
 
     int number;
