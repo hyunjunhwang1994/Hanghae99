@@ -1,6 +1,8 @@
+package day1;
+
 public class Main {
 
-    // 12월 23일
+    // 2022 12월 23일
     //https://school.programmers.co.kr/learn/courses/30/lessons/12945
     // 피보나치 수 n % 1234567
 
