@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-12-26T07:36:37.795Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36" version="20.7.4" etag="BNK4Kc13zNF8Xb-dkKyS" type="github">
+<mxfile host="app.diagrams.net" modified="2022-12-26T07:37:08.270Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36" version="20.7.4" etag="RD2PEV1yiFdpNeDY0Jp3" type="github">
   <diagram id="ic19Fm1MTHeZwUOBJy1f" name="페이지-1">
     <mxGraphModel dx="1434" dy="706" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -11,16 +11,16 @@
           <mxGeometry x="230" y="190" width="120" height="80" as="geometry" />
         </mxCell>
         <mxCell id="qg8rIpIQ6uU5LLOu5hXU-2" value="선택 글 수정" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="400" y="340" width="120" height="80" as="geometry" />
+          <mxGeometry x="430" y="340" width="120" height="80" as="geometry" />
         </mxCell>
         <mxCell id="qg8rIpIQ6uU5LLOu5hXU-3" value="선택 글 조회" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="230" y="340" width="120" height="80" as="geometry" />
         </mxCell>
         <mxCell id="qg8rIpIQ6uU5LLOu5hXU-4" value="사용자 인증&lt;br&gt;(비밀번호)" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="400" y="60" width="120" height="80" as="geometry" />
+          <mxGeometry x="430" y="60" width="120" height="80" as="geometry" />
         </mxCell>
         <mxCell id="qg8rIpIQ6uU5LLOu5hXU-5" value="선택 글 삭제" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="400" y="190" width="120" height="80" as="geometry" />
+          <mxGeometry x="430" y="190" width="120" height="80" as="geometry" />
         </mxCell>
         <mxCell id="qg8rIpIQ6uU5LLOu5hXU-7" value="유저 / 해당 글 작성자" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
           <mxGeometry x="40" y="290" width="30" height="60" as="geometry" />
@@ -69,7 +69,7 @@
             <mxPoint x="436" y="360" as="sourcePoint" />
             <mxPoint x="536" y="270" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="560" y="230" />
+              <mxPoint x="580" y="230" />
             </Array>
           </mxGeometry>
         </mxCell>
