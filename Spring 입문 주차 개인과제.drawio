@@ -1,1 +1,55 @@
-<mxfile host="app.diagrams.net" modified="2022-12-26T07:08:19.290Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36" version="20.7.4" etag="rlFMzGwdwtMGaDMbPy8C" type="github"><diagram id="4jKWV6qnBmNSnKalRAVC">UzV2zq1wL0osyPDNT0nNUTV2VTV2LsrPL4GwciucU3NyVI0MMlNUjV1UjYwMgFjVyA2HrCFY1qAgsSg1rwSLBiADYTaQg2Y1AA==</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2022-12-26T07:14:15.657Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36" version="20.7.4" etag="u5lP3IuWYoBft5EP8R9u" type="github">
+  <diagram id="ic19Fm1MTHeZwUOBJy1f" name="페이지-1">
+    <mxGraphModel dx="1434" dy="706" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="qg8rIpIQ6uU5LLOu5hXU-1" value="전체 글 조회" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="310" y="220" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="qg8rIpIQ6uU5LLOu5hXU-2" value="선택 글 수정" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="250" y="400" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="qg8rIpIQ6uU5LLOu5hXU-3" value="선택 글 조회" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="110" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="qg8rIpIQ6uU5LLOu5hXU-4" value="사용자 인증&lt;br&gt;(비밀번호)" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="220" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="qg8rIpIQ6uU5LLOu5hXU-5" value="선택 글 삭제" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="380" y="400" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="qg8rIpIQ6uU5LLOu5hXU-7" value="유저 / 해당 글 작성자" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="290" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="qg8rIpIQ6uU5LLOu5hXU-8" value="유저 / 일반" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="160" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="qg8rIpIQ6uU5LLOu5hXU-11" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="qg8rIpIQ6uU5LLOu5hXU-7" target="qg8rIpIQ6uU5LLOu5hXU-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="70" y="350" as="sourcePoint" />
+            <mxPoint x="150" y="300" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qg8rIpIQ6uU5LLOu5hXU-12" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="qg8rIpIQ6uU5LLOu5hXU-8" target="qg8rIpIQ6uU5LLOu5hXU-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="80" y="228.1632653061224" as="sourcePoint" />
+            <mxPoint x="310" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qg8rIpIQ6uU5LLOu5hXU-13" value="" style="endArrow=none;dashed=1;html=1;rounded=0;entryX=0;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="qg8rIpIQ6uU5LLOu5hXU-5" target="qg8rIpIQ6uU5LLOu5hXU-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="390" y="380" as="sourcePoint" />
+            <mxPoint x="440" y="330" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qg8rIpIQ6uU5LLOu5hXU-14" value="" style="endArrow=none;dashed=1;html=1;rounded=0;entryX=0;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="qg8rIpIQ6uU5LLOu5hXU-2" target="qg8rIpIQ6uU5LLOu5hXU-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="352.43" y="471.72" as="sourcePoint" />
+            <mxPoint x="430.00359312880727" y="310.0042712474617" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
