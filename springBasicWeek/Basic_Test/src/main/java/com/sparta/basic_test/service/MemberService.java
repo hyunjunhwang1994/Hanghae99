@@ -36,8 +36,8 @@ public class MemberService {
         List<MemberResponseDto> memberResponseDtoList = new ArrayList<>();
 
         for (Member member : memberList) {
-            MemberResponseDto postResponseDto = new MemberResponseDto(member);
-            memberResponseDtoList.add(postResponseDto);
+            MemberResponseDto memberResponseDto = new MemberResponseDto(member);
+            memberResponseDtoList.add(memberResponseDto);
         }
         return memberResponseDtoList;
 
