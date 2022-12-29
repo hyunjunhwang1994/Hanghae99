@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+    <script>
+        function writePost() {
+
+            let data = {'testString': 'hyunjun'};
+
+
+            $.ajax({
+                type: "POST",
+                url: "/test",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    alert('메시지가 성공적으로 작성되었습니다.');
+                    window.location.reload();
+                    alert("z")
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+
+<div class="area-write">
+    <textarea class="field" placeholder="공유하고 싶은 소식을 입력하세요." name="contents"></textarea>
+
+    <button onclick="writePost()"></button>
+
+</div>
+
+
+</body>
+</html>
