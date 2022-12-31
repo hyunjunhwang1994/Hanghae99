@@ -16,7 +16,7 @@ import java.util.List;
 public class MemberService {
     private final MemberRepository memberRepository;
 
-    @Transactional(readOnly = true)
+
     public MemberResponseDto findMember(Long id) {
 
         Member member = memberRepository.findById(id).orElseThrow(
@@ -29,7 +29,7 @@ public class MemberService {
     }
 
 
-    @Transactional
+
     public List<MemberResponseDto> findAllMember() {
 
         List<Member> memberList = memberRepository.findAll();
