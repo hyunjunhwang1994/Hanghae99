@@ -3,6 +3,7 @@ package Date221231;
 
 // 2022 12월 31일
 // https://school.programmers.co.kr/learn/courses/30/lessons/12949
+// https://www.youtube.com/watch?v=JpSe38UHaos <- 행렬의 곱셈 수학 유튜브
 // 행렬의 곱셈.
 
 
